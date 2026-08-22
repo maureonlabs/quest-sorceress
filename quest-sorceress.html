@@ -1,0 +1,842 @@
+<title>Quest Sorceress</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=Karla:wght@300;400;500;700&display=swap">
+
+<style>
+:root{
+  --ink:#0B1014;
+  --ink-2:#131C22;
+  --ink-3:#1B262D;
+  --edge:#26343C;
+  --foil:#C9A24B;
+  --foil-dim:#7E672F;
+  --bone:#E9E3D5;
+  --muted:#8A98A0;
+  --cinnabar:#C2483A;
+  --cinnabar-lit:#DC5B4A;
+
+  --display:"Fraunces","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --body:"Karla","Helvetica Neue",Arial,sans-serif;
+
+  --s1:.4rem; --s2:.7rem; --s3:1.1rem; --s4:1.7rem; --s5:2.6rem;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--bone);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.55;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.vignette{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 0%,rgba(201,162,75,.07),transparent 55%),
+             radial-gradient(100% 100% at 50% 100%,rgba(0,0,0,.55),transparent 60%);
+}
+
+.shell{
+  position:relative;z-index:2;
+  width:100%;max-width:38rem;
+  margin:0 auto;
+  padding:var(--s5) var(--s3) var(--s5);
+  display:flex;flex-direction:column;gap:var(--s5);
+  min-height:100vh;
+}
+
+/* ---------- masthead ---------- */
+.mast{display:flex;flex-direction:column;align-items:center;gap:var(--s2);text-align:center}
+.sigil{width:44px;height:44px;display:block;opacity:.92}
+.mast h1{
+  font-family:var(--display);
+  font-optical-sizing:auto;
+  font-variation-settings:"SOFT" 0,"WONK" 1;
+  font-weight:400;
+  font-size:clamp(2rem,9vw,2.9rem);
+  line-height:1;
+  margin:0;
+  color:var(--bone);
+  text-wrap:balance;
+}
+.mast p{
+  margin:0;font-size:.8rem;color:var(--muted);
+  letter-spacing:.14em;text-transform:uppercase;
+}
+
+/* ---------- framed panel ---------- */
+.panel{
+  position:relative;
+  background:linear-gradient(180deg,var(--ink-2),#0F171C);
+  border:1px solid var(--edge);
+  padding:var(--s4) var(--s3);
+  box-shadow:0 1px 0 rgba(255,255,255,.03) inset,0 18px 48px -24px #000;
+}
+.panel::before{
+  content:"";position:absolute;inset:6px;
+  border:1px solid rgba(201,162,75,.24);
+  pointer-events:none;
+}
+.panel > *{position:relative}
+.corner{position:absolute;color:var(--foil);opacity:.75;font-size:.7rem;line-height:1;z-index:1}
+.corner.tl{top:2px;left:4px} .corner.tr{top:2px;right:4px}
+.corner.bl{bottom:2px;left:4px} .corner.br{bottom:2px;right:4px}
+
+/* ---------- labels & rules ---------- */
+.label{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--foil);font-weight:500;
+  display:flex;align-items:center;gap:var(--s2);
+}
+.label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(201,162,75,.35),transparent)}
+
+/* ---------- chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:.45rem}
+.chip{
+  font-family:var(--body);font-size:.86rem;
+  padding:.42rem .8rem;
+  background:transparent;color:var(--bone);
+  border:1px solid var(--edge);
+  cursor:pointer;
+  transition:border-color .18s,background .18s,color .18s;
+}
+.chip:hover{border-color:var(--foil-dim)}
+.chip[aria-pressed="true"]{
+  background:rgba(201,162,75,.13);
+  border-color:var(--foil);
+  color:var(--foil);
+}
+.chip.wide{flex:1;min-width:5.2rem;text-align:center}
+.chips.stacked{flex-direction:column}
+.chips.stacked .chip{width:100%;text-align:left;padding:.55rem .8rem;line-height:1.3}
+.chip small{
+  display:block;color:var(--muted);font-size:.76rem;
+  margin-top:.1rem;font-weight:400;
+}
+.chip[aria-pressed="true"] small{color:#A99259}
+
+input[type="text"],textarea{
+  width:100%;font-family:var(--body);font-size:.95rem;
+  color:var(--bone);background:#0C1317;
+  border:1px solid var(--edge);
+  padding:.6rem .7rem;
+  resize:vertical;
+}
+input[type="text"]::placeholder,textarea::placeholder{color:#5D6B72}
+input[type="text"]:focus,textarea:focus,.chip:focus-visible,button:focus-visible{
+  outline:2px solid var(--foil);outline-offset:2px;
+}
+
+/* ---------- buttons ---------- */
+.btn{
+  font-family:var(--body);font-size:.82rem;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  padding:.85rem 1.2rem;
+  border:1px solid var(--edge);background:transparent;color:var(--bone);
+  cursor:pointer;transition:border-color .18s,color .18s,background .18s;
+}
+.btn:hover{border-color:var(--foil);color:var(--foil)}
+.btn.primary{
+  background:var(--cinnabar);border-color:var(--cinnabar);color:#150707;
+}
+.btn.primary:hover{background:var(--cinnabar-lit);border-color:var(--cinnabar-lit);color:#150707}
+.btn.big{width:100%;padding:1.15rem;font-size:.95rem;letter-spacing:.22em}
+.btn.ghost{border-color:transparent;color:var(--muted);letter-spacing:.1em;padding:.5rem .3rem}
+.btn.ghost:hover{color:var(--foil)}
+.row{display:flex;gap:.6rem}
+.row>*{flex:1}
+
+/* ---------- onboarding ---------- */
+.stack{display:flex;flex-direction:column;gap:var(--s3)}
+.ask{
+  font-family:var(--display);font-weight:400;
+  font-size:1.45rem;line-height:1.25;margin:0;text-wrap:balance;
+}
+.hint{margin:0;color:var(--muted);font-size:.86rem}
+.pips{display:flex;gap:.35rem;justify-content:center}
+.pip{width:22px;height:2px;background:var(--edge)}
+.pip.on{background:var(--foil)}
+
+/* ---------- console ---------- */
+.grid-intent{display:grid;grid-template-columns:repeat(2,1fr);gap:.45rem}
+@media(min-width:26rem){.grid-intent{grid-template-columns:repeat(3,1fr)}}
+.grid-intent .chip{text-align:center;padding:.55rem .4rem}
+
+/* ---------- quest card ---------- */
+.card-vibe{
+  font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--foil);
+}
+.card-title{
+  font-family:var(--display);
+  font-variation-settings:"SOFT" 0,"WONK" 1;
+  font-weight:400;
+  font-size:clamp(1.8rem,7.5vw,2.4rem);
+  line-height:1.08;margin:0;text-wrap:balance;
+}
+.card-flavor{
+  font-family:var(--display);font-weight:300;font-style:italic;
+  font-size:1.05rem;line-height:1.5;color:#B9BFBC;margin:0;
+}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.6rem}
+.steps li{display:flex;gap:.7rem;align-items:flex-start;font-size:.98rem}
+.steps .bullet{color:var(--foil);font-size:.7rem;line-height:1.7;flex:none}
+.meta{
+  display:flex;justify-content:space-between;align-items:center;gap:var(--s2);
+  padding-top:var(--s3);border-top:1px solid var(--edge);
+  font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.pearls{color:var(--foil);letter-spacing:.28em}
+.pearls .off{color:var(--edge)}
+
+/* ---------- deal animation ---------- */
+@keyframes deal{
+  from{opacity:0;transform:translateY(26px) rotateX(9deg) scale(.975)}
+  to{opacity:1;transform:none}
+}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.dealt{animation:deal .55s cubic-bezier(.2,.75,.25,1) both;transform-origin:50% 100%}
+.dealt .reveal{animation:rise .5s ease both}
+.dealt .reveal:nth-child(1){animation-delay:.16s}
+.dealt .reveal:nth-child(2){animation-delay:.23s}
+.dealt .reveal:nth-child(3){animation-delay:.30s}
+.dealt .reveal:nth-child(4){animation-delay:.37s}
+.dealt .reveal:nth-child(5){animation-delay:.44s}
+
+.hidden{display:none !important}
+footer{text-align:center;color:#4E5B62;font-size:.72rem;letter-spacing:.1em;margin-top:auto}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001s !important;animation-delay:0s !important;transition-duration:.001s !important}
+}
+</style>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="shell">
+
+  <header class="mast">
+    <svg class="sigil" viewBox="0 0 48 48" aria-hidden="true" fill="none">
+      <circle cx="24" cy="24" r="17" stroke="#C9A24B" stroke-width="1" opacity=".55"/>
+      <circle cx="24" cy="24" r="22" stroke="#C9A24B" stroke-width="1" opacity=".2"/>
+      <path d="M24 5 L31 20 L46 24 L31 28 L24 43 L17 28 L2 24 L17 20 Z" fill="#C9A24B" opacity=".9"/>
+    </svg>
+    <h1>Quest Sorceress</h1>
+    <p>She deals one card only</p>
+  </header>
+
+  <!-- ============ ONBOARDING ============ -->
+  <section id="onboard" class="panel">
+    <span class="corner tl">✦</span><span class="corner tr">✦</span>
+    <span class="corner bl">✦</span><span class="corner br">✦</span>
+    <div class="stack">
+      <div class="pips" id="pips"></div>
+      <div id="ob-body" class="stack"></div>
+      <div class="row">
+        <button class="btn" id="ob-back">Back</button>
+        <button class="btn primary" id="ob-next">Next</button>
+      </div>
+      <button class="btn ghost" id="ob-skip">Skip — just give me quests</button>
+    </div>
+  </section>
+
+  <!-- ============ CONSOLE ============ -->
+  <section id="console" class="hidden stack">
+    <button class="btn primary big" id="bored">I'm bored</button>
+
+    <div class="panel stack">
+      <span class="corner tl">✦</span><span class="corner tr">✦</span>
+      <span class="corner bl">✦</span><span class="corner br">✦</span>
+
+      <div class="label">What kind of thing</div>
+      <div class="grid-intent" id="intents"></div>
+
+      <div class="label">How long you have</div>
+      <div class="chips" id="times"></div>
+
+      <div class="label">Energy right now</div>
+      <div class="chips" id="energies"></div>
+
+      <button class="btn primary" id="summon">Summon a quest</button>
+    </div>
+
+    <button class="btn ghost" id="redo-profile">Edit what she knows about you</button>
+  </section>
+
+  <!-- ============ QUEST ============ -->
+  <section id="quest" class="hidden stack">
+    <div class="panel" id="card">
+      <span class="corner tl">✦</span><span class="corner tr">✦</span>
+      <span class="corner bl">✦</span><span class="corner br">✦</span>
+      <div class="stack">
+        <div class="reveal card-vibe" id="q-vibe"></div>
+        <h2 class="reveal card-title" id="q-title"></h2>
+        <p class="reveal card-flavor" id="q-flavor"></p>
+        <ul class="reveal steps" id="q-steps"></ul>
+        <div class="reveal meta">
+          <span id="q-time"></span>
+          <span class="pearls" id="q-diff"></span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn" id="reroll">Deal again</button>
+      <button class="btn" id="back-console">Change ask</button>
+    </div>
+  </section>
+
+  <footer>Nothing is saved. Nothing is scored. Go do the thing.</footer>
+</div>
+
+<script>
+/* =========================================================
+   Quest Sorceress — a single quest, dealt to order.
+   No storage, no accounts, no progress. Session memory only.
+   ========================================================= */
+
+/* ---------- vocabulary ---------- */
+const VIBES = {
+  Systems:  "order, admin, the boring machinery of a life",
+  Arcana:   "AI, code, learning something with teeth",
+  Coin:     "business, money, being paid",
+  Craft:    "making a thing that did not exist",
+  Vigor:    "the body, under load",
+  Wander:   "elsewhere, outside, unfamiliar",
+  Aura:     "style, surfaces, how you meet the world",
+  Stillness:"rest, reflection, the quiet register"
+};
+
+const INTENTS = [
+  ["productive","Productive"], ["creative","Creative"], ["business","Business"],
+  ["fitness","Fitness"],       ["fun","Fun"],           ["adventure","Adventure"],
+  ["selfcare","Self-care"],    ["improvement","Improve"],
+  ["surprise","Surprise me"],  ["mine","My things"]
+];
+
+const TIMES = [[5,"5 min"],[15,"15 min"],[30,"30 min"],[60,"1 hour"],[90,"90+ min"]];
+const ENERGY = [[1,"Drained"],[2,"Low"],[3,"Steady"],[4,"Charged"]];
+
+const INTERESTS = [
+  ["music","music"],["writing","writing"],["art","drawing & art"],["photography","photography"],
+  ["fitness","training"],["running","running"],["climbing","climbing"],["cooking","cooking"],
+  ["gaming","games"],["reading","reading"],["coding","coding"],["ai","AI"],
+  ["business","business"],["film","film & tv"],["fashion","style"],["nature","nature"],
+  ["travel","travel"],["meditation","meditation"],["language","languages"],["dance","dance"],
+  ["gardening","gardening"],["making","building things"],["podcasts","podcasts"],["design","design"]
+];
+
+/* interests bleed into neighbours, so answers generalise */
+const NEAR = {
+  climbing:["fitness","nature","making"], running:["fitness","nature"],
+  fitness:["running","dance"], music:["making","dance","podcasts"],
+  writing:["reading","podcasts"], art:["design","photography","making"],
+  photography:["art","travel","nature"], coding:["ai","making","design"],
+  ai:["coding","business","writing"], business:["ai","writing"],
+  cooking:["making","nature"], gaming:["coding","film"],
+  reading:["writing","language"], film:["photography","writing"],
+  fashion:["design","art"], nature:["travel","running","gardening"],
+  travel:["nature","photography","language"], meditation:["nature"],
+  language:["reading","travel"], dance:["music","fitness"],
+  gardening:["nature","cooking"], making:["coding","art","cooking"],
+  podcasts:["music","reading"], design:["art","coding","fashion"]
+};
+
+/* ---------- quest bank ----------
+   q(intents, vibe, [energyMin,energyMax], [timeBuckets], difficulty,
+     title, flavor, [steps], [tags], needs)                            */
+const Q = [];
+function q(i,v,e,m,d,t,f,s,g,n){ Q.push({i,v,e,m,d,t,f,s,g:g||[],n:n||null}); }
+
+/* ---- PRODUCTIVE ---- */
+q(["productive"],"Systems",[2,4],[15,30],2,"Inbox Purge","An unread count is a debt collected in dread.",["Archive everything older than two weeks, unread or not.","Reply to exactly three messages. No more.","Close the tab afterward."],["admin"]);
+q(["productive"],"Systems",[1,3],[5,15],1,"The Twelve Tabs","Each open tab is a decision you keep re-making.",["Close every browser tab except the two you actually need.","Anything you're afraid to lose, paste into one note first."],["admin"]);
+q(["productive"],"Systems",[2,4],[15,30],2,"Desktop Exorcism","Your screen is a room. Somebody lives there.",["Make one folder named with today's date.","Sweep every loose desktop file into it.","Pull back out only what you'll touch this week."],["admin"]);
+q(["productive"],"Systems",[3,4],[15,30,60],3,"The Undone Thing","You already know which one. It's been following you.",["Name the task you've dodged longest.","Set a timer and do only its first ten minutes.","Stop when the timer does, finished or not."],["admin"]);
+q(["productive"],"Coin",[2,4],[5,15],1,"Kill a Subscription","Somewhere, a service is quietly billing you for nothing.",["Open your card statement or app store subscriptions.","Cancel one thing you haven't used in a month."],["money"]);
+q(["productive"],"Systems",[2,4],[15],2,"Two-Minute Rampage","Small undone things weigh more than large ones. Unfair, but true.",["Set fifteen minutes.","Do every task you've been putting off that takes under two minutes.","Move fast. Don't perfect anything."],["admin"]);
+q(["productive"],"Systems",[1,3],[5,15],1,"Tomorrow, in Three Lines","A plan longer than three lines is a wish list.",["Write the three things that would make tomorrow good.","Put them somewhere you'll see before your phone.","Do not write a fourth."],["admin"]);
+q(["productive"],"Systems",[2,4],[15,30],2,"The Filing Spell","Not the whole system. One folder.",["Pick a single messy folder — Downloads counts.","Sort it into keep, file, delete.","Empty the delete pile immediately."],["admin"]);
+q(["productive"],"Coin",[3,4],[5,15],3,"The Hard Message","It gets heavier every day you carry it unanswered.",["Open the message you've been avoiding.","Reply in under four sentences.","Send it before you reread it a third time."],["admin"]);
+q(["productive"],"Systems",[2,4],[60,90],2,"Battery of Errands","Three errands at once cost less than three errands apart.",["List every errand you owe the world.","Chain the three nearest into one loop.","Walk or ride it if you can."],["admin"]);
+q(["productive"],"Systems",[2,4],[30,60],3,"Password Reckoning","The weakest one is protecting something that matters.",["Change the password you've reused most.","Turn on two-factor for your email, if it isn't already."],["admin"]);
+q(["productive"],"Coin",[2,4],[15],2,"The Money Glance","Not a budget. Just look.",["Open your accounts and read the actual numbers.","Write down one figure that surprised you.","Close the app. No decisions required today."],["money"]);
+q(["productive"],"Systems",[1,3],[15,30],1,"Shred the Ghosts","Unsubscribing is the only reply that ends a conversation.",["Search your inbox for 'unsubscribe'.","Unsubscribe from ten senders in a row.","Do not read a single one of them."],["admin"]);
+q(["productive","improvement"],"Arcana",[3,4],[30,60,90],3,"One Automation","Do it twice by hand, then never again.",["Name a task you repeat every week.","Build the smallest thing that removes one step of it — a template, a shortcut, a saved search.","Ugly and working beats elegant and unbuilt."],["coding","ai"]);
+q(["productive","selfcare"],"Aura",[1,2],[5,15],1,"Surface Clearing","Clear one surface and the room follows.",["Choose one flat surface you see every day.","Clear it completely.","Wipe it. Put back at most three things."],[]);
+q(["productive"],"Systems",[2,4],[15,30],2,"Calendar Truth Pass","Half of what's booked is no longer true.",["Read the next two weeks properly.","Cancel or move one thing you don't want to do.","Block one hour for something you do."],["admin"]);
+q(["productive"],"Systems",[2,4],[30,60],2,"Return the Thing","It has been sitting by the door, judging you.",["Find the item you've been meaning to return, send, or give away.","Package it now.","Get it out of the house today."],["admin"]);
+q(["productive"],"Systems",[1,3],[5,15],1,"Name the Nameless","Nothing you can't find is really yours.",["Open your downloads folder.","Rename the five most recent useful files properly.","Delete everything else from this month."],["admin"]);
+
+/* ---- CREATIVE ---- */
+q(["creative"],"Craft",[2,4],[15,30],2,"Ugly First Draft","Perfectionism is procrastination in a good coat.",["Set a timer.","Write the worst possible version of something you've been circling.","Do not edit a single line until the timer ends."],["writing"]);
+q(["creative"],"Craft",[1,3],[15],1,"Twelve Bad Ideas","Quantity is a shortcut to quality. Nobody likes this fact.",["Pick a problem you're stuck on.","Write twelve solutions. They're allowed to be terrible.","Circle the two least sensible ones."],[]);
+q(["creative"],"Craft",[2,4],[30,60,90],2,"Steal Like a Thief","Copy the master's work by hand and you'll find where the seams are.",["Choose one piece of work you admire.","Recreate it as closely as you can.","Note the three decisions you'd never have made yourself."],["art","design","writing","music"]);
+q(["creative"],"Craft",[1,3],[15,30],1,"One Photograph","Not a roll. One.",["Leave the building.","Take exactly one photograph you'd be willing to print.","You may take as long as you like getting it."],["photography"]);
+q(["creative"],"Craft",[1,3],[15],1,"The Hundred-Word Story","Constraint is the fastest teacher.",["Write a complete story in exactly one hundred words.","Beginning, turn, end. Count them."],["writing"]);
+q(["creative"],"Aura",[1,3],[15],1,"Colour Theft","Every room you're in is a palette nobody's written down.",["Look around wherever you are.","Pull five colours from what you can see.","Save them. Use them in the next thing you make."],["design","art"]);
+q(["creative"],"Craft",[2,4],[30,60],2,"Loop Forge","Eight bars is a whole world if you let it be.",["Make one eight-bar loop.","Give it one element that shouldn't work.","Loop it twenty times before you judge it."],["music"]);
+q(["creative"],"Craft",[1,3],[15,30],1,"Draw What's In Front of You","Not from memory. From the actual object.",["Pick the nearest object with an awkward shape.","Draw it without lifting your eyes to the page more than twice."],["art"]);
+q(["creative"],"Craft",[1,3],[15],2,"Rename Everything","The name is the first draft of the idea.",["Take something you're working on.","Write fifteen alternative names for it.","The eleventh is usually where it gets interesting."],[]);
+q(["creative"],"Craft",[1,3],[5,15],1,"Voice Memo Manifesto","Speaking is faster than thinking, which is the point.",["Hit record.","Talk for three uninterrupted minutes about what you actually want to make.","Don't listen back today."],["writing","podcasts"]);
+q(["creative"],"Craft",[2,4],[60,90],3,"Collage Hour","Scissors bypass the part of you that argues.",["Gather printed matter — magazines, packaging, receipts.","Make one physical collage. No screen.","Hang it somewhere you'll pass tomorrow."],["art","making"]);
+q(["creative"],"Craft",[1,3],[15,30],2,"One Verse","A whole song is a mountain. One verse is a walk.",["Write or compose exactly one verse.","Finish it badly rather than leaving it open."],["music","writing"]);
+q(["creative"],"Craft",[2,4],[30],3,"The Constraint Curse","Remove an option and watch what grows in the gap.",["Make something using only one colour, one tool, or one sound source.","No exceptions, no substitutions, no cheating at the end."],["art","music","design"]);
+q(["creative"],"Craft",[3,4],[60,90],3,"Finish the Abandoned","{project} has been waiting. It hasn't forgotten.",["Open {project}.","Do not restart it. Push it one visible step forward.","Stop while you still know what comes next."],[],"project");
+q(["creative"],"Craft",[1,3],[15],1,"Sketch a Stranger","Nobody will know. That's the freedom.",["Go somewhere with people in it.","Sketch one person in under four minutes.","Get the posture, not the face."],["art"]);
+q(["creative"],"Craft",[2,4],[30,60,90],2,"The Cover Version","Interpretation teaches what imitation can't.",["Take a piece of work you love in your field.","Redo it in your own voice — same bones, your skin.","Keep what surprises you."],["music","writing","art"]);
+q(["creative","fun"],"Craft",[1,3],[15],1,"The Advert for Your Life","Absurd, but you'll learn something.",["Write the thirty-second radio ad for your current life.","Make it honest and make it sell.","Read it aloud once."],["writing"]);
+q(["creative"],"Craft",[3,4],[30],3,"Deliberate Ruin","You can't improve what you're precious about.",["Take a draft you've polished too long.","Break it on purpose — cut a third, reorder it, change the ending.","Compare. Keep the better corpse."],["writing","design"]);
+
+/* ---- BUSINESS ---- */
+q(["business"],"Coin",[3,4],[15,30],3,"The Cold Send","The message you don't send has a zero percent response rate.",["Pick one person who could change something for you.","Write four sentences: who you are, why them, what you want, an easy out.","Send it."],["business"]);
+q(["business"],"Coin",[2,4],[30],3,"Price the Thing","Undercharging is a decision you make once and pay for repeatedly.",["Write down what you currently charge.","Write the number that would feel slightly uncomfortable.","Find one reason the second number is defensible."],["business","money"]);
+q(["business"],"Coin",[3,4],[30,60,90],3,"One-Page Pitch","If it doesn't fit on a page it isn't clear yet.",["Write one page: the problem, your answer, who it's for, why now.","Cut it by a third.","Read it aloud to check it survives being spoken."],["business","writing"]);
+q(["business","improvement"],"Coin",[2,4],[30],2,"Competitor Reconnaissance","Watch what they do, not what they say.",["Pick one competitor.","Go through their buying process as a customer would.","Write the three moments where it felt worst."],["business"]);
+q(["business"],"Coin",[2,4],[15],2,"Ask for the Money","Politeness has never once collected an invoice.",["Find an unpaid invoice or an owed favour.","Send a short, warm, unambiguous chase.","No apologising for asking."],["business","money"]);
+q(["business"],"Coin",[2,4],[15,30],2,"The Testimonial Harvest","Proof you didn't write yourself is worth ten times your own words.",["Message two past clients or collaborators.","Ask for one specific sentence about working with you.","Give them a draft to edit — it triples the reply rate."],["business"]);
+q(["business"],"Coin",[3,4],[30,60,90],3,"Offer Autopsy","People don't reject your offer. They reject their understanding of it.",["Write out what you're selling, exactly as a stranger would read it.","Find the sentence that requires them to already know you.","Rewrite that sentence."],["business"]);
+q(["business","improvement"],"Aura",[2,4],[15,30],2,"Rewrite Your Bio","Yours currently describes a person from two years ago.",["Rewrite your bio in three sentences: what you do, who for, one proof.","Update it in the one place that actually gets read."],["business","writing"]);
+q(["business","creative"],"Coin",[1,3],[15],1,"Ten Names","The first three are always obvious. Keep going.",["Name a project, product, or offer ten different ways.","One of them must be a plain description. One must be a joke."],["business"]);
+q(["business"],"Coin",[3,4],[15,30],3,"Customer Séance","Guessing is expensive. Asking is free.",["Message one person who has actually paid you.","Ask what nearly stopped them buying.","Shut up and read the answer twice."],["business"]);
+q(["business"],"Coin",[3,4],[60,90],3,"Ship Something Small","A small thing in the world beats a large thing in a folder.",["Pick the smallest sellable, shareable, or usable piece of what you're building.","Get it out today, imperfect.","Tell exactly one person it exists."],["business","making"]);
+q(["business"],"Coin",[2,4],[15],2,"The Landing Line","One sentence. If they don't get it, nothing after it matters.",["Write what you do in one sentence, no jargon.","Show it to someone outside your field.","Rewrite based on the face they pull."],["business","writing"]);
+q(["business"],"Coin",[2,4],[30],2,"The Quiet Ledger","Money leaves quietly. It should be made to explain itself.",["List every business expense from the last month.","Mark each one: earns, protects, or neither.","Cancel one 'neither'."],["business","money"]);
+q(["business"],"Coin",[2,4],[15],2,"Reactivate the Dead","A lead that went quiet is warmer than a stranger.",["Find someone who went cold three or more months ago.","Send something useful with no ask attached.","Leave it there."],["business"]);
+q(["business","improvement"],"Coin",[2,4],[30,60,90],3,"Trace One Funnel","Somebody has already solved a problem you're stuck on.",["Sign up to one company you admire.","Screenshot every email and screen they send you for the first hour.","Steal one mechanic."],["business"]);
+q(["business"],"Coin",[3,4],[15],3,"Post the Frightening Thing","Visibility costs something. That's why it works.",["Write the post about your work you've been too self-conscious to publish.","Publish it.","Close the app for an hour."],["business","writing"]);
+q(["business"],"Coin",[3,4],[60,90],3,"The Follow-Up Sequence","Most sales happen after the point most people stop.",["Draft three short follow-up messages for anyone who goes quiet.","Space them a week apart.","Each one gives something before it asks."],["business","writing"]);
+q(["business"],"Coin",[2,4],[30],2,"Where Your People Gather","You cannot sell in a room you've never entered.",["Find three places your ideal customer already talks — forum, group, newsletter, event.","Join all three.","Say something useful in one of them."],["business"]);
+
+/* ---- FITNESS ---- */
+q(["fitness"],"Vigor",[2,4],[15],2,"The Hundred","One movement. One hundred repetitions. However long it takes.",["Choose press-ups, squats, or kettlebell swings.","Accumulate one hundred reps in as many sets as you need."],["fitness"]);
+q(["fitness"],"Vigor",[2,4],[5,15],1,"Stair Toll","Height is the cheapest resistance there is.",["Find the nearest staircase.","Climb it ten times.","Walk down, don't run."],["fitness"]);
+q(["fitness","adventure"],"Vigor",[1,3],[30,60,90],1,"Walk Without a Destination","Movement without a purpose is still movement.",["Leave with no route and no podcast.","Walk until you're bored, then walk ten more minutes."],["fitness","running","nature"]);
+q(["fitness"],"Vigor",[1,3],[5],1,"Grease the Groove","Frequency beats intensity. Almost always.",["Do a comfortable set of one movement now — nowhere near failure.","Repeat it every twenty minutes until you go to bed."],["fitness"]);
+q(["fitness"],"Vigor",[2,4],[15,30],2,"Carry Something Heavy","The oldest exercise. Still undefeated.",["Find something awkward and heavy.","Carry it for distance — laps, stairs, up the street and back.","Set it down before your grip fails, not after."],["fitness"]);
+q(["fitness"],"Vigor",[2,4],[5,15],2,"Hang Time","Your shoulders were designed for this and you've stopped asking.",["Find a bar, a beam, a branch.","Accumulate two minutes of dead hang.","Break it into as many sets as you need."],["fitness","climbing"]);
+q(["fitness","selfcare"],"Vigor",[1,2],[15,30],1,"Floor Work","Low energy is not an excuse. It's a specification.",["Get on the floor.","Move through hips, spine, and ankles slowly for the whole time.","No reps, no counting, no phone."],["fitness"]);
+q(["fitness"],"Vigor",[3,4],[30,60],3,"Sprint Ladder","Short, brutal, over quickly. The best kind of deal.",["Warm up properly — five minutes, no shortcuts.","Sprint 10, 20, 30, 20, 10 seconds with full recovery between.","Walk for five minutes afterward."],["fitness","running"]);
+q(["fitness"],"Vigor",[3,4],[5,15],3,"The Unbroken Set","One set. No rest. Find the edge.",["Choose one bodyweight movement.","Do a single set to two reps short of failure.","Note the number. Beat it next month."],["fitness"]);
+q(["fitness","selfcare"],"Vigor",[2,4],[5],2,"Cold Finish","Thirty seconds that reorganise the whole day.",["Take your normal shower.","End it on cold for thirty seconds.","Breathe slowly. Don't brace."],["fitness"]);
+q(["fitness"],"Vigor",[2,4],[15],2,"Shadow Round","Three rounds is enough to remember you have a body.",["Three rounds, three minutes each, one minute rest.","Shadowbox, or throw whatever movements you know.","Stay light on your feet the whole time."],["fitness","dance"]);
+q(["fitness","adventure"],"Vigor",[3,4],[60,90],3,"Long Slow Distance","Slower than feels right. Longer than feels necessary.",["Go out at a pace where you could hold a conversation.","Stay there for the whole distance.","Resist every urge to speed up."],["fitness","running"]);
+q(["fitness"],"Vigor",[2,4],[5],2,"Wall Sit Vigil","Nothing happens. That's what makes it hard.",["Sit against a wall, thighs parallel to the floor.","Hold for as long as you can, three times.","The last thirty seconds are the only ones that count."],["fitness"]);
+q(["fitness"],"Vigor",[3,4],[30,60],3,"Kettlebell Liturgy","Swing, rest, repeat. A metronome with consequences.",["Ten swings at the top of every minute.","Rest for the remainder of the minute.","Continue for fifteen minutes."],["fitness"]);
+q(["fitness","selfcare"],"Vigor",[1,2],[5,15],1,"Balance Trial","A skill that quietly disappears if nobody asks for it.",["Stand on one leg for sixty seconds. Then the other.","Repeat with your eyes closed.","Notice which side is worse."],["fitness"]);
+q(["fitness"],"Vigor",[2,3],[15],1,"Movement Snack Tour","Five movements, one round, no equipment, no excuse.",["Pick five movements covering push, pull, squat, hinge, and carry.","Do ten of each, once through, unhurried."],["fitness"]);
+q(["fitness","selfcare"],"Vigor",[1,2],[15,30],1,"Post-Meal March","The most effective walk of the day is the least ambitious one.",["Within an hour of eating, walk gently.","No pace target. No tracking.","Come back the long way."],["fitness","running"]);
+q(["fitness"],"Vigor",[4,4],[30,60,90],3,"Max Effort Attempt","Once in a while you need to find the actual ceiling.",["Warm up thoroughly.","Work up to a genuine one-rep or one-round maximum in a movement you know well.","Stop the moment form breaks."],["fitness"]);
+
+/* ---- FUN ---- */
+q(["fun"],"Wander",[1,3],[30,60],1,"The Wrong Playlist","Taste is a habit and habits go stale.",["Pick a genre you'd never claim to like.","Listen to a full album of it. Whole thing.","Find one track you'd defend."],["music"]);
+q(["fun"],"Craft",[2,4],[60,90],2,"Cook Without a Recipe","Improvisation is a skill and dinner is a low-stakes place to practise it.",["Open the fridge. Take the first three things you see.","Make a meal from them plus what's in the cupboard.","No looking anything up."],["cooking"]);
+q(["fun"],"Stillness",[1,3],[5,15],1,"Text an Old Friend","No occasion. That's what makes it land.",["Think of someone you haven't spoken to in over a year.","Send them one specific memory. Not 'how are you'.","Expect nothing back."],[]);
+q(["fun","improvement"],"Arcana",[2,4],[30],2,"Subtitles Off","Immersion is uncomfortable, then suddenly it isn't.",["Watch thirty minutes of something in a language you're learning.","No subtitles. Accept the confusion.","Write down three words you caught."],["language","film"]);
+q(["fun","adventure"],"Wander",[1,3],[15,30],1,"Local Legend","There is something strange within a mile of you.",["Search for the odd history of your street or neighbourhood.","Find one story you didn't know.","Go stand where it happened."],["travel","reading"]);
+q(["fun"],"Craft",[2,4],[30,60,90],2,"Solo Game Night","Play with intent instead of fidgeting.",["Choose one game and play it properly for the whole time.","No second screen. No scrolling between turns."],["gaming"]);
+q(["fun"],"Stillness",[1,2],[90],1,"The Bad Movie Ritual","Deliberate low culture, taken seriously, is genuinely restorative.",["Choose a film with a terrible reputation.","Watch it start to finish with full attention.","Decide sincerely whether it was misjudged."],["film"]);
+q(["fun"],"Vigor",[2,4],[5],1,"One Song, All In","Three minutes of unobserved nonsense.",["Put on the loudest thing you own.","Dance for the length of one song.","Curtains closed if you must."],["dance","music"]);
+q(["fun"],"Craft",[2,4],[15,30],2,"Learn a Card Trick","A pocket-sized piece of charisma.",["Learn one self-working card trick.","Practise it until you can do it while talking.","Perform it badly for someone tonight."],["making"]);
+q(["fun"],"Aura",[1,3],[15,30],1,"Assemble a Board","Cooking without cooking.",["Build a snack board from whatever is in the house.","Arrange it like you're being photographed.","Eat it somewhere you don't normally eat."],["cooking"]);
+q(["fun"],"Craft",[2,4],[15],2,"Karaoke Alone","Nobody is listening. Sing like they are.",["Pick the song you'd never sing in front of people.","Sing it fully, badly, at volume."],["music"]);
+q(["fun","adventure"],"Wander",[1,3],[15,30],1,"The Novelty Beverage","Small novelty, disproportionate effect.",["Go and buy a drink you have never tried before.","Bonus if you can't identify half the ingredients.","Drink it somewhere you don't usually sit."],["cooking","travel"]);
+q(["fun"],"Stillness",[1,3],[30,60,90],1,"Reread the Old Favourite","The book you loved at fourteen knows things about you.",["Find something you loved before you had taste.","Read thirty minutes of it without irony."],["reading"]);
+q(["fun","creative"],"Craft",[1,3],[15],1,"Meme Your Week","Comedy is compression. Compression is clarity.",["Summarise your week as a single image and caption.","Make it genuinely funny to you.","Send it to one person."],["art","design"]);
+q(["fun","creative"],"Craft",[2,4],[60,90],2,"Build Something Stupid","Useless projects teach the same skills as useful ones, faster.",["Make something with no purpose whatsoever.","It must physically or digitally exist by the end.","Nobody needs to see it."],["making","coding"]);
+q(["fun","creative"],"Craft",[1,3],[30],1,"Soundtrack a Film That Doesn't Exist","Invent the film by choosing its music.",["Invent a film — genre, one scene, an ending.","Build a ten-track soundtrack for it.","Name the film last."],["music","film"]);
+q(["fun"],"Stillness",[2,4],[15,30],2,"Call, Don't Text","Voices carry things text drops.",["Call someone you'd normally message.","No agenda, no reason.","Ten minutes minimum."],[]);
+q(["fun"],"Stillness",[1,3],[15,30],1,"Hide a Small Kindness","Anonymous, so it can't be transactional.",["Do something quietly good that nobody can trace to you.","Overtip, leave a note, pay something forward.","Tell no one afterward."],[]);
+
+/* ---- ADVENTURE ---- */
+q(["adventure"],"Wander",[2,4],[30,60],2,"The Third Left","A rule instead of a plan.",["Walk out of your door.","Take every third left turn.","Continue until you don't recognise the street, then find your own way back."],["travel","nature"]);
+q(["adventure"],"Wander",[2,4],[30],2,"The Unvisited Block","There's a street near you that you've simply never had a reason to walk down.",["Find a street within walking distance you've never used.","Walk its full length.","Notice one thing worth going back for."],["travel"]);
+q(["adventure"],"Wander",[3,4],[60],3,"Sunrise Summons","The city belongs to almost nobody at that hour.",["Be outside before the sun is properly up.","Walk for at least half of it.","No podcast until the sun clears the buildings."],["nature","running"]);
+q(["adventure"],"Wander",[1,3],[30,60],1,"New Café Rite","Same ritual, unfamiliar room.",["Go to a café you've never entered.","Order what the person before you ordered.","Stay long enough to read or write something."],["travel"]);
+q(["adventure"],"Wander",[2,4],[60,90],3,"Transit Roulette","Chance is a better travel agent than you are.",["Get on the next bus or train that arrives.","Ride it for a set number of stops decided in advance.","Get off and explore before coming back."],["travel"]);
+q(["adventure"],"Wander",[2,4],[60],2,"High Ground","Altitude changes your opinion of a place.",["Find the highest publicly accessible point near you.","Get to the top of it.","Stay there for ten minutes doing nothing."],["travel","nature","climbing"]);
+q(["adventure"],"Wander",[3,4],[15,30],3,"One Stranger","Small talk is a muscle and yours has atrophied.",["Start one real conversation with someone you don't know.","Ask two follow-up questions before you talk about yourself.","Leave before it gets awkward."],[]);
+q(["adventure"],"Wander",[2,4],[60,90],2,"The Market Crawl","Markets are the most concentrated version of anywhere.",["Find a market — food, flea, farmers, anything.","Walk every aisle before you buy anything.","Buy one thing you can't name."],["travel","cooking"]);
+q(["adventure"],"Wander",[1,3],[30,60],1,"Night Walk","The same route becomes a different route after dark.",["Walk a familiar route at night.","No headphones.","Notice what's open that you assumed was closed."],["travel","nature"]);
+q(["adventure"],"Wander",[2,4],[60,90],2,"Water's Edge","Find the nearest water and go and stand next to it.",["Locate the closest river, canal, lake, or sea.","Get to it however you can.","Sit by it for fifteen minutes before heading back."],["nature","travel"]);
+q(["adventure"],"Wander",[3,4],[90],3,"Free Event Hunt","Something is happening tonight and you don't know about it.",["Search local listings for something free happening today.","Pick the one you'd normally talk yourself out of.","Go alone."],["travel"]);
+q(["adventure","improvement"],"Wander",[2,4],[60],2,"Bookshop Divination","Let the shelf choose.",["Go to a physical bookshop.","Walk to a section you never visit.","Buy the seventh book you touch. Start it there."],["reading","travel"]);
+q(["adventure","creative"],"Wander",[2,4],[30,60],2,"One Street, Properly","Photograph a hundred metres like it's a foreign country.",["Choose one street.","Take twenty photographs within it. No more.","Keep the three that a stranger would look at twice."],["photography","travel"]);
+q(["adventure"],"Wander",[1,3],[15,30],1,"The Long Way Home","The direct route is a habit, not a requirement.",["Go somewhere you're already going.","Come back by a route that takes at least ten minutes longer.","Don't check the map."],["travel","nature"]);
+q(["adventure"],"Wander",[2,4],[60],2,"Something Unpronounceable","Order the thing you'd have to point at.",["Find a food shop or restaurant from a cuisine you don't know.","Order something you cannot pronounce.","Ask what it is only after you've tried it."],["cooking","travel"]);
+q(["adventure"],"Wander",[2,4],[60,90],2,"Museum Sprint","One room, properly, beats nine rooms at a jog.",["Go to a museum or gallery.","Visit exactly one room.","Stay for thirty minutes, then leave the building."],["art","travel"]);
+q(["adventure"],"Wander",[3,4],[15,30],3,"Ask a Local","Every neighbourhood has a best thing and it isn't online.",["Ask someone who works nearby for their favourite place within five minutes' walk.","Go there immediately.","Report back to them if you can."],["travel"]);
+q(["adventure"],"Wander",[2,4],[30,60],2,"Follow the Music","Somewhere near you, someone is playing something.",["Go out and listen for live music, or a busker, or an open door.","Follow it.","Stay for at least one full song."],["music","travel"]);
+
+/* ---- SELF-CARE ---- */
+q(["selfcare"],"Stillness",[1,4],[5],1,"Ten Breaths, Nothing Else","Not meditation. Ten breaths.",["Sit down. Feet flat.","Count ten breaths out, not in.","If you lose count, start again without comment."],["meditation"]);
+q(["selfcare"],"Stillness",[1,3],[30,60],2,"The Screenless Half Hour","Boredom is where the good thoughts are kept.",["Put every screen in another room.","Stay for thirty minutes.","You may stare at a wall. That's allowed."],["meditation"]);
+q(["selfcare"],"Stillness",[1,2],[5],1,"Water and Window","The two cheapest repairs available.",["Drink a full glass of water.","Stand at a window and look at the furthest thing you can see for two minutes."],["meditation"]);
+q(["selfcare"],"Aura",[1,3],[15,30],1,"Full Reset Shower","Long, hot, and treated as an event rather than maintenance.",["Take a shower with no time pressure.","Do the full ritual — everything you normally skip.","Put on clean clothes afterward even if you're staying in."],["fashion"]);
+q(["selfcare"],"Stillness",[1,2],[15],1,"Legs Up the Wall","Fifteen minutes that feel like a nap you didn't have time for.",["Lie on your back, legs vertical against a wall.","Stay for fifteen minutes.","Phone face down, in another room ideally."],["meditation"]);
+q(["selfcare"],"Stillness",[1,3],[15],2,"Write the Worry Down","On paper it's a problem. In your head it's weather.",["Write down what you're anxious about, in full.","Underneath, write what you'd actually do if the worst happened.","Close the notebook."],["writing","meditation"]);
+q(["selfcare"],"Stillness",[1,2],[30,60],1,"Nap Protocol","Done properly it costs twenty minutes and returns four hours.",["Set an alarm for twenty-five minutes.","Dark room, no expectations of actually sleeping.","Get up when it goes, regardless."],[]);
+q(["selfcare"],"Stillness",[1,3],[15,30],1,"Tea Ceremony of One","The ceremony is the point. The tea is incidental.",["Make a hot drink with full attention — no phone, no podcast.","Drink it sitting down, doing nothing else.","Take the whole time."],["cooking","meditation"]);
+q(["selfcare"],"Aura",[1,3],[5,15],1,"Unfollow Five","Your feed is a room you chose to stand in.",["Open the app that makes you feel worst.","Unfollow five accounts that reliably sour your mood.","No explanations owed to anyone."],[]);
+q(["selfcare","fitness"],"Vigor",[1,3],[30,60],1,"The Long Stretch","Slow enough to be boring is the correct speed.",["Stretch for thirty minutes.","Hold each position at least two minutes.","Breathe out into the tight ones."],["fitness","meditation"]);
+q(["selfcare"],"Aura",[1,2],[5,15],1,"Bed, Properly Made","A made bed is a message from your morning self.",["Strip and remake the bed properly.","Fresh sheets if you have them.","Clear whatever has colonised the bedside table."],[]);
+q(["selfcare"],"Aura",[1,3],[15],1,"Skin and Teeth","Small maintenance, disproportionate returns.",["Do the full version of whatever your grooming routine skips.","Nails, floss, moisturiser, the lot.","Ten unhurried minutes minimum."],["fashion"]);
+q(["selfcare"],"Stillness",[2,4],[5,15],3,"Say No to One Thing","Every yes you resent is borrowed from someone you love.",["Find one commitment you agreed to but don't want.","Withdraw from it, kindly and without a long explanation.","Do not offer an alternative."],[]);
+q(["selfcare"],"Stillness",[1,3],[5,15],1,"Sunlight Before Screens","The order matters more than the duration.",["Get outside light on your face before you look at a screen.","Ten minutes if you can. Two is better than none."],["nature"]);
+q(["selfcare"],"Stillness",[1,4],[5],1,"The Gratitude Three","Specific ones only. 'My health' doesn't count.",["Write three specific things from the last day that were good.","Each must be something that actually happened.","No generalities."],["writing","meditation"]);
+q(["selfcare","adventure"],"Stillness",[1,3],[30,60,90],1,"Silence Walk","No podcast, no music, no calls.",["Walk with nothing in your ears.","Let it be boring for the first ten minutes.","Notice what your brain does at minute twenty."],["meditation","nature","running"]);
+q(["selfcare"],"Aura",[1,2],[5,15],1,"Clean What You Touch","The objects nearest you are the dirtiest ones.",["Clean your phone, your keys, your glasses, your keyboard.","Properly, with something wet."],[]);
+q(["selfcare"],"Stillness",[1,3],[60,90],2,"Early Shutdown","End the day an hour before you think you're allowed.",["Stop working an hour earlier than usual.","No screens for the last thirty minutes.","Go to bed while you still feel awake."],[]);
+
+/* ---- IMPROVEMENT ---- */
+q(["improvement"],"Arcana",[3,4],[15,30],3,"Twenty Minutes of the Hard Part","Skip the warm-up. Go straight to what you're bad at.",["Identify the sub-skill of {hobby} you avoid because you're weak at it.","Work only on that for the whole time.","Expect to feel incompetent. That's the receipt."],[],"hobby");
+q(["improvement"],"Arcana",[2,4],[15,30],2,"Teach It Back","You don't know it until you can say it out loud without notes.",["Choose something you learned recently.","Explain it aloud for five minutes with nothing in front of you.","The gaps you stumble over are the real syllabus."],["reading"]);
+q(["improvement"],"Arcana",[1,3],[30,60,90],1,"One Chapter","Not the book. One chapter.",["Read a single chapter of something demanding.","Write three sentences on it afterward.","Stop at the chapter break even if it's going well."],["reading"]);
+q(["improvement"],"Arcana",[1,3],[60,90],2,"Three Notes","Consumption without capture evaporates by tomorrow.",["Watch a talk or lecture in your field.","Take exactly three notes. No more — the limit forces judgement.","Act on one of them this week."],["reading","podcasts"]);
+q(["improvement"],"Arcana",[2,4],[30],2,"The Flashcard Forge","Making the cards teaches more than reviewing them.",["Take something you keep forgetting.","Write ten question-and-answer cards for it.","Test yourself once, then put them away."],["reading","language"]);
+q(["improvement"],"Arcana",[2,4],[15,30],2,"Stop Googling It","There is one thing you look up every single week.",["Name the thing you re-search constantly.","Learn it properly, once — or write yourself a permanent note.","Never search for it again."],["coding"]);
+q(["improvement"],"Arcana",[2,4],[30,60,90],2,"Read the Actual Documentation","Everyone skims. Almost nobody reads.",["Take a tool you use daily.","Read its real documentation for the whole time.","Find two features you didn't know existed."],["coding","ai"]);
+q(["improvement"],"Arcana",[1,3],[60,90],1,"Interview by Proxy","Sit with one expert for an hour instead of ten for five minutes.",["Find a long interview with someone excellent in your field.","Listen to the whole thing.","Extract three things they do that you don't."],["podcasts","reading"]);
+q(["improvement"],"Arcana",[2,4],[15,30],2,"Ten Words","Vocabulary is the only part of a language that's pure arithmetic.",["Learn ten new words in a language you're studying.","Use each one in a sentence out loud.","Revisit them before bed."],["language"]);
+q(["improvement"],"Arcana",[2,4],[15,30],3,"Deliberate Repetition","Not practice. Drilling one specific movement.",["Isolate one small component of {hobby}.","Repeat only that, slowly, for the whole session.","Speed comes later and comes free."],[],"hobby");
+q(["improvement"],"Arcana",[2,4],[15,30],3,"Postmortem of One Mistake","Mistakes only pay out if you sit with them.",["Pick something that went wrong recently.","Write what you believed at the time that turned out to be false.","Write the one rule that would have prevented it."],["writing"]);
+q(["improvement"],"Arcana",[3,4],[15],3,"Ask a Better Question","Asking publicly costs pride and returns years.",["Write down the thing you're confused about.","Rewrite it until it's specific enough to be answerable.","Post it somewhere people who know will see it."],["coding","writing"]);
+q(["improvement"],"Craft",[2,4],[60,90],2,"Shadow a Master","Study one work closely enough to see the decisions.",["Choose one excellent piece of work in your field.","Spend an hour taking it apart — structure, choices, what was left out.","Write the three rules its maker seems to follow."],["design","writing","music","art"]);
+q(["improvement"],"Arcana",[3,4],[60,90],3,"Build the Tiny Version","Reading about it is not the same as it existing.",["Take a concept you've only read about.","Build the smallest possible working version of it.","Broken and running beats perfect and theoretical."],["coding","ai","making"]);
+q(["improvement"],"Arcana",[1,3],[30,60],1,"Handwrite Your Notes","Slower input, better retention. Annoying but consistent.",["Take notes on something by hand for the whole session.","Rewrite the key ideas in your own words at the end.","Don't transcribe — compress."],["writing","reading"]);
+q(["improvement"],"Arcana",[2,4],[15,30],2,"Prompt Craft","The quality of the answer is downstream of the question.",["Take a prompt you use often with an AI tool.","Rewrite it with role, context, constraints, and an example.","Run both. Keep the better one permanently."],["ai","coding"]);
+q(["improvement"],"Systems",[1,3],[15],1,"The Reading List Cull","A list you'll never finish is a list you'll never start.",["Open your saved articles, books, or watch-later pile.","Delete two-thirds of it without guilt.","Start the top one now."],["reading"]);
+q(["improvement"],"Arcana",[2,4],[15],2,"Explain It to a Child","Jargon is where fuzzy thinking hides.",["Explain {project} using only simple words.","No jargon, no field-specific terms.","Where you can't, you don't understand it yet."],[],"project");
+
+/* ---- YOUR THINGS (profile-driven) ---- */
+q(["fun","improvement","creative"],"Craft",[2,4],[60,90],2,"An Hour Inside It","Not admin about the hobby. The hobby.",["Spend the whole time doing {hobby} itself.","No researching, no buying gear, no watching others do it."],[],"hobby");
+q(["improvement","fun"],"Craft",[3,4],[30,60],3,"Teach What You Know","Explaining it is how you find out what you know.",["Show someone one thing about {hobby}.","In person, on a call, or in a short written guide.","Aim to make them able to do it, not impressed by you."],[],"hobby");
+q(["fun","improvement"],"Arcana",[1,3],[30,60],1,"The Deep Cut","Go past the popular layer of {hobby}.",["Find something obscure within {hobby} — a niche corner, an old master, a dead branch.","Spend the time only there.","Bring back one thing nobody else in your circle would know."],[],"hobby");
+q(["creative","improvement"],"Craft",[2,4],[15,30],2,"One Detail, Levelled","Everything gets better one detail at a time.",["Pick a single detail of how you do {hobby}.","Improve only that today.","Leave everything else exactly as it was."],[],"hobby");
+q(["creative","fun"],"Craft",[2,4],[30,60],2,"Document It","Making a record of the work changes how you do the work.",["Photograph, film, or write about {hobby} while you do it.","Produce one shareable artefact by the end.","Whether you share it is up to you."],[],"hobby");
+q(["creative","improvement"],"Craft",[3,4],[30,60],3,"The Constraint","Take a tool away from {hobby} and see what appears.",["Do {hobby} with one thing you normally rely on removed.","Adapt rather than substitute.","Note what the restriction taught you."],[],"hobby");
+q(["productive","business"],"Systems",[2,4],[30,60],2,"Clear the Path","Half of a stalled project is unfinished admin around it.",["List everything blocking {project}.","Do the smallest blocker completely.","Delete one blocker by deciding it doesn't matter."],[],"project");
+q(["business","creative"],"Coin",[3,4],[15,30],3,"Show It Early","Feedback before you're ready is the only feedback worth having.",["Show {project} to one person while it's still unfinished.","Ask what's confusing, not what's good.","Change one thing based on their answer."],[],"project");
+
+/* ---- FIVE MINUTES ---- */
+q(["creative"],"Craft",[1,4],[5],1,"One Line","A sentence is a small enough commitment to actually make.",["Write one sentence you'd be pleased to have written.","Rewrite it twice.","Keep the second version."],["writing"]);
+q(["creative"],"Craft",[1,3],[5],1,"The Nearest Ugly Thing","Photographing something unlovely teaches more than photographing something lovely.",["Find the least attractive object within reach.","Photograph it so it looks good.","One angle only."],["photography","art"]);
+q(["creative"],"Craft",[1,4],[5],1,"Five-Minute Doodle","Not art. Marks on paper.",["Draw continuously for five minutes without lifting the pen.","No subject. No stopping to think."],["art"]);
+q(["creative"],"Craft",[1,3],[5],1,"Record One Hum","The melody you can't get out of your head is trying to tell you something.",["Hum, sing, or tap whatever's stuck in your head into your phone.","Don't tidy it up.","Name the file something absurd."],["music"]);
+q(["creative","improvement"],"Craft",[1,3],[5],1,"Steal One Sentence","Copying by hand is how writers used to learn. It still works.",["Find a sentence you admire.","Write it out by hand.","Underneath, write what it's doing that yours don't."],["writing","reading"]);
+
+q(["business"],"Coin",[2,4],[5],2,"One Follow-Up","The message you never chased is the deal you never lost, technically.",["Find one conversation that went quiet.","Send a single sentence reviving it.","Close the app."],["business"]);
+q(["business"],"Coin",[1,4],[5],1,"Check One Number","One metric, looked at honestly, beats a dashboard ignored.",["Open the one number that actually tells you how things are going.","Write it down with today's date.","Don't act on it yet."],["business","money"]);
+q(["business","creative"],"Coin",[1,3],[5],1,"Write the Subject Line","The whole email lives or dies here.",["Write eight subject lines for something you need people to open.","Pick the shortest one that still says something."],["business","writing"]);
+q(["business"],"Coin",[1,4],[5],1,"Thank a Customer","Unprompted gratitude is rare enough to be memorable.",["Message one person who has paid you or helped you.","Thank them specifically. Ask for nothing."],["business"]);
+q(["business"],"Coin",[2,4],[5],2,"Cut One Thing from the Offer","Every extra feature is a reason to hesitate.",["List what your offer includes.","Delete the item you added out of insecurity."],["business"]);
+
+q(["fun"],"Wander",[1,4],[5],1,"One Absurd Fact","Five minutes of pointless knowledge is not pointless.",["Look up something genuinely useless.","Follow it two links deep.","Tell someone about it before the day ends."],["reading"]);
+q(["fun"],"Craft",[1,4],[5],1,"Send a Terrible Pun","Low art, high return.",["Send someone the worst joke you can construct about their day.","Do not apologise for it."],[]);
+q(["fun"],"Aura",[1,3],[5],1,"Upgrade the Snack","The difference between food and a small event is about ninety seconds.",["Take whatever you were going to eat.","Add one thing that makes it better — heat, salt, acid, a plate.","Sit down for it."],["cooking"]);
+q(["fun"],"Stillness",[1,3],[5],1,"Rate the Day Out Loud","Saying it out loud makes it a fact rather than a mood.",["Say out loud what you'd score today out of ten.","Say the one thing that would have made it one point higher.","Note whether that thing is still possible."],[]);
+
+q(["adventure"],"Wander",[1,4],[5],1,"Step Outside","Five minutes on the other side of the door.",["Go out of the front door with no phone.","Stand still for three minutes.","Come back in."],["nature"]);
+q(["adventure"],"Wander",[1,3],[5],1,"Look Up","Everything above the first floor is a city you've never visited.",["Walk to the end of the street.","Look only at rooflines, upper windows, and sky.","Find one thing you'd never noticed."],["travel","photography"]);
+q(["adventure"],"Wander",[2,4],[5],1,"Pick a Direction","No destination, no map, five minutes.",["Choose the direction you leave in least often.","Walk that way for five minutes.","Turn around."],["travel"]);
+q(["adventure","selfcare"],"Wander",[1,3],[5],1,"Three Smells","The sense you stopped using.",["Go outside.","Identify three distinct smells.","Name each one out loud."],["nature"]);
+q(["adventure"],"Wander",[2,4],[5],2,"The Door You've Never Opened","There is one nearby. You've walked past it for years.",["Think of a shop, door, or entrance near you that you've never gone through.","Go through it.","You are allowed to buy nothing."],["travel"]);
+
+q(["improvement"],"Arcana",[1,4],[5],1,"One Word, Properly","One word learned well outlasts twenty half-learned.",["Learn one new word — in a language, or in your own field.","Say it aloud five times.","Use it in a sentence before bed."],["language","reading"]);
+q(["improvement"],"Arcana",[1,3],[5],1,"The One-Question Quiz","Retrieval beats rereading. It always has.",["Pick something you learned this week.","Close everything and write what you remember.","Only then check how much you got."],["reading"]);
+q(["improvement"],"Arcana",[1,3],[5],1,"Read One Paragraph Twice","Speed is the enemy of anything difficult.",["Find a paragraph you didn't fully understand.","Read it twice more, slowly.","Write it back in your own words."],["reading"]);
+q(["improvement","productive"],"Systems",[1,4],[5],1,"Fix One Setting","A small daily irritation, removed permanently.",["Name the setting on a device or app that annoys you daily.","Go and change it now."],["coding"]);
+q(["improvement"],"Arcana",[1,3],[5],1,"Yesterday's Lesson","If you can't name it, it didn't land.",["Write the one thing yesterday taught you.","If nothing comes, write why that might be."],["writing"]);
+
+/* ---- LONG SESSIONS ---- */
+q(["productive"],"Systems",[2,4],[60,90],2,"The Deep Clean","One room, treated seriously, changes the whole flat.",["Pick one room.","Clean it properly — the parts you normally skip.","Throw away five things before you finish."],[]);
+q(["productive"],"Systems",[3,4],[60,90],3,"Admin Ambush","The dull immortal tasks. All at once, then done.",["Gather every piece of unfinished official business — renewals, forms, claims, appointments.","Work through them in one sitting until the pile is smaller.","Reward yourself properly afterward."],["admin","money"]);
+q(["creative"],"Craft",[3,4],[90],3,"One Complete Thing","Finished and flawed beats perfect and theoretical.",["Make something small from start to actual finish today.","No part of it may be left for tomorrow.","Show it to one person."],["making","art","writing","music"]);
+q(["creative"],"Craft",[2,4],[60,90],2,"The Long Session","Creative work has a warm-up you never reach in twenty minutes.",["Work on one creative thing for the whole block.","The first thirty minutes will be bad. Continue anyway.","Stop mid-sentence so tomorrow has a handle."],["writing","music","art","design"]);
+q(["business"],"Coin",[3,4],[60,90],3,"Build the Page","One page that explains and sells is worth a month of posts.",["Write the page for your offer: what, who, why, proof, price, next step.","Get it live even if it's plain text.","Send it to one person today."],["business","writing"]);
+q(["business"],"Coin",[3,4],[60,90],3,"The Outreach Block","Volume is uncomfortable and it is also the answer.",["Make a list of fifteen people worth contacting.","Message as many as you can in the block.","Personalise the first line of every one."],["business"]);
+q(["fitness"],"Vigor",[3,4],[60,90],3,"The Full Session","Warm-up, main work, accessory, cool-down. The whole ritual.",["Train properly with no phone between sets.","Include one thing you've been avoiding.","Cool down for ten minutes instead of leaving early."],["fitness"]);
+q(["fitness","adventure"],"Vigor",[2,4],[60,90],2,"Two Sports, One Day","Novelty is the best cure for a stale routine.",["Do two different physical things in the same block.","One familiar, one you're bad at.","No performance expectations on the second."],["fitness","climbing","dance","running"]);
+q(["fun"],"Craft",[2,4],[60,90],2,"Cook for Someone","Feeding a person is the least complicated way to be good to them.",["Cook a proper meal for at least one other person.","Something you haven't made before.","Eat it at a table."],["cooking"]);
+q(["fun"],"Stillness",[1,3],[60,90],1,"Full Album, Full Attention","Nobody listens to records any more. Try it.",["Choose one album.","Listen start to finish doing nothing else.","No skipping, no phone."],["music"]);
+q(["selfcare"],"Stillness",[1,3],[60,90],1,"The Unstructured Evening","No plan is the plan.",["Cancel or decline whatever is optional tonight.","Make no plan for the evening at all.","Follow whatever you actually feel like."],[]);
+q(["selfcare"],"Stillness",[1,2],[60,90],1,"Bath and Book","An old technology that still outperforms most new ones.",["Run a bath or a very long shower.","Take a physical book in with you.","Leave the phone in another room entirely."],["reading"]);
+q(["improvement"],"Arcana",[3,4],[60,90],3,"The Study Block","Deep work needs a runway, not a gap between meetings.",["Choose one difficult thing to learn.","Work on it for the whole block with no interruptions.","Write a one-paragraph summary at the end."],["reading","coding","ai"]);
+q(["improvement","creative"],"Arcana",[2,4],[60,90],2,"Take Something Apart","Understanding comes from disassembly, not description.",["Choose something you use but don't understand — an object, a codebase, a song, a recipe.","Take it apart, literally or on paper.","Write how it actually works."],["making","coding","music"]);
+
+/* =========================================================
+   State — memory only, nothing persisted
+   ========================================================= */
+const profile = { interests:[], projects:[], avoid:"", wants:[] };
+const ask = { intent:"surprise", time:30, energy:3 };
+const recent = [];   /* titles served, for novelty */
+
+/* =========================================================
+   Onboarding
+   ========================================================= */
+const STEPS = [
+  {
+    ask:"What are you actually into?",
+    hint:"Pick anything that's true. She'll use these to make quests sound like your life rather than a productivity blog.",
+    render(){ return chipField(INTERESTS, profile.interests) + textField("ob-free","Anything else? bouldering, chess, fermenting…"); },
+    save(){ profile.interests = readChips(); readFree("ob-free").forEach(v=>{ if(!profile.interests.includes(v)) profile.interests.push(v); }); }
+  },
+  {
+    ask:"Anything you're working on right now?",
+    hint:"A project, a goal, a thing half-finished on your desk. Optional — but it's what makes the quests bite.",
+    render(){ return textArea("ob-proj","One per line.\nThe album\nMy website redesign", profile.projects.join("\n")); },
+    save(){ profile.projects = readLines("ob-proj"); }
+  },
+  {
+    ask:"Anything you'd rather she never suggests?",
+    hint:"Words to avoid. Type 'running' and no quest will mention it again.",
+    render(){ return textField("ob-avoid","running, cold showers, phone calls", profile.avoid); },
+    save(){ profile.avoid = (document.getElementById("ob-avoid").value||"").toLowerCase(); }
+  },
+  {
+    ask:"What do you want more of in your life?",
+    hint:"She'll lean this way when you ask her to surprise you.",
+    render(){ return chipField(Object.keys(VIBES).map(k=>[k,k]), profile.wants, VIBES); },
+    save(){ profile.wants = readChips(); }
+  }
+];
+let step = 0;
+
+function chipField(items, selected, tips){
+  return '<div class="chips'+(tips?" stacked":"")+'" data-chips>' + items.map(([v,l])=>
+    '<button type="button" class="chip" data-v="'+v+'" aria-pressed="'+(selected.includes(v)?"true":"false")+'">'+
+    l + (tips ? '<small>'+tips[v]+'</small>' : '') + '</button>').join("") + '</div>';
+}
+function textField(id,ph,val){ return '<input type="text" id="'+id+'" placeholder="'+ph+'" value="'+(val||"")+'">'; }
+function textArea(id,ph,val){ return '<textarea id="'+id+'" rows="4" placeholder="'+ph+'">'+(val||"")+'</textarea>'; }
+function readChips(){ return [...document.querySelectorAll('[data-chips] .chip[aria-pressed="true"]')].map(b=>b.dataset.v); }
+function readFree(id){
+  const el = document.getElementById(id); if(!el) return [];
+  return el.value.split(/[,\n]/).map(s=>s.trim().toLowerCase()).filter(Boolean);
+}
+function readLines(id){
+  const el = document.getElementById(id); if(!el) return [];
+  return el.value.split("\n").map(s=>s.trim()).filter(Boolean);
+}
+
+function drawStep(){
+  const s = STEPS[step];
+  document.getElementById("ob-body").innerHTML =
+    '<h2 class="ask">'+s.ask+'</h2><p class="hint">'+s.hint+'</p>'+s.render();
+  document.getElementById("pips").innerHTML =
+    STEPS.map((_,n)=>'<span class="pip'+(n<=step?" on":"")+'"></span>').join("");
+  document.getElementById("ob-back").classList.toggle("hidden", step === 0);
+  document.getElementById("ob-next").textContent = step===STEPS.length-1 ? "Begin" : "Next";
+  document.querySelectorAll('[data-chips] .chip').forEach(b=>{
+    b.onclick = ()=> b.setAttribute("aria-pressed", b.getAttribute("aria-pressed")==="true" ? "false":"true");
+  });
+}
+document.getElementById("ob-next").onclick = ()=>{
+  STEPS[step].save();
+  if(step === STEPS.length-1){ show("console"); } else { step++; drawStep(); }
+};
+document.getElementById("ob-back").onclick = ()=>{ STEPS[step].save(); step--; drawStep(); };
+document.getElementById("ob-skip").onclick = ()=> show("console");
+document.getElementById("redo-profile").onclick = ()=>{ step=0; drawStep(); show("onboard"); };
+
+/* =========================================================
+   Console
+   ========================================================= */
+function buildChips(host, items, current, cls){
+  document.getElementById(host).innerHTML = items.map(([v,l])=>
+    '<button type="button" class="chip'+(cls?" "+cls:"")+'" data-v="'+v+'" aria-pressed="'+(v==current?"true":"false")+'">'+l+'</button>'
+  ).join("");
+}
+function wireChips(host, key, cast){
+  document.getElementById(host).onclick = e=>{
+    const b = e.target.closest(".chip"); if(!b) return;
+    ask[key] = cast ? cast(b.dataset.v) : b.dataset.v;
+    [...e.currentTarget.children].forEach(c=>c.setAttribute("aria-pressed", c===b ? "true":"false"));
+  };
+}
+buildChips("intents", INTENTS, ask.intent);
+buildChips("times", TIMES, ask.time, "wide");
+buildChips("energies", ENERGY, ask.energy, "wide");
+wireChips("intents","intent");
+wireChips("times","time",Number);
+wireChips("energies","energy",Number);
+
+/* =========================================================
+   The generator
+   ========================================================= */
+function widened(){
+  const set = new Set(profile.interests);
+  profile.interests.forEach(i => (NEAR[i]||[]).forEach(n=>set.add(n)));
+  return set;
+}
+function avoidWords(){
+  return profile.avoid.split(/[,\n]/).map(s=>s.trim()).filter(w=>w.length>2);
+}
+function blocked(t, words){
+  if(!words.length) return false;
+  const hay = (t.t+" "+t.f+" "+t.s.join(" ")+" "+t.g.join(" ")).toLowerCase();
+  return words.some(w => hay.includes(w));
+}
+function slotsOk(t){
+  if(t.n === "hobby")   return profile.interests.length > 0;
+  if(t.n === "project") return profile.projects.length > 0;
+  return true;
+}
+function fill(str){
+  const hobby = pick(profile.interests.map(labelFor));
+  const project = pick(profile.projects);
+  return str.replace(/\{hobby\}/g, hobby || "it").replace(/\{project\}/g, project || "it");
+}
+function labelFor(v){ const f = INTERESTS.find(x=>x[0]===v); return f ? f[1] : v; }
+function pick(a){ return a && a.length ? a[Math.floor(Math.random()*a.length)] : null; }
+
+const bucketIndex = m => TIMES.findIndex(x=>x[0]===m);
+
+/* Time may only ever be relaxed downward — you can do a shorter quest in a longer
+   window, but never a longer one in a shorter window. */
+function timeOk(t, relax){
+  if(relax === 0) return t.m.includes(ask.time);
+  const want = bucketIndex(ask.time);
+  if(relax === 1) return t.m.some(m=>{ const i = bucketIndex(m); return i <= want && i >= want-1; });
+  return t.m.some(m => m <= ask.time);
+}
+/* Energy is only ever relaxed downward too: a charged person can do a quiet quest,
+   but a drained one must never be handed a max-effort session. */
+function energyOk(t, relax){
+  return ask.energy >= t.e[0] - (relax >= 2 ? 1 : 0);
+}
+function candidates(relax){
+  const words = avoidWords(), tags = widened();
+  return Q.filter(t=>{
+    if(!slotsOk(t)) return false;
+    if(blocked(t, words)) return false;
+    if(relax < 3 && !timeOk(t, relax)) return false;
+    if(!energyOk(t, relax)) return false;
+    /* "My things" needs something to go on; with a blank profile it behaves as "surprise" */
+    if(ask.intent === "mine" && knowsYou()){
+      return t.n !== null || t.g.some(g=>tags.has(g));
+    }
+    if(ask.intent !== "surprise" && ask.intent !== "mine" && !t.i.includes(ask.intent)) return false;
+    return true;
+  });
+}
+function knowsYou(){ return profile.interests.length > 0 || profile.projects.length > 0; }
+function score(t){
+  const tags = widened();
+  let s = 1;
+  if(t.i.includes(ask.intent)) s += 2;
+  s += t.g.filter(g=>tags.has(g)).length * 1.6;
+  if(profile.wants.includes(t.v)) s += ask.intent==="surprise" ? 2.2 : 1.1;
+  /* quests that name your own hobbies and projects are the most personal she has */
+  if(t.n) s += ask.intent === "mine" ? 3 : 1;
+  /* prefer quests pitched at the energy you actually have, without banning quieter ones */
+  if(ask.energy > t.e[1]) s -= (ask.energy - t.e[1]) * 0.9;
+  if(ask.energy >= t.e[0] && ask.energy <= t.e[1]) s += 1;
+  /* prefer quests that fill the window rather than leaving most of it empty */
+  if(t.m.includes(ask.time)) s += 1.4;
+  else s -= (bucketIndex(ask.time) - Math.max(...t.m.map(bucketIndex))) * 0.7;
+  const seen = recent.indexOf(t.t);
+  if(seen > -1) s -= (6 - seen);
+  return Math.max(s, .15);
+}
+function deal(){
+  let pool = [];
+  for(let r = 0; r <= 3; r++){
+    pool = candidates(r);
+    if(pool.length >= 5) break;
+  }
+  /* last resorts still respect the window — a five-minute ask never returns an hour of work */
+  if(!pool.length) pool = Q.filter(t=>slotsOk(t) && timeOk(t, 2) && energyOk(t, 2));
+  if(!pool.length) pool = Q.filter(t=>slotsOk(t) && timeOk(t, 2));
+
+  const ranked = pool.map(t=>({t, s:score(t)})).sort((a,b)=>b.s-a.s).slice(0, 9);
+  const total = ranked.reduce((n,r)=>n+r.s, 0);
+  let roll = Math.random()*total, chosen = ranked[0].t;
+  for(const r of ranked){ roll -= r.s; if(roll <= 0){ chosen = r.t; break; } }
+
+  recent.unshift(chosen.t);
+  if(recent.length > 6) recent.pop();
+  return chosen;
+}
+
+/* =========================================================
+   Rendering the card
+   ========================================================= */
+function render(t){
+  document.getElementById("q-vibe").textContent  = t.v + " · " + VIBES[t.v];
+  document.getElementById("q-title").textContent = fill(t.t);
+  document.getElementById("q-flavor").textContent = fill(t.f);
+  document.getElementById("q-steps").innerHTML = t.s.map(x=>
+    '<li><span class="bullet">◆</span><span>'+fill(x)+'</span></li>').join("");
+  document.getElementById("q-time").textContent =
+    (TIMES.find(x=>x[0]===ask.time)||[,"30 min"])[1];
+  document.getElementById("q-diff").innerHTML =
+    [1,2,3].map(n=> n<=t.d ? "◆" : '<span class="off">◇</span>').join("");
+
+  const card = document.getElementById("card");
+  card.classList.remove("dealt"); void card.offsetWidth; card.classList.add("dealt");
+}
+function summon(){ render(deal()); show("quest"); }
+
+document.getElementById("summon").onclick = summon;
+document.getElementById("reroll").onclick = ()=> render(deal());
+document.getElementById("back-console").onclick = ()=> show("console");
+document.getElementById("bored").onclick = ()=>{
+  ask.intent = "surprise";
+  summon();
+};
+
+/* =========================================================
+   Screens
+   ========================================================= */
+function show(id){
+  ["onboard","console","quest"].forEach(s=>
+    document.getElementById(s).classList.toggle("hidden", s !== id));
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+/* =========================================================
+   Ambient drift
+   ========================================================= */
+(function sky(){
+  const c = document.getElementById("sky"), x = c.getContext("2d");
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let w, h, motes = [];
+  function size(){
+    w = c.width = innerWidth * devicePixelRatio;
+    h = c.height = innerHeight * devicePixelRatio;
+    const n = Math.min(90, Math.round(innerWidth/12));
+    motes = Array.from({length:n}, ()=>({
+      x: Math.random()*w, y: Math.random()*h,
+      r: (Math.random()*1.5 + .3) * devicePixelRatio,
+      d: Math.random()*.22 + .04,
+      a: Math.random()*.5 + .12,
+      p: Math.random()*Math.PI*2
+    }));
+  }
+  function frame(){
+    x.clearRect(0,0,w,h);
+    for(const m of motes){
+      if(!still){ m.y -= m.d; m.p += .012; if(m.y < -4) m.y = h + 4; }
+      const tw = still ? m.a : m.a * (.65 + .35*Math.sin(m.p));
+      x.beginPath();
+      x.arc(m.x + (still?0:Math.sin(m.p)*6), m.y, m.r, 0, 6.283);
+      x.fillStyle = "rgba(201,162,75," + tw.toFixed(3) + ")";
+      x.fill();
+    }
+    if(!still) requestAnimationFrame(frame);
+  }
+  addEventListener("resize", ()=>{ size(); if(still) frame(); });
+  size(); frame();
+})();
+
+drawStep();
+</script>
