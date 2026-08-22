@@ -1,0 +1,7 @@
+Codes/
+*recovery-codes*
+.env
+.env.*
+*.key
+*.pem
+.git
