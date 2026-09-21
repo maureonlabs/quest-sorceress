@@ -8,3 +8,4 @@ Codes/
 *.pem
 .env
 .env.*
+.env*
