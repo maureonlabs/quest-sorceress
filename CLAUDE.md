@@ -24,6 +24,18 @@ direction (glowing vines, gold ornate borders, forest lighting).
 
 Treat building toward `SPEC.md` as a rewrite, not an increment.
 
+## Where the spec version is being built
+
+**Base44 — not in this repo.** Base44 provides the database and auth the spec assumes.
+`BUILD-PROMPT.md` is sections 1–8 formatted as the first Base44 prompt.
+
+This repo's job is therefore: hold `SPEC.md` as the source of truth, and host the old
+prototype until the Base44 build replaces it. Do not start reimplementing the spec in
+`index.html`.
+
+**Decided:** the Base44 build replaces the prototype once ready. The prototype is a
+first pass, not a version to maintain.
+
 ## Build order
 
 Per the spec-first playbook: **data model → core user flows → auth → polish.**
@@ -31,11 +43,11 @@ Section 9's acceptance criteria are the pre-release QA checklist.
 
 ## Deployment
 
-- **Live:** https://quest-sorceress.vercel.app
+- **Live (prototype):** https://quest-sorceress.vercel.app
 - **Repo:** https://github.com/maureonlabs/quest-sorceress (public)
 - Vercel auto-deploys on every push to `main`. No manual deploy step.
-- Static hosting only today. The spec's auth and per-user data will require a backend,
-  so hosting needs revisiting before that work starts.
+- Base44 will host the spec version itself, so the live URL changes when it ships —
+  either to Base44's hosting or a custom domain pointed at it.
 
 ## Conventions
 
