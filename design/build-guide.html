@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@400;500;700&display=swap">
 
 <style>
 :root{
@@ -19,7 +19,9 @@
   --mint-soft:#DFF0EA;
   --warn:#9A3F2B;
   --warn-soft:#F8E8E3;
-  --display:"Fraunces","Iowan Old Style",Georgia,serif;
+  --mint-line:#B4D8CC;
+  --warn-line:#E8C4B8;
+  --display:"Instrument Serif","Iowan Old Style",Georgia,serif;
   --body:"Karla","Helvetica Neue",Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){
@@ -28,6 +30,7 @@
     --ink:#F0EBE0; --ink-2:#C4CFC7; --muted:#8B9C93; --line:#25332C;
     --gold:#C9A34E; --gold-soft:#241D0F; --mint:#6FD8C0; --mint-soft:#102B25;
     --warn:#E2856C; --warn-soft:#2B1712;
+    --mint-line:#1E4A40; --warn-line:#4A2A20;
   }
 }
 :root[data-theme="dark"]{
@@ -35,6 +38,7 @@
   --ink:#F0EBE0; --ink-2:#C4CFC7; --muted:#8B9C93; --line:#25332C;
   --gold:#C9A34E; --gold-soft:#241D0F; --mint:#6FD8C0; --mint-soft:#102B25;
   --warn:#E2856C; --warn-soft:#2B1712;
+  --mint-line:#1E4A40; --warn-line:#4A2A20;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--ground);color:var(--ink);
@@ -44,7 +48,7 @@ body{margin:0;background:var(--ground);color:var(--ink);
 /* header */
 header{display:flex;flex-direction:column;gap:.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--line)}
 .eyebrow{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
-h1{font-family:var(--display);font-variation-settings:"WONK" 1;font-weight:400;
+h1{font-family:var(--display);font-weight:400;letter-spacing:.005em;
   font-size:clamp(1.9rem,6vw,2.6rem);line-height:1.05;margin:0;text-wrap:balance}
 .sub{margin:0;color:var(--ink-2);font-size:1rem}
 
@@ -53,8 +57,9 @@ h1{font-family:var(--display);font-variation-settings:"WONK" 1;font-weight:400;
   padding:.75rem 0 .6rem;border-bottom:1px solid var(--line);
   display:flex;align-items:center;gap:.75rem}
 .bar{flex:1;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
-.bar span{display:block;height:100%;width:0;background:var(--gold);
-  transition:width .3s ease;border-radius:99px}
+.bar span{display:block;height:100%;width:100%;background:var(--gold);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .3s ease;border-radius:99px}
 .pct{font-size:.78rem;font-weight:700;color:var(--gold);
   font-variant-numeric:tabular-nums;min-width:5.5rem;text-align:right}
 
@@ -62,7 +67,7 @@ h1{font-family:var(--display);font-variation-settings:"WONK" 1;font-weight:400;
 .phase{background:var(--surface);border:1px solid var(--line);border-radius:12px;
   padding:1.3rem 1.25rem;display:flex;flex-direction:column;gap:.85rem}
 .phase > h2{display:flex;align-items:baseline;gap:.7rem;margin:0;
-  font-family:var(--display);font-weight:600;font-size:1.25rem;line-height:1.2;text-wrap:balance}
+  font-family:var(--display);font-weight:400;font-size:1.45rem;line-height:1.15;text-wrap:balance}
 .num{font-family:var(--body);font-size:.7rem;font-weight:700;letter-spacing:.14em;
   color:var(--gold);background:var(--gold-soft);padding:.25rem .5rem;border-radius:5px;flex:none}
 .phase > p{margin:0;color:var(--ink-2);font-size:.95rem}
@@ -84,10 +89,13 @@ pre{margin:.2rem 0 0;background:var(--surface-2);border:1px solid var(--line);
 pre code{background:none;padding:0;font-size:.82rem;line-height:1.7}
 
 /* callouts */
-.note{border-left:3px solid var(--mint);background:var(--mint-soft);
-  padding:.8rem .95rem;border-radius:0 7px 7px 0;font-size:.92rem;color:var(--ink-2)}
-.warn{border-left:3px solid var(--warn);background:var(--warn-soft);
-  padding:.8rem .95rem;border-radius:0 7px 7px 0;font-size:.92rem;color:var(--ink-2)}
+.note,.warn{padding:.85rem 1rem;border-radius:8px;font-size:.92rem;color:var(--ink-2);border:1px solid}
+.note{background:var(--mint-soft);border-color:var(--mint-line)}
+.warn{background:var(--warn-soft);border-color:var(--warn-line)}
+.note::before,.warn::before{display:block;font-size:.66rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;margin-bottom:.35rem}
+.note::before{content:"Worth knowing";color:var(--mint)}
+.warn::before{content:"Don't skip this";color:var(--warn)}
 .note b,.warn b{color:var(--ink)}
 
 footer{color:var(--muted);font-size:.82rem;text-align:center;padding-top:1rem;border-top:1px solid var(--line)}
@@ -265,7 +273,7 @@ footer{color:var(--muted);font-size:.82rem;text-align:center;padding-top:1rem;bo
   }
   function paint(){
     const done = boxes.filter(b => b.checked).length;
-    fill.style.width = (boxes.length ? (done/boxes.length*100) : 0) + '%';
+    fill.style.transform = 'scaleX(' + (boxes.length ? done/boxes.length : 0) + ')';
     pct.textContent = done + ' of ' + boxes.length;
   }
   boxes.forEach(b => b.addEventListener('change', () => { save(); paint(); }));
