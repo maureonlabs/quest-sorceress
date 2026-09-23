@@ -57,3 +57,12 @@ Section 9's acceptance criteria are the pre-release QA checklist.
 - Commit with `git add -A && git commit -m "..." && git push` — Vercel does the rest.
 - Never commit credentials. `.gitignore` covers `Codes/`, `*recovery-codes*`, `.env*`,
   `*.key`, `*.pem`.
+
+## Content
+
+`content/quests.csv` and `content/quests.json` hold the finished quest library — **269
+quests covering all 126 setting × category × difficulty combinations**. 190 were retagged
+from the prototype, 79 written to fill gaps. Import the CSV into QuestTemplate; do not
+regenerate this content.
+
+`design/build-guide.html` is the step-by-step build checklist.

@@ -1,0 +1,1885 @@
+[
+ {
+  "title": "Inbox Purge",
+  "description": "An unread count is a debt collected in dread.\n\n1. Archive everything older than two weeks, unread or not.\n2. Reply to exactly three messages. No more.\n3. Close the tab afterward.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Twelve Tabs",
+  "description": "Each open tab is a decision you keep re-making.\n\n1. Close every browser tab except the two you actually need.\n2. Anything you're afraid to lose, paste into one note first.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Desktop Exorcism",
+  "description": "Your screen is a room. Somebody lives there.\n\n1. Make one folder named with today's date.\n2. Sweep every loose desktop file into it.\n3. Pull back out only what you'll touch this week.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Undone Thing",
+  "description": "You already know which one. It's been following you.\n\n1. Name the task you've dodged longest.\n2. Set a timer and do only its first ten minutes.\n3. Stop when the timer does, finished or not.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Kill a Subscription",
+  "description": "Somewhere, a service is quietly billing you for nothing.\n\n1. Open your card statement or app store subscriptions.\n2. Cancel one thing you haven't used in a month.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Two-Minute Rampage",
+  "description": "Small undone things weigh more than large ones. Unfair, but true.\n\n1. Set fifteen minutes.\n2. Do every task you've been putting off that takes under two minutes.\n3. Move fast. Don't perfect anything.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Tomorrow, in Three Lines",
+  "description": "A plan longer than three lines is a wish list.\n\n1. Write the three things that would make tomorrow good.\n2. Put them somewhere you'll see before your phone.\n3. Do not write a fourth.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Filing Spell",
+  "description": "Not the whole system. One folder.\n\n1. Pick a single messy folder — Downloads counts.\n2. Sort it into keep, file, delete.\n3. Empty the delete pile immediately.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Hard Message",
+  "description": "It gets heavier every day you carry it unanswered.\n\n1. Open the message you've been avoiding.\n2. Reply in under four sentences.\n3. Send it before you reread it a third time.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Battery of Errands",
+  "description": "Three errands at once cost less than three errands apart.\n\n1. List every errand you owe the world.\n2. Chain the three nearest into one loop.\n3. Walk or ride it if you can.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Password Reckoning",
+  "description": "The weakest one is protecting something that matters.\n\n1. Change the password you've reused most.\n2. Turn on two-factor for your email, if it isn't already.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Money Glance",
+  "description": "Not a budget. Just look.\n\n1. Open your accounts and read the actual numbers.\n2. Write down one figure that surprised you.\n3. Close the app. No decisions required today.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Shred the Ghosts",
+  "description": "Unsubscribing is the only reply that ends a conversation.\n\n1. Search your inbox for 'unsubscribe'.\n2. Unsubscribe from ten senders in a row.\n3. Do not read a single one of them.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "One Automation",
+  "description": "Do it twice by hand, then never again.\n\n1. Name a task you repeat every week.\n2. Build the smallest thing that removes one step of it — a template, a shortcut, a saved search.\n3. Ugly and working beats elegant and unbuilt.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Surface Clearing",
+  "description": "Clear one surface and the room follows.\n\n1. Choose one flat surface you see every day.\n2. Clear it completely.\n3. Wipe it. Put back at most three things.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Calendar Truth Pass",
+  "description": "Half of what's booked is no longer true.\n\n1. Read the next two weeks properly.\n2. Cancel or move one thing you don't want to do.\n3. Block one hour for something you do.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Return the Thing",
+  "description": "It has been sitting by the door, judging you.\n\n1. Find the item you've been meaning to return, send, or give away.\n2. Package it now.\n3. Get it out of the house today.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Name the Nameless",
+  "description": "Nothing you can't find is really yours.\n\n1. Open your downloads folder.\n2. Rename the five most recent useful files properly.\n3. Delete everything else from this month.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Ugly First Draft",
+  "description": "Perfectionism is procrastination in a good coat.\n\n1. Set a timer.\n2. Write the worst possible version of something you've been circling.\n3. Do not edit a single line until the timer ends.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Twelve Bad Ideas",
+  "description": "Quantity is a shortcut to quality. Nobody likes this fact.\n\n1. Pick a problem you're stuck on.\n2. Write twelve solutions. They're allowed to be terrible.\n3. Circle the two least sensible ones.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Steal Like a Thief",
+  "description": "Copy the master's work by hand and you'll find where the seams are.\n\n1. Choose one piece of work you admire.\n2. Recreate it as closely as you can.\n3. Note the three decisions you'd never have made yourself.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "One Photograph",
+  "description": "Not a roll. One.\n\n1. Leave the building.\n2. Take exactly one photograph you'd be willing to print.\n3. You may take as long as you like getting it.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Hundred-Word Story",
+  "description": "Constraint is the fastest teacher.\n\n1. Write a complete story in exactly one hundred words.\n2. Beginning, turn, end. Count them.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Colour Theft",
+  "description": "Every room you're in is a palette nobody's written down.\n\n1. Look around wherever you are.\n2. Pull five colours from what you can see.\n3. Save them. Use them in the next thing you make.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Loop Forge",
+  "description": "Eight bars is a whole world if you let it be.\n\n1. Make one eight-bar loop.\n2. Give it one element that shouldn't work.\n3. Loop it twenty times before you judge it.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Draw What's In Front of You",
+  "description": "Not from memory. From the actual object.\n\n1. Pick the nearest object with an awkward shape.\n2. Draw it without lifting your eyes to the page more than twice.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Rename Everything",
+  "description": "The name is the first draft of the idea.\n\n1. Take something you're working on.\n2. Write fifteen alternative names for it.\n3. The eleventh is usually where it gets interesting.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Voice Memo Manifesto",
+  "description": "Speaking is faster than thinking, which is the point.\n\n1. Hit record.\n2. Talk for three uninterrupted minutes about what you actually want to make.\n3. Don't listen back today.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Collage Hour",
+  "description": "Scissors bypass the part of you that argues.\n\n1. Gather printed matter — magazines, packaging, receipts.\n2. Make one physical collage. No screen.\n3. Hang it somewhere you'll pass tomorrow.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "One Verse",
+  "description": "A whole song is a mountain. One verse is a walk.\n\n1. Write or compose exactly one verse.\n2. Finish it badly rather than leaving it open.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "The Constraint Curse",
+  "description": "Remove an option and watch what grows in the gap.\n\n1. Make something using only one colour, one tool, or one sound source.\n2. No exceptions, no substitutions, no cheating at the end.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Finish the Abandoned",
+  "description": "Your current project has been waiting. It hasn't forgotten.\n\n1. Open your current project.\n2. Do not restart it. Push it one visible step forward.\n3. Stop while you still know what comes next.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Sketch a Stranger",
+  "description": "Nobody will know. That's the freedom.\n\n1. Go somewhere with people in it.\n2. Sketch one person in under four minutes.\n3. Get the posture, not the face.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Cover Version",
+  "description": "Interpretation teaches what imitation can't.\n\n1. Take a piece of work you love in your field.\n2. Redo it in your own voice — same bones, your skin.\n3. Keep what surprises you.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Advert for Your Life",
+  "description": "Absurd, but you'll learn something.\n\n1. Write the thirty-second radio ad for your current life.\n2. Make it honest and make it sell.\n3. Read it aloud once.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Deliberate Ruin",
+  "description": "You can't improve what you're precious about.\n\n1. Take a draft you've polished too long.\n2. Break it on purpose — cut a third, reorder it, change the ending.\n3. Compare. Keep the better corpse.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Cold Send",
+  "description": "The message you don't send has a zero percent response rate.\n\n1. Pick one person who could change something for you.\n2. Write four sentences: who you are, why them, what you want, an easy out.\n3. Send it.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Price the Thing",
+  "description": "Undercharging is a decision you make once and pay for repeatedly.\n\n1. Write down what you currently charge.\n2. Write the number that would feel slightly uncomfortable.\n3. Find one reason the second number is defensible.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "One-Page Pitch",
+  "description": "If it doesn't fit on a page it isn't clear yet.\n\n1. Write one page: the problem, your answer, who it's for, why now.\n2. Cut it by a third.\n3. Read it aloud to check it survives being spoken.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Competitor Reconnaissance",
+  "description": "Watch what they do, not what they say.\n\n1. Pick one competitor.\n2. Go through their buying process as a customer would.\n3. Write the three moments where it felt worst.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Ask for the Money",
+  "description": "Politeness has never once collected an invoice.\n\n1. Find an unpaid invoice or an owed favour.\n2. Send a short, warm, unambiguous chase.\n3. No apologising for asking.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Testimonial Harvest",
+  "description": "Proof you didn't write yourself is worth ten times your own words.\n\n1. Message two past clients or collaborators.\n2. Ask for one specific sentence about working with you.\n3. Give them a draft to edit — it triples the reply rate.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Offer Autopsy",
+  "description": "People don't reject your offer. They reject their understanding of it.\n\n1. Write out what you're selling, exactly as a stranger would read it.\n2. Find the sentence that requires them to already know you.\n3. Rewrite that sentence.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Rewrite Your Bio",
+  "description": "Yours currently describes a person from two years ago.\n\n1. Rewrite your bio in three sentences: what you do, who for, one proof.\n2. Update it in the one place that actually gets read.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Ten Names",
+  "description": "The first three are always obvious. Keep going.\n\n1. Name a project, product, or offer ten different ways.\n2. One of them must be a plain description. One must be a joke.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Customer Séance",
+  "description": "Guessing is expensive. Asking is free.\n\n1. Message one person who has actually paid you.\n2. Ask what nearly stopped them buying.\n3. Shut up and read the answer twice.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Ship Something Small",
+  "description": "A small thing in the world beats a large thing in a folder.\n\n1. Pick the smallest sellable, shareable, or usable piece of what you're building.\n2. Get it out today, imperfect.\n3. Tell exactly one person it exists.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Landing Line",
+  "description": "One sentence. If they don't get it, nothing after it matters.\n\n1. Write what you do in one sentence, no jargon.\n2. Show it to someone outside your field.\n3. Rewrite based on the face they pull.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "The Quiet Ledger",
+  "description": "Money leaves quietly. It should be made to explain itself.\n\n1. List every business expense from the last month.\n2. Mark each one: earns, protects, or neither.\n3. Cancel one 'neither'.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Reactivate the Dead",
+  "description": "A lead that went quiet is warmer than a stranger.\n\n1. Find someone who went cold three or more months ago.\n2. Send something useful with no ask attached.\n3. Leave it there.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Trace One Funnel",
+  "description": "Somebody has already solved a problem you're stuck on.\n\n1. Sign up to one company you admire.\n2. Screenshot every email and screen they send you for the first hour.\n3. Steal one mechanic.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Post the Frightening Thing",
+  "description": "Visibility costs something. That's why it works.\n\n1. Write the post about your work you've been too self-conscious to publish.\n2. Publish it.\n3. Close the app for an hour.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Follow-Up Sequence",
+  "description": "Most sales happen after the point most people stop.\n\n1. Draft three short follow-up messages for anyone who goes quiet.\n2. Space them a week apart.\n3. Each one gives something before it asks.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Where Your People Gather",
+  "description": "You cannot sell in a room you've never entered.\n\n1. Find three places your ideal customer already talks — forum, group, newsletter, event.\n2. Join all three.\n3. Say something useful in one of them.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Hundred",
+  "description": "One movement. One hundred repetitions. However long it takes.\n\n1. Choose press-ups, squats, or kettlebell swings.\n2. Accumulate one hundred reps in as many sets as you need.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Stair Toll",
+  "description": "Height is the cheapest resistance there is.\n\n1. Find the nearest staircase.\n2. Climb it ten times.\n3. Walk down, don't run.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Walk Without a Destination",
+  "description": "Movement without a purpose is still movement.\n\n1. Leave with no route and no podcast.\n2. Walk until you're bored, then walk ten more minutes.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Grease the Groove",
+  "description": "Frequency beats intensity. Almost always.\n\n1. Do a comfortable set of one movement now — nowhere near failure.\n2. Repeat it every twenty minutes until you go to bed.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Carry Something Heavy",
+  "description": "The oldest exercise. Still undefeated.\n\n1. Find something awkward and heavy.\n2. Carry it for distance — laps, stairs, up the street and back.\n3. Set it down before your grip fails, not after.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Hang Time",
+  "description": "Your shoulders were designed for this and you've stopped asking.\n\n1. Find a bar, a beam, a branch.\n2. Accumulate two minutes of dead hang.\n3. Break it into as many sets as you need.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Floor Work",
+  "description": "Low energy is not an excuse. It's a specification.\n\n1. Get on the floor.\n2. Move through hips, spine, and ankles slowly for the whole time.\n3. No reps, no counting, no phone.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Sprint Ladder",
+  "description": "Short, brutal, over quickly. The best kind of deal.\n\n1. Warm up properly — five minutes, no shortcuts.\n2. Sprint 10, 20, 30, 20, 10 seconds with full recovery between.\n3. Walk for five minutes afterward.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "The Unbroken Set",
+  "description": "One set. No rest. Find the edge.\n\n1. Choose one bodyweight movement.\n2. Do a single set to two reps short of failure.\n3. Note the number. Beat it next month.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Cold Finish",
+  "description": "Thirty seconds that reorganise the whole day.\n\n1. Take your normal shower.\n2. End it on cold for thirty seconds.\n3. Breathe slowly. Don't brace.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Shadow Round",
+  "description": "Three rounds is enough to remember you have a body.\n\n1. Three rounds, three minutes each, one minute rest.\n2. Shadowbox, or throw whatever movements you know.\n3. Stay light on your feet the whole time.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Long Slow Distance",
+  "description": "Slower than feels right. Longer than feels necessary.\n\n1. Go out at a pace where you could hold a conversation.\n2. Stay there for the whole distance.\n3. Resist every urge to speed up.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Wall Sit Vigil",
+  "description": "Nothing happens. That's what makes it hard.\n\n1. Sit against a wall, thighs parallel to the floor.\n2. Hold for as long as you can, three times.\n3. The last thirty seconds are the only ones that count.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Kettlebell Liturgy",
+  "description": "Swing, rest, repeat. A metronome with consequences.\n\n1. Ten swings at the top of every minute.\n2. Rest for the remainder of the minute.\n3. Continue for fifteen minutes.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Balance Trial",
+  "description": "A skill that quietly disappears if nobody asks for it.\n\n1. Stand on one leg for sixty seconds. Then the other.\n2. Repeat with your eyes closed.\n3. Notice which side is worse.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Movement Snack Tour",
+  "description": "Five movements, one round, no equipment, no excuse.\n\n1. Pick five movements covering push, pull, squat, hinge, and carry.\n2. Do ten of each, once through, unhurried.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Post-Meal March",
+  "description": "The most effective walk of the day is the least ambitious one.\n\n1. Within an hour of eating, walk gently.\n2. No pace target. No tracking.\n3. Come back the long way.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Max Effort Attempt",
+  "description": "Once in a while you need to find the actual ceiling.\n\n1. Warm up thoroughly.\n2. Work up to a genuine one-rep or one-round maximum in a movement you know well.\n3. Stop the moment form breaks.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "The Wrong Playlist",
+  "description": "Taste is a habit and habits go stale.\n\n1. Pick a genre you'd never claim to like.\n2. Listen to a full album of it. Whole thing.\n3. Find one track you'd defend.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Cook Without a Recipe",
+  "description": "Improvisation is a skill and dinner is a low-stakes place to practise it.\n\n1. Open the fridge. Take the first three things you see.\n2. Make a meal from them plus what's in the cupboard.\n3. No looking anything up.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Text an Old Friend",
+  "description": "No occasion. That's what makes it land.\n\n1. Think of someone you haven't spoken to in over a year.\n2. Send them one specific memory. Not 'how are you'.\n3. Expect nothing back.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Subtitles Off",
+  "description": "Immersion is uncomfortable, then suddenly it isn't.\n\n1. Watch thirty minutes of something in a language you're learning.\n2. No subtitles. Accept the confusion.\n3. Write down three words you caught.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Local Legend",
+  "description": "There is something strange within a mile of you.\n\n1. Search for the odd history of your street or neighbourhood.\n2. Find one story you didn't know.\n3. Go stand where it happened.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Solo Game Night",
+  "description": "Play with intent instead of fidgeting.\n\n1. Choose one game and play it properly for the whole time.\n2. No second screen. No scrolling between turns.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Bad Movie Ritual",
+  "description": "Deliberate low culture, taken seriously, is genuinely restorative.\n\n1. Choose a film with a terrible reputation.\n2. Watch it start to finish with full attention.\n3. Decide sincerely whether it was misjudged.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "One Song, All In",
+  "description": "Three minutes of unobserved nonsense.\n\n1. Put on the loudest thing you own.\n2. Dance for the length of one song.\n3. Curtains closed if you must.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Learn a Card Trick",
+  "description": "A pocket-sized piece of charisma.\n\n1. Learn one self-working card trick.\n2. Practise it until you can do it while talking.\n3. Perform it badly for someone tonight.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Assemble a Board",
+  "description": "Cooking without cooking.\n\n1. Build a snack board from whatever is in the house.\n2. Arrange it like you're being photographed.\n3. Eat it somewhere you don't normally eat.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Karaoke Alone",
+  "description": "Nobody is listening. Sing like they are.\n\n1. Pick the song you'd never sing in front of people.\n2. Sing it fully, badly, at volume.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Novelty Beverage",
+  "description": "Small novelty, disproportionate effect.\n\n1. Go and buy a drink you have never tried before.\n2. Bonus if you can't identify half the ingredients.\n3. Drink it somewhere you don't usually sit.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Reread the Old Favourite",
+  "description": "The book you loved at fourteen knows things about you.\n\n1. Find something you loved before you had taste.\n2. Read thirty minutes of it without irony.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Meme Your Week",
+  "description": "Comedy is compression. Compression is clarity.\n\n1. Summarise your week as a single image and caption.\n2. Make it genuinely funny to you.\n3. Send it to one person.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Build Something Stupid",
+  "description": "Useless projects teach the same skills as useful ones, faster.\n\n1. Make something with no purpose whatsoever.\n2. It must physically or digitally exist by the end.\n3. Nobody needs to see it.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Soundtrack a Film That Doesn't Exist",
+  "description": "Invent the film by choosing its music.\n\n1. Invent a film — genre, one scene, an ending.\n2. Build a ten-track soundtrack for it.\n3. Name the film last.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Call, Don't Text",
+  "description": "Voices carry things text drops.\n\n1. Call someone you'd normally message.\n2. No agenda, no reason.\n3. Ten minutes minimum.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Hide a Small Kindness",
+  "description": "Anonymous, so it can't be transactional.\n\n1. Do something quietly good that nobody can trace to you.\n2. Overtip, leave a note, pay something forward.\n3. Tell no one afterward.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Third Left",
+  "description": "A rule instead of a plan.\n\n1. Walk out of your door.\n2. Take every third left turn.\n3. Continue until you don't recognise the street, then find your own way back.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "The Unvisited Block",
+  "description": "There's a street near you that you've simply never had a reason to walk down.\n\n1. Find a street within walking distance you've never used.\n2. Walk its full length.\n3. Notice one thing worth going back for.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Sunrise Summons",
+  "description": "The city belongs to almost nobody at that hour.\n\n1. Be outside before the sun is properly up.\n2. Walk for at least half of it.\n3. No podcast until the sun clears the buildings.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "New Café Rite",
+  "description": "Same ritual, unfamiliar room.\n\n1. Go to a café you've never entered.\n2. Order what the person before you ordered.\n3. Stay long enough to read or write something.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Transit Roulette",
+  "description": "Chance is a better travel agent than you are.\n\n1. Get on the next bus or train that arrives.\n2. Ride it for a set number of stops decided in advance.\n3. Get off and explore before coming back.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "High Ground",
+  "description": "Altitude changes your opinion of a place.\n\n1. Find the highest publicly accessible point near you.\n2. Get to the top of it.\n3. Stay there for ten minutes doing nothing.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "One Stranger",
+  "description": "Small talk is a muscle and yours has atrophied.\n\n1. Start one real conversation with someone you don't know.\n2. Ask two follow-up questions before you talk about yourself.\n3. Leave before it gets awkward.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Market Crawl",
+  "description": "Markets are the most concentrated version of anywhere.\n\n1. Find a market — food, flea, farmers, anything.\n2. Walk every aisle before you buy anything.\n3. Buy one thing you can't name.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Night Walk",
+  "description": "The same route becomes a different route after dark.\n\n1. Walk a familiar route at night.\n2. No headphones.\n3. Notice what's open that you assumed was closed.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Water's Edge",
+  "description": "Find the nearest water and go and stand next to it.\n\n1. Locate the closest river, canal, lake, or sea.\n2. Get to it however you can.\n3. Sit by it for fifteen minutes before heading back.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Free Event Hunt",
+  "description": "Something is happening tonight and you don't know about it.\n\n1. Search local listings for something free happening today.\n2. Pick the one you'd normally talk yourself out of.\n3. Go alone.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Bookshop Divination",
+  "description": "Let the shelf choose.\n\n1. Go to a physical bookshop.\n2. Walk to a section you never visit.\n3. Buy the seventh book you touch. Start it there.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "One Street, Properly",
+  "description": "Photograph a hundred metres like it's a foreign country.\n\n1. Choose one street.\n2. Take twenty photographs within it. No more.\n3. Keep the three that a stranger would look at twice.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "The Long Way Home",
+  "description": "The direct route is a habit, not a requirement.\n\n1. Go somewhere you're already going.\n2. Come back by a route that takes at least ten minutes longer.\n3. Don't check the map.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Something Unpronounceable",
+  "description": "Order the thing you'd have to point at.\n\n1. Find a food shop or restaurant from a cuisine you don't know.\n2. Order something you cannot pronounce.\n3. Ask what it is only after you've tried it.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Museum Sprint",
+  "description": "One room, properly, beats nine rooms at a jog.\n\n1. Go to a museum or gallery.\n2. Visit exactly one room.\n3. Stay for thirty minutes, then leave the building.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Ask a Local",
+  "description": "Every neighbourhood has a best thing and it isn't online.\n\n1. Ask someone who works nearby for their favourite place within five minutes' walk.\n2. Go there immediately.\n3. Report back to them if you can.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Follow the Music",
+  "description": "Somewhere near you, someone is playing something.\n\n1. Go out and listen for live music, or a busker, or an open door.\n2. Follow it.\n3. Stay for at least one full song.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Ten Breaths, Nothing Else",
+  "description": "Not meditation. Ten breaths.\n\n1. Sit down. Feet flat.\n2. Count ten breaths out, not in.\n3. If you lose count, start again without comment.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Screenless Half Hour",
+  "description": "Boredom is where the good thoughts are kept.\n\n1. Put every screen in another room.\n2. Stay for thirty minutes.\n3. You may stare at a wall. That's allowed.",
+  "category": "mindfulness",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Water and Window",
+  "description": "The two cheapest repairs available.\n\n1. Drink a full glass of water.\n2. Stand at a window and look at the furthest thing you can see for two minutes.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Full Reset Shower",
+  "description": "Long, hot, and treated as an event rather than maintenance.\n\n1. Take a shower with no time pressure.\n2. Do the full ritual — everything you normally skip.\n3. Put on clean clothes afterward even if you're staying in.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Legs Up the Wall",
+  "description": "Fifteen minutes that feel like a nap you didn't have time for.\n\n1. Lie on your back, legs vertical against a wall.\n2. Stay for fifteen minutes.\n3. Phone face down, in another room ideally.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Write the Worry Down",
+  "description": "On paper it's a problem. In your head it's weather.\n\n1. Write down what you're anxious about, in full.\n2. Underneath, write what you'd actually do if the worst happened.\n3. Close the notebook.",
+  "category": "mindfulness",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Nap Protocol",
+  "description": "Done properly it costs twenty minutes and returns four hours.\n\n1. Set an alarm for twenty-five minutes.\n2. Dark room, no expectations of actually sleeping.\n3. Get up when it goes, regardless.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Tea Ceremony of One",
+  "description": "The ceremony is the point. The tea is incidental.\n\n1. Make a hot drink with full attention — no phone, no podcast.\n2. Drink it sitting down, doing nothing else.\n3. Take the whole time.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Unfollow Five",
+  "description": "Your feed is a room you chose to stand in.\n\n1. Open the app that makes you feel worst.\n2. Unfollow five accounts that reliably sour your mood.\n3. No explanations owed to anyone.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Long Stretch",
+  "description": "Slow enough to be boring is the correct speed.\n\n1. Stretch for thirty minutes.\n2. Hold each position at least two minutes.\n3. Breathe out into the tight ones.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Bed, Properly Made",
+  "description": "A made bed is a message from your morning self.\n\n1. Strip and remake the bed properly.\n2. Fresh sheets if you have them.\n3. Clear whatever has colonised the bedside table.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Skin and Teeth",
+  "description": "Small maintenance, disproportionate returns.\n\n1. Do the full version of whatever your grooming routine skips.\n2. Nails, floss, moisturiser, the lot.\n3. Ten unhurried minutes minimum.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Say No to One Thing",
+  "description": "Every yes you resent is borrowed from someone you love.\n\n1. Find one commitment you agreed to but don't want.\n2. Withdraw from it, kindly and without a long explanation.\n3. Do not offer an alternative.",
+  "category": "mindfulness",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Sunlight Before Screens",
+  "description": "The order matters more than the duration.\n\n1. Get outside light on your face before you look at a screen.\n2. Ten minutes if you can. Two is better than none.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "The Gratitude Three",
+  "description": "Specific ones only. 'My health' doesn't count.\n\n1. Write three specific things from the last day that were good.\n2. Each must be something that actually happened.\n3. No generalities.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Silence Walk",
+  "description": "No podcast, no music, no calls.\n\n1. Walk with nothing in your ears.\n2. Let it be boring for the first ten minutes.\n3. Notice what your brain does at minute twenty.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Clean What You Touch",
+  "description": "The objects nearest you are the dirtiest ones.\n\n1. Clean your phone, your keys, your glasses, your keyboard.\n2. Properly, with something wet.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Early Shutdown",
+  "description": "End the day an hour before you think you're allowed.\n\n1. Stop working an hour earlier than usual.\n2. No screens for the last thirty minutes.\n3. Go to bed while you still feel awake.",
+  "category": "mindfulness",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Twenty Minutes of the Hard Part",
+  "description": "Skip the warm-up. Go straight to what you're bad at.\n\n1. Identify the sub-skill of your main hobby you avoid because you're weak at it.\n2. Work only on that for the whole time.\n3. Expect to feel incompetent. That's the receipt.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Teach It Back",
+  "description": "You don't know it until you can say it out loud without notes.\n\n1. Choose something you learned recently.\n2. Explain it aloud for five minutes with nothing in front of you.\n3. The gaps you stumble over are the real syllabus.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "One Chapter",
+  "description": "Not the book. One chapter.\n\n1. Read a single chapter of something demanding.\n2. Write three sentences on it afterward.\n3. Stop at the chapter break even if it's going well.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Three Notes",
+  "description": "Consumption without capture evaporates by tomorrow.\n\n1. Watch a talk or lecture in your field.\n2. Take exactly three notes. No more — the limit forces judgement.\n3. Act on one of them this week.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "The Flashcard Forge",
+  "description": "Making the cards teaches more than reviewing them.\n\n1. Take something you keep forgetting.\n2. Write ten question-and-answer cards for it.\n3. Test yourself once, then put them away.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Stop Googling It",
+  "description": "There is one thing you look up every single week.\n\n1. Name the thing you re-search constantly.\n2. Learn it properly, once — or write yourself a permanent note.\n3. Never search for it again.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Read the Actual Documentation",
+  "description": "Everyone skims. Almost nobody reads.\n\n1. Take a tool you use daily.\n2. Read its real documentation for the whole time.\n3. Find two features you didn't know existed.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Interview by Proxy",
+  "description": "Sit with one expert for an hour instead of ten for five minutes.\n\n1. Find a long interview with someone excellent in your field.\n2. Listen to the whole thing.\n3. Extract three things they do that you don't.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Ten Words",
+  "description": "Vocabulary is the only part of a language that's pure arithmetic.\n\n1. Learn ten new words in a language you're studying.\n2. Use each one in a sentence out loud.\n3. Revisit them before bed.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Deliberate Repetition",
+  "description": "Not practice. Drilling one specific movement.\n\n1. Isolate one small component of your main hobby.\n2. Repeat only that, slowly, for the whole session.\n3. Speed comes later and comes free.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Postmortem of One Mistake",
+  "description": "Mistakes only pay out if you sit with them.\n\n1. Pick something that went wrong recently.\n2. Write what you believed at the time that turned out to be false.\n3. Write the one rule that would have prevented it.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Ask a Better Question",
+  "description": "Asking publicly costs pride and returns years.\n\n1. Write down the thing you're confused about.\n2. Rewrite it until it's specific enough to be answerable.\n3. Post it somewhere people who know will see it.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Shadow a Master",
+  "description": "Study one work closely enough to see the decisions.\n\n1. Choose one excellent piece of work in your field.\n2. Spend an hour taking it apart — structure, choices, what was left out.\n3. Write the three rules its maker seems to follow.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Build the Tiny Version",
+  "description": "Reading about it is not the same as it existing.\n\n1. Take a concept you've only read about.\n2. Build the smallest possible working version of it.\n3. Broken and running beats perfect and theoretical.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Handwrite Your Notes",
+  "description": "Slower input, better retention. Annoying but consistent.\n\n1. Take notes on something by hand for the whole session.\n2. Rewrite the key ideas in your own words at the end.\n3. Don't transcribe — compress.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Prompt Craft",
+  "description": "The quality of the answer is downstream of the question.\n\n1. Take a prompt you use often with an AI tool.\n2. Rewrite it with role, context, constraints, and an example.\n3. Run both. Keep the better one permanently.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Reading List Cull",
+  "description": "A list you'll never finish is a list you'll never start.\n\n1. Open your saved articles, books, or watch-later pile.\n2. Delete two-thirds of it without guilt.\n3. Start the top one now.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Explain It to a Child",
+  "description": "Jargon is where fuzzy thinking hides.\n\n1. Explain your current project using only simple words.\n2. No jargon, no field-specific terms.\n3. Where you can't, you don't understand it yet.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "An Hour Inside It",
+  "description": "Not admin about the hobby. The hobby.\n\n1. Spend the whole time doing your main hobby itself.\n2. No researching, no buying gear, no watching others do it.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Teach What You Know",
+  "description": "Explaining it is how you find out what you know.\n\n1. Show someone one thing about your main hobby.\n2. In person, on a call, or in a short written guide.\n3. Aim to make them able to do it, not impressed by you.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Deep Cut",
+  "description": "Go past the popular layer of your main hobby.\n\n1. Find something obscure within your main hobby — a niche corner, an old master, a dead branch.\n2. Spend the time only there.\n3. Bring back one thing nobody else in your circle would know.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "One Detail, Levelled",
+  "description": "Everything gets better one detail at a time.\n\n1. Pick a single detail of how you do your main hobby.\n2. Improve only that today.\n3. Leave everything else exactly as it was.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Document It",
+  "description": "Making a record of the work changes how you do the work.\n\n1. Photograph, film, or write about your main hobby while you do it.\n2. Produce one shareable artefact by the end.\n3. Whether you share it is up to you.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Constraint",
+  "description": "Take a tool away from your main hobby and see what appears.\n\n1. Do your main hobby with one thing you normally rely on removed.\n2. Adapt rather than substitute.\n3. Note what the restriction taught you.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Clear the Path",
+  "description": "Half of a stalled project is unfinished admin around it.\n\n1. List everything blocking your current project.\n2. Do the smallest blocker completely.\n3. Delete one blocker by deciding it doesn't matter.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Show It Early",
+  "description": "Feedback before you're ready is the only feedback worth having.\n\n1. Show your current project to one person while it's still unfinished.\n2. Ask what's confusing, not what's good.\n3. Change one thing based on their answer.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "One Line",
+  "description": "A sentence is a small enough commitment to actually make.\n\n1. Write one sentence you'd be pleased to have written.\n2. Rewrite it twice.\n3. Keep the second version.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Nearest Ugly Thing",
+  "description": "Photographing something unlovely teaches more than photographing something lovely.\n\n1. Find the least attractive object within reach.\n2. Photograph it so it looks good.\n3. One angle only.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Five-Minute Doodle",
+  "description": "Not art. Marks on paper.\n\n1. Draw continuously for five minutes without lifting the pen.\n2. No subject. No stopping to think.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Record One Hum",
+  "description": "The melody you can't get out of your head is trying to tell you something.\n\n1. Hum, sing, or tap whatever's stuck in your head into your phone.\n2. Don't tidy it up.\n3. Name the file something absurd.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Steal One Sentence",
+  "description": "Copying by hand is how writers used to learn. It still works.\n\n1. Find a sentence you admire.\n2. Write it out by hand.\n3. Underneath, write what it's doing that yours don't.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "One Follow-Up",
+  "description": "The message you never chased is the deal you never lost, technically.\n\n1. Find one conversation that went quiet.\n2. Send a single sentence reviving it.\n3. Close the app.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Check One Number",
+  "description": "One metric, looked at honestly, beats a dashboard ignored.\n\n1. Open the one number that actually tells you how things are going.\n2. Write it down with today's date.\n3. Don't act on it yet.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Write the Subject Line",
+  "description": "The whole email lives or dies here.\n\n1. Write eight subject lines for something you need people to open.\n2. Pick the shortest one that still says something.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Thank a Customer",
+  "description": "Unprompted gratitude is rare enough to be memorable.\n\n1. Message one person who has paid you or helped you.\n2. Thank them specifically. Ask for nothing.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Cut One Thing from the Offer",
+  "description": "Every extra feature is a reason to hesitate.\n\n1. List what your offer includes.\n2. Delete the item you added out of insecurity.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "One Absurd Fact",
+  "description": "Five minutes of pointless knowledge is not pointless.\n\n1. Look up something genuinely useless.\n2. Follow it two links deep.\n3. Tell someone about it before the day ends.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Send a Terrible Pun",
+  "description": "Low art, high return.\n\n1. Send someone the worst joke you can construct about their day.\n2. Do not apologise for it.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Upgrade the Snack",
+  "description": "The difference between food and a small event is about ninety seconds.\n\n1. Take whatever you were going to eat.\n2. Add one thing that makes it better — heat, salt, acid, a plate.\n3. Sit down for it.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Rate the Day Out Loud",
+  "description": "Saying it out loud makes it a fact rather than a mood.\n\n1. Say out loud what you'd score today out of ten.\n2. Say the one thing that would have made it one point higher.\n3. Note whether that thing is still possible.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Step Outside",
+  "description": "Five minutes on the other side of the door.\n\n1. Go out of the front door with no phone.\n2. Stand still for three minutes.\n3. Come back in.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Look Up",
+  "description": "Everything above the first floor is a city you've never visited.\n\n1. Walk to the end of the street.\n2. Look only at rooflines, upper windows, and sky.\n3. Find one thing you'd never noticed.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Pick a Direction",
+  "description": "No destination, no map, five minutes.\n\n1. Choose the direction you leave in least often.\n2. Walk that way for five minutes.\n3. Turn around.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Three Smells",
+  "description": "The sense you stopped using.\n\n1. Go outside.\n2. Identify three distinct smells.\n3. Name each one out loud.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "The Door You've Never Opened",
+  "description": "There is one nearby. You've walked past it for years.\n\n1. Think of a shop, door, or entrance near you that you've never gone through.\n2. Go through it.\n3. You are allowed to buy nothing.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "One Word, Properly",
+  "description": "One word learned well outlasts twenty half-learned.\n\n1. Learn one new word — in a language, or in your own field.\n2. Say it aloud five times.\n3. Use it in a sentence before bed.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "The One-Question Quiz",
+  "description": "Retrieval beats rereading. It always has.\n\n1. Pick something you learned this week.\n2. Close everything and write what you remember.\n3. Only then check how much you got.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Read One Paragraph Twice",
+  "description": "Speed is the enemy of anything difficult.\n\n1. Find a paragraph you didn't fully understand.\n2. Read it twice more, slowly.\n3. Write it back in your own words.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Fix One Setting",
+  "description": "A small daily irritation, removed permanently.\n\n1. Name the setting on a device or app that annoys you daily.\n2. Go and change it now.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Yesterday's Lesson",
+  "description": "If you can't name it, it didn't land.\n\n1. Write the one thing yesterday taught you.\n2. If nothing comes, write why that might be.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Deep Clean",
+  "description": "One room, treated seriously, changes the whole flat.\n\n1. Pick one room.\n2. Clean it properly — the parts you normally skip.\n3. Throw away five things before you finish.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Admin Ambush",
+  "description": "The dull immortal tasks. All at once, then done.\n\n1. Gather every piece of unfinished official business — renewals, forms, claims, appointments.\n2. Work through them in one sitting until the pile is smaller.\n3. Reward yourself properly afterward.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "One Complete Thing",
+  "description": "Finished and flawed beats perfect and theoretical.\n\n1. Make something small from start to actual finish today.\n2. No part of it may be left for tomorrow.\n3. Show it to one person.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Long Session",
+  "description": "Creative work has a warm-up you never reach in twenty minutes.\n\n1. Work on one creative thing for the whole block.\n2. The first thirty minutes will be bad. Continue anyway.\n3. Stop mid-sentence so tomorrow has a handle.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Build the Page",
+  "description": "One page that explains and sells is worth a month of posts.\n\n1. Write the page for your offer: what, who, why, proof, price, next step.\n2. Get it live even if it's plain text.\n3. Send it to one person today.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Outreach Block",
+  "description": "Volume is uncomfortable and it is also the answer.\n\n1. Make a list of fifteen people worth contacting.\n2. Message as many as you can in the block.\n3. Personalise the first line of every one.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Full Session",
+  "description": "Warm-up, main work, accessory, cool-down. The whole ritual.\n\n1. Train properly with no phone between sets.\n2. Include one thing you've been avoiding.\n3. Cool down for ten minutes instead of leaving early.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Two Sports, One Day",
+  "description": "Novelty is the best cure for a stale routine.\n\n1. Do two different physical things in the same block.\n2. One familiar, one you're bad at.\n3. No performance expectations on the second.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Cook for Someone",
+  "description": "Feeding a person is the least complicated way to be good to them.\n\n1. Cook a proper meal for at least one other person.\n2. Something you haven't made before.\n3. Eat it at a table.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Full Album, Full Attention",
+  "description": "Nobody listens to records any more. Try it.\n\n1. Choose one album.\n2. Listen start to finish doing nothing else.\n3. No skipping, no phone.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "The Unstructured Evening",
+  "description": "No plan is the plan.\n\n1. Cancel or decline whatever is optional tonight.\n2. Make no plan for the evening at all.\n3. Follow whatever you actually feel like.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Bath and Book",
+  "description": "An old technology that still outperforms most new ones.\n\n1. Run a bath or a very long shower.\n2. Take a physical book in with you.\n3. Leave the phone in another room entirely.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "The Study Block",
+  "description": "Deep work needs a runway, not a gap between meetings.\n\n1. Choose one difficult thing to learn.\n2. Work on it for the whole block with no interruptions.\n3. Write a one-paragraph summary at the end.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Take Something Apart",
+  "description": "Understanding comes from disassembly, not description.\n\n1. Choose something you use but don't understand — an object, a codebase, a song, a recipe.\n2. Take it apart, literally or on paper.\n3. Write how it actually works.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Forgotten Drawer",
+  "description": "Every home has one nobody has opened this year.\n\n1. Open a drawer or cupboard you never use.\n2. Remove one thing that should not be there.\n3. Deal with it now, not later.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "home"
+ },
+ {
+  "title": "Breathe Between Sets",
+  "description": "The rest is part of the training, not a gap in it.\n\n1. Between every set, take five slow breaths out.\n2. No phone during the rest.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Train Without Music",
+  "description": "You have never actually heard yourself lift.\n\n1. Do the whole session with nothing in your ears.\n2. Notice your breathing and your tempo.",
+  "category": "mindfulness",
+  "difficulty": "medium",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "The Unhurried Session",
+  "description": "No clock, no rush, no sets left half-finished because you were bored.\n\n1. Train with no time limit and no phone.\n2. Rest as long as you genuinely need.\n3. Leave only when the work is done.",
+  "category": "mindfulness",
+  "difficulty": "hard",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Pack the Bag Properly",
+  "description": "Half your missed sessions are logistics, not motivation.\n\n1. Empty your gym bag completely.\n2. Repack it with everything you actually need.\n3. Leave it by the door.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Log the Session",
+  "description": "What isn't written down didn't happen.\n\n1. Write down every exercise, weight and rep from today.\n2. Note one thing to change next time.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Plan the Next Four Weeks",
+  "description": "Turning up without a plan is how people train for a year and change nothing.\n\n1. Write out four weeks of sessions.\n2. Give each week one number you're trying to beat.\n3. Put them in your calendar.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Learn One Machine",
+  "description": "There is equipment you walk past because you don't know what it does.\n\n1. Pick one machine you have never used.\n2. Read the instruction panel properly.\n3. Do one light set on it.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Study One Lift",
+  "description": "Technique is knowledge, not instinct.\n\n1. Choose one lift you already do.\n2. Watch a proper coaching breakdown of it.\n3. Apply one correction today at a lighter weight.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Film Your Form",
+  "description": "Everyone thinks their form is fine. Very few people have looked.\n\n1. Film one working set from the side.\n2. Watch it back honestly.\n3. Write down the one thing that needs fixing.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "New Playlist, New Session",
+  "description": "Same songs, same session, same effort.\n\n1. Build a playlist you have never trained to.\n2. Use it for the whole session.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "The Machine You Avoid",
+  "description": "Avoidance is usually embarrassment wearing a disguise.\n\n1. Use the piece of equipment you feel least confident on.\n2. Go light. Nobody is watching.\n3. Do three sets.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Bring Someone",
+  "description": "Training with a person changes what you're willing to attempt.\n\n1. Invite someone to train with you.\n2. Let them pick half the session.\n3. Do their half without complaining.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Ask One Question",
+  "description": "The staff know things you have been guessing at for months.\n\n1. Ask a trainer or staff member one genuine question.\n2. Act on the answer today.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Let the Coin Decide",
+  "description": "Your routine has become a rut with good lighting.\n\n1. Write three possible sessions on paper.\n2. Pick one at random.\n3. Do it exactly as written.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "gym"
+ },
+ {
+  "title": "Hill Repeats",
+  "description": "The cheapest hard session there is.\n\n1. Find a hill that takes about a minute to climb.\n2. Go up hard, walk down, repeat six times.\n3. Walk for five minutes afterward.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Sit Still Outside",
+  "description": "Not a walk. Sitting.\n\n1. Go outside and sit down somewhere.\n2. Stay for fifteen minutes doing nothing at all.\n3. No phone, no book, no audio.",
+  "category": "mindfulness",
+  "difficulty": "medium",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "An Hour, No Phone",
+  "description": "The first twenty minutes are boring. That is the point.\n\n1. Leave your phone at home.\n2. Go outside for a full hour.\n3. Come back when the hour is up, not before.",
+  "category": "mindfulness",
+  "difficulty": "hard",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Name Three Plants",
+  "description": "You walk past the same living things every day without knowing them.\n\n1. Photograph three plants near you.\n2. Identify each one.\n3. Say the names out loud so they stick.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Map It From Memory",
+  "description": "You know your area far less well than you assume.\n\n1. Without looking anything up, draw a map of your neighbourhood.\n2. Then walk it and correct what you got wrong.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Sunset Mission",
+  "description": "Be somewhere good when the light goes.\n\n1. Find out what time the sun sets today.\n2. Choose a spot worth watching it from.\n3. Be there ten minutes early.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "outdoors"
+ },
+ {
+  "title": "Calf Raises, Quietly",
+  "description": "Nobody will notice and your circulation will.\n\n1. Do thirty calf raises at your desk.\n2. Repeat twice more before the day ends.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Stair Break",
+  "description": "A building is exercise equipment with a lift attached.\n\n1. Leave your desk.\n2. Climb every flight of stairs in the building once.\n3. Walk back down.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Every Twenty Minutes",
+  "description": "Frequency beats intensity, and desks are undefeated at stopping both.\n\n1. Set a repeating twenty-minute timer.\n2. Every time it goes, stand and move for one minute.\n3. Keep it up for the whole working day.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Twenty Seconds at the Window",
+  "description": "Your eyes have not looked past arm's length in hours.\n\n1. Stand at the furthest window.\n2. Look at the most distant thing you can see for twenty seconds.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Single-Tab Hour",
+  "description": "Attention is not a renewable resource within a single day.\n\n1. Close every tab and app except the one you need.\n2. Work for one hour that way.\n3. Notice how often you reach for something else.",
+  "category": "mindfulness",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Lunch Away From the Screen",
+  "description": "Eating at your desk is not a lunch break. It is a slower kind of work.\n\n1. Take your food somewhere with no screen.\n2. Eat the whole thing there.\n3. Do not bring your phone.",
+  "category": "mindfulness",
+  "difficulty": "hard",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "One Shortcut",
+  "description": "You have done that with the mouse ten thousand times.\n\n1. Find the keyboard shortcut for the thing you do most.\n2. Use it exclusively for the rest of the day.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Read the Whole Thread",
+  "description": "You are working from a summary of a decision you never actually read.\n\n1. Find a decision you inherited but never understood.\n2. Read the original discussion end to end.\n3. Write three sentences on why it went that way.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Change the Wallpaper",
+  "description": "You look at it more than you look at most people.\n\n1. Find an image you genuinely like.\n2. Set it as your desktop background.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Two Minutes on Paper",
+  "description": "A screen is a bad place to think loosely.\n\n1. Take a blank sheet of paper.\n2. Draw or scribble for two minutes with no purpose.\n3. Keep it on your desk.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Build a Tiny Tool",
+  "description": "The annoying manual thing you do weekly does not have to stay manual.\n\n1. Name the task you repeat by hand every week.\n2. Build the smallest thing that removes one step of it.\n3. Ugly and working beats elegant and unbuilt.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Oldest File",
+  "description": "There is something in there from a version of you that no longer exists.\n\n1. Open the oldest file in your working folder.\n2. Read it.\n3. Delete it or file it properly.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Message Another Team",
+  "description": "Your organisation is bigger than the six people you talk to.\n\n1. Message someone you have never worked with directly.\n2. Ask what they are working on.\n3. Ask one follow-up question.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "The Unread Bookmark",
+  "description": "You saved it because it mattered. Then you never opened it.\n\n1. Open the oldest link in your saved or read-later list.\n2. Read it properly.\n3. Do one thing it suggests, today.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "office/desk"
+ },
+ {
+  "title": "Take the Stairs",
+  "description": "The lift saves ninety seconds you did not need.\n\n1. Use only stairs for the whole day.\n2. No exceptions, even going up.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "The Long Way Between Classes",
+  "description": "The shortest route is a habit, not a rule.\n\n1. Walk the longest reasonable route to your next class.\n2. Do it for every class today.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Campus Lap",
+  "description": "Somewhere between lectures there is a walk worth taking.\n\n1. Walk a full lap of the campus or grounds.\n2. Keep a pace that makes talking slightly difficult.\n3. Do not stop halfway.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Ten Minutes Before Class",
+  "description": "Arriving flustered costs you the first ten minutes anyway.\n\n1. Get to your next class ten minutes early.\n2. Sit without your phone until it starts.",
+  "category": "mindfulness",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "One Lecture, No Device",
+  "description": "Handwriting is slower, which is exactly why it works.\n\n1. Attend one full class with no laptop or phone.\n2. Take notes on paper only.\n3. Rewrite the key ideas afterward in your own words.",
+  "category": "mindfulness",
+  "difficulty": "hard",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Empty the Bag",
+  "description": "There is something at the bottom that should have been dealt with weeks ago.\n\n1. Empty your bag completely.\n2. Throw away or file everything that isn't needed tomorrow.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "File One Subject",
+  "description": "Notes you cannot find are notes you did not take.\n\n1. Pick one subject.\n2. Put every note, handout and file for it in one place, in order.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Rebuild the Study Plan",
+  "description": "The plan you made in week one no longer matches reality.\n\n1. Write out every deadline you actually have.\n2. Work backwards and block time for each.\n3. Cancel one commitment to make it fit.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Join One Thing",
+  "description": "The societies exist and you have been meaning to for two terms.\n\n1. Find a club, society or group that meets this week.\n2. Turn up to one session.\n3. Go alone.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Sit Somewhere New",
+  "description": "You have sat in roughly the same seat since the first week.\n\n1. Sit somewhere completely different in your next class.\n2. Notice what the room looks like from there.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Talk to Someone in Your Class",
+  "description": "You have shared a room with these people for months.\n\n1. Start a real conversation with someone you have never spoken to.\n2. Ask two questions before you talk about yourself.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Attend Something Unrelated",
+  "description": "The best ideas usually arrive from the next field over.\n\n1. Find a talk or class in a subject that is not yours.\n2. Attend the whole thing.\n3. Write down one idea worth stealing.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "school"
+ },
+ {
+  "title": "Lap the Green",
+  "description": "One lap. No pace target. Just go around the whole thing.\n\n1. Walk one full lap of the park's perimeter.\n2. Do not cut across the middle.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Bench Circuit",
+  "description": "A park bench is a gym that nobody charges for.\n\n1. Find a bench.\n2. Do ten step-ups, ten press-ups against it, and ten dips.\n3. Three rounds.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Find the Hill",
+  "description": "Every park has one slope people avoid.\n\n1. Find the steepest path in the park.\n2. Go up it hard five times.\n3. Walk down between each.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Five Minutes on a Bench",
+  "description": "Sitting outside doing nothing is a real thing to do.\n\n1. Sit on a bench for five minutes.\n2. No phone, no podcast.\n3. Watch whatever is in front of you.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Cloud Watch",
+  "description": "A childhood activity that is genuinely restorative and slightly embarrassing.\n\n1. Lie or sit back and look up for ten minutes.\n2. Find three shapes.\n3. Tell nobody.",
+  "category": "mindfulness",
+  "difficulty": "medium",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "An Hour Under a Tree",
+  "description": "Long enough that boredom passes and something else arrives.\n\n1. Choose a tree and sit under it for a full hour.\n2. No phone, no book for the first thirty minutes.",
+  "category": "mindfulness",
+  "difficulty": "hard",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Plan Tomorrow on a Bench",
+  "description": "Planning outdoors produces different plans.\n\n1. Sit in the park with paper.\n2. Write the three things that would make tomorrow good.",
+  "category": "productivity/chores",
+  "difficulty": "easy",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Inbox on a Bench",
+  "description": "The work is the same. The room is better.\n\n1. Take your phone or laptop to the park.\n2. Clear your inbox there.\n3. Go home when it's empty.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "The Outdoor Work Block",
+  "description": "Ninety minutes of real work, outside, no walls.\n\n1. Take one substantial task to the park.\n2. Work on it for ninety minutes.\n3. Do not go back indoors until it is done.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Identify One Tree",
+  "description": "You have walked past it a hundred times without knowing its name.\n\n1. Photograph a tree in the park.\n2. Identify the species.\n3. Look at it properly once you know.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "A Chapter Outside",
+  "description": "Reading outdoors is a different experience from reading indoors.\n\n1. Bring a demanding book to the park.\n2. Read one full chapter there.\n3. Write three sentences on it before you leave.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Read the Ecosystem",
+  "description": "A park is a system, not scenery.\n\n1. Spend an hour noting what lives there — birds, insects, plants.\n2. Look up three you cannot name.\n3. Write what you learned.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Watch the People",
+  "description": "The oldest free entertainment there is.\n\n1. Sit somewhere with a view of a path.\n2. Watch people for ten minutes.\n3. Invent a story for one of them.",
+  "category": "fun activities",
+  "difficulty": "easy",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Picnic of One",
+  "description": "Eating outside alone is not sad. It is a small luxury.\n\n1. Bring proper food, not a sad sandwich.\n2. Eat it in the park without rushing.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Bring a Game",
+  "description": "Parks are for playing in and almost nobody over twelve does.\n\n1. Bring a ball, frisbee, kite or set of boules.\n2. Use it for at least half an hour.\n3. Bring someone if you can.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Take the Other Path",
+  "description": "You always go the same way round.\n\n1. Enter by a different gate than usual.\n2. Follow a path you have never taken.",
+  "category": "random activities",
+  "difficulty": "easy",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Find the Oldest Tree",
+  "description": "Something in there was alive before you were.\n\n1. Walk the park looking for the oldest tree you can find.\n2. Stand under it for a minute.",
+  "category": "random activities",
+  "difficulty": "medium",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "The Park at Dawn",
+  "description": "It is a completely different place before people arrive.\n\n1. Be in the park before the sun is fully up.\n2. Stay for at least half an hour.\n3. Walk a route you know well and notice what's different.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "park"
+ },
+ {
+  "title": "Stairs, Not Escalator",
+  "description": "They are right next to each other and one is free exercise.\n\n1. Use only stairs for the whole visit.\n2. No escalators, no lifts.",
+  "category": "fitness",
+  "difficulty": "easy",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Walk the Whole Length",
+  "description": "A shopping centre is an indoor track with better heating.\n\n1. Walk the full length of every floor.\n2. Keep moving — no stopping to browse.\n3. Brisk pace throughout.",
+  "category": "fitness",
+  "difficulty": "medium",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Carry It Home",
+  "description": "Shopping bags are a loaded carry with a receipt.\n\n1. Do your shopping.\n2. Carry everything home on foot.\n3. No trolley, no taxi, no stopping to rest unless you must.",
+  "category": "fitness",
+  "difficulty": "hard",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Sit and Do Nothing",
+  "description": "Somewhere in there is a bench nobody is using.\n\n1. Find a seat.\n2. Sit for five minutes without your phone.\n3. Watch the crowd move.",
+  "category": "mindfulness",
+  "difficulty": "easy",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Buy Nothing Hour",
+  "description": "Being somewhere designed to extract money, and not spending any, is a small act of will.\n\n1. Spend an hour there and buy nothing at all.\n2. Look at whatever you like.\n3. Notice what nearly got you.",
+  "category": "mindfulness",
+  "difficulty": "medium",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "The Unhurried Errand",
+  "description": "You normally do this at speed, resenting it.\n\n1. Take an errand you usually rush.\n2. Do it at half your normal pace.\n3. No phone while you do it.",
+  "category": "mindfulness",
+  "difficulty": "hard",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "One Errand, Properly",
+  "description": "The half-done errand comes back twice.\n\n1. Pick the errand you have rescheduled most.\n2. Do it completely today.\n3. Do not leave until it's finished.",
+  "category": "productivity/chores",
+  "difficulty": "medium",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "The Returns Run",
+  "description": "They have been by the door for weeks, quietly judging you.\n\n1. Gather everything you need to return or exchange.\n2. Take all of it in one trip.\n3. Come home with none of it.",
+  "category": "productivity/chores",
+  "difficulty": "hard",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Read Three Labels",
+  "description": "You buy these things constantly and have never read them.\n\n1. Pick three products you buy often.\n2. Read their labels properly.\n3. Notice one thing that surprises you.",
+  "category": "learning",
+  "difficulty": "easy",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Price Study",
+  "description": "You have no idea what things actually cost.\n\n1. Pick one item you buy regularly.\n2. Check its price in three different shops.\n3. Write down the spread.",
+  "category": "learning",
+  "difficulty": "medium",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Study a Shopfront",
+  "description": "Every shop is a lesson in persuasion, if you look.\n\n1. Choose one shop and study how it is arranged.\n2. Note what is at eye level, what is at the entrance, what is hidden at the back.\n3. Write down three deliberate choices you spotted.",
+  "category": "learning",
+  "difficulty": "hard",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "Try On Something You'd Never Wear",
+  "description": "Changing rooms are free and nobody is keeping score.\n\n1. Find something completely unlike your usual style.\n2. Try it on.\n3. Buy it only if it is unexpectedly right.",
+  "category": "fun activities",
+  "difficulty": "medium",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "The Blind Taste",
+  "description": "Pick the thing you cannot identify.\n\n1. Find a food shop selling something you have never eaten.\n2. Buy one thing you cannot name.\n3. Try it before you look it up.",
+  "category": "fun activities",
+  "difficulty": "hard",
+  "requiredSetting": "mall"
+ },
+ {
+  "title": "The Seventh Shop",
+  "description": "Let counting decide instead of preference.\n\n1. Walk in and count shops as you pass them.\n2. Go into the seventh one.\n3. Stay for five minutes, whatever it sells.",
+  "category": "random activities",
+  "difficulty": "hard",
+  "requiredSetting": "mall"
+ }
+]

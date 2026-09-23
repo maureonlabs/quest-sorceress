@@ -158,12 +158,13 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
 - Flow 1 is **on-demand, one quest at a time**, not a daily batch.
 - Art direction is settled — see `design/ART-DIRECTION.md`.
 - Platform is **Base44 (Builder plan)**.
+- Quest library is written and validated (269 quests, full coverage).
 
 **Still open:**
 
-- **Writing 126 quests.** The coverage requirement needs at least one quest per
-  setting x category x difficulty combination. That content has to be authored. The old
-  prototype holds 190 quests that could be retagged rather than written from scratch.
+- ~~Writing the quest library.~~ **Done** — 269 quests in `content/quests.csv`, covering
+  all 126 setting x category x difficulty combinations. 190 retagged from the prototype,
+  79 written to fill the gaps.
 - **Replacing a pending quest.** Assumed: tapping "Give me a quest" while one is pending
   replaces it, and the replaced one counts as dismissed (entering the 14-day cooldown).
   Confirm — it means rerolling burns templates.
