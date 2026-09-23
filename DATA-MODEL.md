@@ -40,8 +40,9 @@ and are the same for every user.
 
 ### DailyQuest
 
-One row per quest assigned to one user on one day. This is the join between a User and
-a QuestTemplate.
+One row per quest assigned to a user. Created **on demand**, when the user taps
+"Give me a quest" — there is no morning batch. `date` groups quests by day so streaks
+can be calculated; the entity name reflects that grouping, not a daily generation cycle.
 
 | Field | Type | Rules |
 |---|---|---|
@@ -74,7 +75,7 @@ Which items a user owns and which one is equipped.
 | `userId` | uuid | → User, required |
 | `itemId` | uuid | → Item, required |
 | `owned` | boolean | default false |
-| `equipped` | boolean | default false |
+| `equipped` | boolean | default false; **not exclusive** — several items may be equipped at once |
 
 ---
 
@@ -91,7 +92,8 @@ Fixed value sets, taken verbatim from the spec. Nothing outside these lists is v
 **Status** — a DailyQuest's state:
 `pending` · `completed` · `dismissed`
 
-**Difficulty** — value set not specified in the spec. See open questions below.
+**Difficulty** — how hard a quest is:
+`easy` · `medium` · `hard`
 
 ---
 
@@ -115,12 +117,16 @@ These come from the spec and are not optional.
 1. **Ownership.** Every DailyQuest and UserItem is readable and writable only by the
    user it belongs to — **enforced at the database or API layer, never only in the UI**
    (spec §5, and acceptance criterion 6).
-2. **Setting eligibility.** A QuestTemplate is only assignable to a user when its
-   `requiredSetting` is in that user's `settingPreferences` (acceptance criterion 4).
-3. **14-day dismissal cooldown.** Once dismissed, that template cannot be assigned to
+2. **Eligibility.** A QuestTemplate is only assignable when its `requiredSetting` is in
+   the user's `settingPreferences`, its `category` is in their `categoryPreferences`, and
+   its `difficulty` matches their `difficultyPreference`.
+3. **Library coverage.** The library must hold at least one quest for every
+   setting x category x difficulty combination (7 x 6 x 3 = **126 minimum**), so no
+   eligible combination can return empty. Guaranteed by content, not by runtime fallback.
+4. **14-day dismissal cooldown.** Once dismissed, that template cannot be assigned to
    the same user again until 14 days after `dismissedAt`.
-4. **Unique email** per User.
-5. **No XP anywhere.** Unlocks are driven purely by `unlockAtStreakWeeks` against the
+5. **Unique email** per User.
+6. **No XP anywhere.** Unlocks are driven purely by `unlockAtStreakWeeks` against the
    user's streak (spec §3 notes).
 
 ---
@@ -141,17 +147,21 @@ of truth.
 
 Flagged rather than guessed, per the spec's own rule.
 
-1. **Difficulty values.** The spec references `difficulty` on QuestTemplate and
-   `difficultyPreference` on User, but never lists the allowed values. Suggest
-   `easy` · `medium` · `hard`. Needs confirming.
-2. **`difficultyPreference` — single or multi?** Written as singular, unlike the two
-   multi-select preference fields. Is it one chosen level, a maximum, or a mix?
-3. **Daily generation timing.** "Each morning" — in whose timezone, and at what hour?
-   Needs a definite answer before the scheduled job can be written.
-4. **What if too few templates are eligible?** If a user's setting and category
-   choices leave fewer than 3 eligible templates, does the app relax a filter, show
-   fewer quests, or prompt them to widen their preferences?
-5. **Equipping.** Can several items be equipped at once (a hat *and* a robe), or only
-   one at a time? Affects whether `equipped` needs a per-slot constraint.
-6. **Art assets.** `artAssetRef` cannot be filled until the reference images arrive
-   (spec §10).
+**Resolved:**
+
+- Difficulty values: `easy` · `medium` · `hard`.
+- Several items can be equipped at once — `equipped` is not exclusive.
+- Empty-result risk is handled by library coverage (126 quests minimum), not by
+  relaxing filters.
+- Generation is on demand, one quest at a time.
+
+**Still open:**
+
+1. **`difficultyPreference` — single or multi?** Written as singular, unlike the two
+   multi-select preference fields. Is it one chosen level, a maximum, or a mix? If it
+   becomes multi-select, the 126-quest coverage floor still holds.
+2. **One pending quest at a time?** Assumed yes: tapping "Give me a quest" while one is
+   pending replaces it, and the replaced one is recorded as `dismissed` (and so enters
+   the 14-day cooldown). Confirm this is wanted — it means rerolling burns templates.
+3. **Art assets.** `artAssetRef` cannot be filled until reference images arrive.
+4. **Platform.** Supabase or Base44 — undecided. Nothing above depends on it.

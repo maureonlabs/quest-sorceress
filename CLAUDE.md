@@ -18,23 +18,26 @@ matches `SPEC.md`.
 - No streaks, no avatar, no items, no XP, no persistence of any kind
 
 **The spec additionally requires** a backend with real user accounts, persistent
-per-user data, a daily 3–5 quest generation cycle, streaks, an avatar with unlockable
-items, server-side ownership checks, PWA offline support, and a fantasy/nature art
-direction (glowing vines, gold ornate borders, forest lighting).
+per-user data, streaks, an avatar with unlockable items, server-side ownership checks,
+PWA offline support, and a fantasy/nature art direction (glowing vines, gold ornate
+borders, forest lighting).
 
-Treat building toward `SPEC.md` as a rewrite, not an increment.
+Note the spec's Flow 1 now matches the prototype's *behaviour* — **one quest at a time,
+on demand, via a "Give me a quest" button**, not a daily batch. The filtering differs
+though (setting/category/difficulty, not intent/time/energy), and everything behind it
+is different. Still a rewrite, not an increment.
 
-## Where the spec version is being built
+## Platform: undecided
 
-**Base44 — not in this repo.** Base44 provides the database and auth the spec assumes.
-`BUILD-PROMPT.md` is sections 1–8 formatted as the first Base44 prompt.
+Supabase (free, open Postgres, more to build) vs Base44 ($40/month, auth and database
+pre-built, two-way GitHub sync). `SPEC.md` section 7 still names Base44 — **update it
+once the choice is made.**
 
-This repo's job is therefore: hold `SPEC.md` as the source of truth, and host the old
-prototype until the Base44 build replaces it. Do not start reimplementing the spec in
-`index.html`.
+`DATA-MODEL.md` is deliberately platform-neutral, so the first build stage commits to
+neither. `BUILD-PROMPT.md` is spec sections 1–8, paste-ready for whichever builder.
 
-**Decided:** the Base44 build replaces the prototype once ready. The prototype is a
-first pass, not a version to maintain.
+**Decided:** whatever gets built replaces the prototype. The prototype is a first pass,
+not a version to maintain. Do not reimplement the spec in `index.html`.
 
 ## Build order
 
