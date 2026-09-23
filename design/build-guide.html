@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Petrona:ital,wght@0,400;0,600;1,400&family=Karla:wght@400;500;700&display=swap">
 
 <style>
 :root{
@@ -21,7 +21,7 @@
   --warn-soft:#F8E8E3;
   --mint-line:#B4D8CC;
   --warn-line:#E8C4B8;
-  --display:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --display:"Petrona","Iowan Old Style",Georgia,serif;
   --body:"Karla","Helvetica Neue",Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){
@@ -48,7 +48,7 @@ body{margin:0;background:var(--ground);color:var(--ink);
 /* header */
 header{display:flex;flex-direction:column;gap:.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--line)}
 .eyebrow{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
-h1{font-family:var(--display);font-weight:400;letter-spacing:.005em;
+h1{font-family:var(--display);font-weight:600;letter-spacing:-.005em;
   font-size:clamp(1.9rem,6vw,2.6rem);line-height:1.05;margin:0;text-wrap:balance}
 .sub{margin:0;color:var(--ink-2);font-size:1rem}
 
@@ -67,7 +67,7 @@ h1{font-family:var(--display);font-weight:400;letter-spacing:.005em;
 .phase{background:var(--surface);border:1px solid var(--line);border-radius:12px;
   padding:1.3rem 1.25rem;display:flex;flex-direction:column;gap:.85rem}
 .phase > h2{display:flex;align-items:baseline;gap:.7rem;margin:0;
-  font-family:var(--display);font-weight:400;font-size:1.45rem;line-height:1.15;text-wrap:balance}
+  font-family:var(--display);font-weight:600;font-size:1.35rem;line-height:1.2;text-wrap:balance}
 .num{font-family:var(--body);font-size:.7rem;font-weight:700;letter-spacing:.14em;
   color:var(--gold);background:var(--gold-soft);padding:.25rem .5rem;border-radius:5px;flex:none}
 .phase > p{margin:0;color:var(--ink-2);font-size:.95rem}
@@ -125,7 +125,7 @@ footer{color:var(--muted);font-size:.82rem;text-align:center;padding-top:1rem;bo
   <p>Nothing can be built until these exist. Do all of it before you write a single prompt.</p>
   <ul class="steps">
     <li><input type="checkbox" id="c0a"><label for="c0a"><b>Create a Base44 account</b><span class="hint">base44.com — free to sign up. Use the same email you use for GitHub to keep things simple.</span></label></li>
-    <li><input type="checkbox" id="c0b"><label for="c0b"><b>Upgrade to the Builder plan</b><span class="hint">$40/month. Required for GitHub sync, custom domains and backend functions. The free tier caps you at 5 messages a day, which is not enough to build this.</span></label></li>
+    <li><input type="checkbox" id="c0b"><label for="c0b"><b>Upgrade to the Builder plan — start month-to-month</b><span class="hint">$50 monthly, or $40/month billed yearly (~$480 up front). Pay monthly until you have shipped this; the extra $10 is cheap insurance against a year you might not use. Builder is the lowest tier with GitHub sync. It gives unlimited apps and 250 AI messages a month, pooled across everything you build.</span></label></li>
     <li><input type="checkbox" id="c0c"><label for="c0c"><b>Ask support what happens to a live app if you downgrade</b><span class="hint">Get it in writing before you rely on this as a portfolio link. A dead link is worse than no link.</span></label></li>
     <li><input type="checkbox" id="c0d"><label for="c0d"><b>Create two projects: <code>quest-sorceress-dev</code> and <code>quest-sorceress</code></b><span class="hint">Your spec requires separate dev and production environments so you never test against real user data.</span></label></li>
     <li><input type="checkbox" id="c0e"><label for="c0e"><b>Connect the dev project to GitHub</b><span class="hint">Dashboard → GitHub icon → authorise → select <code>maureonlabs</code> → connect. Only the app owner can do the first connection.</span></label></li>
