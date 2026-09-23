@@ -21,7 +21,7 @@ The account. One row per person.
 | `displayName` | text | required |
 | `settingPreferences` | text[] | multi-select from the Setting enum; at least one required |
 | `categoryPreferences` | text[] | multi-select from the Category enum; at least one required |
-| `difficultyPreference` | text | one of the Difficulty enum |
+| `difficultyPreference` | text | **single-select** — exactly one of the Difficulty enum |
 | `createdAt` | timestamptz | set on insert, never updated |
 
 ### QuestTemplate
@@ -94,6 +94,7 @@ Fixed value sets, taken verbatim from the spec. Nothing outside these lists is v
 
 **Difficulty** — how hard a quest is:
 `easy` · `medium` · `hard`
+Displayed in the UI as **Apprentice · Adept · Master**. Stored values stay plain.
 
 ---
 
@@ -154,14 +155,13 @@ Flagged rather than guessed, per the spec's own rule.
 - Empty-result risk is handled by library coverage (126 quests minimum), not by
   relaxing filters.
 - Generation is on demand, one quest at a time.
+- `difficultyPreference` is single-select.
+- Platform is Base44 (Builder plan).
 
 **Still open:**
 
-1. **`difficultyPreference` — single or multi?** Written as singular, unlike the two
-   multi-select preference fields. Is it one chosen level, a maximum, or a mix? If it
-   becomes multi-select, the 126-quest coverage floor still holds.
-2. **One pending quest at a time?** Assumed yes: tapping "Give me a quest" while one is
+1. **One pending quest at a time?** Assumed yes: tapping "Give me a quest" while one is
    pending replaces it, and the replaced one is recorded as `dismissed` (and so enters
-   the 14-day cooldown). Confirm this is wanted — it means rerolling burns templates.
-3. **Art assets.** `artAssetRef` cannot be filled until reference images arrive.
-4. **Platform.** Supabase or Base44 — undecided. Nothing above depends on it.
+   the 14-day cooldown). Confirm — it means rerolling burns templates.
+2. **Item art.** `artAssetRef` needs actual assets. Direction is set in
+   `design/ART-DIRECTION.md`; individual pieces are not drawn.
