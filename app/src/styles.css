@@ -30,6 +30,7 @@
   --text-dim: #a8b5ae;
 
   --display: 'Marcellus', 'Iowan Old Style', Georgia, serif;
+  --brand: 'Pinyon Script', 'Snell Roundhand', 'Apple Chancery', cursive;
   --body: 'Mulish', 'Helvetica Neue', Arial, sans-serif;
 
   --radius-panel: 18px;
@@ -169,11 +170,6 @@ body {
 @media (min-width: 56rem) {
   .wordmark {
     display: block;
-    font-family: var(--display);
-    font-size: 1.3rem;
-    line-height: 1.15;
-    color: var(--gold-lit);
-    letter-spacing: 0.02em;
     margin-bottom: 1.5rem;
     padding: 0 0.85rem;
   }
@@ -692,12 +688,6 @@ input,
   position: relative;
   margin: 0;
   text-align: center;
-  font-family: var(--display);
-  font-size: clamp(1.6rem, 7vw, 2.4rem);
-  line-height: 1.12;
-  letter-spacing: 0.04em;
-  color: var(--gold-lit);
-  text-shadow: 0 0 28px rgba(201, 163, 78, 0.45);
   animation: arrive 1.6s ease 0.5s both;
 }
 
@@ -732,13 +722,11 @@ input,
 @keyframes arrive {
   from {
     opacity: 0;
-    transform: translateY(10px);
-    letter-spacing: 0.22em;
+    transform: translateY(12px) scale(0.96);
   }
   to {
     opacity: 1;
     transform: none;
-    letter-spacing: 0.04em;
   }
 }
 
@@ -829,6 +817,10 @@ input,
 
 .card .row {
   margin-top: auto;
+  /* Above the vines: a leaf may fall across the glass, but never across a
+     control the player is trying to press. */
+  position: relative;
+  z-index: 3;
 }
 
 @media (max-width: 26rem) {
@@ -901,4 +893,74 @@ input,
 .toggle[aria-checked='true'] .knob {
   transform: translateX(1.1rem);
   background: var(--mint);
+}
+
+
+/* ------------------------------------------------------------------ brand */
+
+/* The wordmark: ornate calligraphy in struck gold, lit from within. The pink in
+   the outer glow is the blossom colour, which ties the name to the vines. */
+.brand {
+  font-family: var(--brand);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  /* Fallback for anything without background-clip: text — still gold, just flat. */
+  color: var(--gold-lit);
+  background: linear-gradient(
+    168deg,
+    #fff6dc 0%,
+    #f0d695 22%,
+    #c9a34e 52%,
+    #e7c878 72%,
+    #fbf0cf 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter:
+    drop-shadow(0 0 14px rgba(201, 163, 78, 0.45))
+    drop-shadow(0 0 34px rgba(233, 163, 184, 0.22));
+  /* Calligraphy sits low in its box; this re-centres it optically. */
+  padding-bottom: 0.08em;
+}
+
+/* Small, where it labels a screen rather than announcing the app. */
+.brand.sm {
+  font-size: 1.45rem;
+}
+
+/* The sidebar mark. Deliberately does NOT set display — .wordmark owns that, and
+   setting it here out-specified the mobile `display: none` and leaked the mark
+   into the bottom bar. */
+.brand.side {
+  font-size: 2rem;
+}
+
+/* The portal, where the name is the whole point. */
+.brand.hero {
+  font-size: clamp(2.8rem, 13vw, 4.6rem);
+  letter-spacing: 0.02em;
+}
+
+/* A thin ornament beneath the hero mark, echoing the reference's flourish. */
+.brand-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  color: var(--gold);
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.brand-rule::before,
+.brand-rule::after {
+  content: '';
+  height: 1px;
+  width: clamp(1.5rem, 9vw, 3.5rem);
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
 }

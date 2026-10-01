@@ -72,11 +72,16 @@ Starting values, to be refined against real screens.
 
 ## Type
 
-- **Display:** an elegant serif, small-caps, letter-spaced, in `--gold-lit`. Titles only.
-- **Body:** a light humanist sans, generous line-height, in `--text`.
+- **Brand / wordmark:** **Pinyon Script** — ornate copperplate calligraphy, filled with
+  a gold gradient (`background-clip: text`) and lit by two drop shadows: gold close in,
+  blossom-pink further out. The pink is what ties the name to the vines. Used for every
+  appearance of the app's name and nowhere else.
+- **Display:** **Marcellus**, in `--gold-lit`. Quest titles and headings.
+- **Body:** **Mulish**, light, generous line-height, in `--text`.
 
-Exact families to be chosen at build time — the references show the *treatment*
-(small-caps gold serif over quiet sans), which is the part that must survive.
+The wordmark carries the flourish so the rest of the interface does not have to. Quest
+titles stay in Marcellus — calligraphy at body sizes is decoration pretending to be
+information.
 
 ## Motion
 

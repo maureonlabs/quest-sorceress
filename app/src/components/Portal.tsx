@@ -93,11 +93,10 @@ export function Portal({ onDone }: { onDone: () => void }) {
       <div className="portal-ring" />
       <div className="portal-ring two" />
       <div className="portal-core" />
-      <p className="portal-word">
-        Quest
-        <br />
-        Sorceress
-      </p>
+      <div className="portal-word">
+        <p className="brand hero">Quest Sorceress</p>
+        <p className="brand-rule">One card only</p>
+      </div>
     </div>
   );
 }

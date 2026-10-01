@@ -98,7 +98,7 @@ export function Onboarding() {
   return (
     <div className="content">
       <header className="center">
-        <p className="eyebrow">Quest Sorceress</p>
+        <p className="brand sm">Quest Sorceress</p>
         <h1>She deals one card only</h1>
       </header>
 

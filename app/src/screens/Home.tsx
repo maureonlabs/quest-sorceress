@@ -39,7 +39,7 @@ export function Home() {
   return (
     <div className="content">
       <header className="topbar">
-        <p className="eyebrow">Quest Sorceress</p>
+        <p className="brand sm">Quest Sorceress</p>
         {streak > 0 ? (
           <p className="streak">
             <b>{streak}</b>

@@ -16,11 +16,7 @@ function Nav() {
   const { pathname } = useLocation();
   return (
     <nav className="nav">
-      <p className="wordmark">
-        Quest
-        <br />
-        Sorceress
-      </p>
+      <p className="wordmark brand side">Quest Sorceress</p>
       {NAV.map((item) => (
         <Link
           key={item.to}
