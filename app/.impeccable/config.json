@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "app/src/styles.css"
+        ],
+        "createdAt": "2026-10-01T13:28:21.602Z",
+        "reason": "user confirmed: supplied a gold-gradient logo reference and asked for that exact styling on the brand name. Scoped to .brand (the wordmark) only — no headings, metrics or body text — and carries a solid var(--gold-lit) fallback for engines without background-clip:text."
+      }
+    ]
+  }
+}
