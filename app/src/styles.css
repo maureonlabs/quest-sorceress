@@ -851,12 +851,11 @@ input,
 /* The vines sit above the glass and overhang its edge. */
 .vines {
   position: absolute;
-  inset: -26px;
-  width: calc(100% + 52px);
-  height: calc(100% + 52px);
+  inset: 0;
   z-index: 2;
   pointer-events: none;
   overflow: visible;
+  line-height: 0;
 }
 
 /* Card contents sit above the glass but below the vines, so a leaf can fall
@@ -889,11 +888,7 @@ input,
     padding: 1.9rem 1.35rem 1.6rem;
     min-height: min(70vh, 29rem);
   }
-  .vines {
-    inset: -18px;
-    width: calc(100% + 36px);
-    height: calc(100% + 36px);
-  }
+
 }
 
 /* ----------------------------------------------------------------- toggle */
@@ -1024,4 +1019,14 @@ input,
   height: 1px;
   width: clamp(1.5rem, 9vw, 3.5rem);
   background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+/* The "Anything" chip means all of them, so it is marked as a different kind of
+   choice rather than one more item in the list. */
+.chip-all {
+  border-style: dashed;
+}
+
+.chip-all[aria-pressed='true'] {
+  border-style: solid;
 }

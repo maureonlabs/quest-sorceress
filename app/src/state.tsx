@@ -16,7 +16,7 @@ import {
 import * as store from './storage';
 import * as sound from './sound';
 import { pickQuest, streak, streakWeeks, templateById, today } from './game/quests';
-import type { DailyQuest, Profile, QuestTemplate, SaveData } from './types';
+import type { DailyQuest, Profile, QuestTemplate, SaveData, Setting } from './types';
 
 interface Game {
   profile: Profile | null;
@@ -31,6 +31,9 @@ interface Game {
   remembers: boolean;
   soundOn: boolean;
   setSound: (on: boolean) => void;
+  /** Where the player said they are today, or null if they have not been asked yet. */
+  here: Setting[] | null;
+  checkIn: (places: Setting[]) => void;
 
   saveProfile: (p: Profile) => void;
   generate: () => void;
@@ -62,6 +65,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
     [apply],
   );
 
+  /** Record where they are today. Good until midnight, then they are asked again. */
+  const checkIn = useCallback(
+    (places: Setting[]) => {
+      sound.play('select');
+      apply((d) => ({ ...d, checkIn: { date: today(new Date()), settings: places } }));
+    },
+    [apply],
+  );
+
   /**
    * Hand over one quest.
    *
@@ -79,7 +91,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
         q.status === 'pending' ? { ...q, status: 'dismissed' as const, dismissedAt: stamp } : q,
       );
 
-      const template = pickQuest(d.profile, quests, now);
+      const hereToday =
+        d.checkIn && d.checkIn.date === today(now) ? d.checkIn.settings : undefined;
+      const template = pickQuest(d.profile, quests, now, Math.random, hereToday);
       if (!template) return { ...d, quests };
       sound.play('deal');
 
@@ -142,6 +156,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Game>(() => {
     const pending = data.quests.find((q) => q.status === 'pending') ?? null;
     const now = new Date();
+    const fresh = data.checkIn && data.checkIn.date === today(now) ? data.checkIn : null;
     return {
       profile: data.profile,
       quests: data.quests,
@@ -155,13 +170,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
       remembers: store.isPersistent(),
       soundOn: data.settings.sound,
       setSound,
+      here: fresh ? fresh.settings : null,
+      checkIn,
       saveProfile,
       generate,
       complete,
       dismiss,
       startOver,
     };
-  }, [data, saveProfile, generate, complete, dismiss, startOver, setSound]);
+  }, [data, saveProfile, generate, complete, dismiss, startOver, setSound, checkIn]);
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }

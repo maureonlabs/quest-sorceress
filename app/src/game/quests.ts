@@ -33,10 +33,21 @@ export function today(now: Date = new Date()): string {
 
 /* ------------------------------------------------------------ eligibility */
 
-/** A template matches the player's stated preferences. */
-export function matchesPreferences(t: QuestTemplate, p: Profile): boolean {
+/**
+ * A template the player could be given.
+ *
+ * `here` is where they said they are today. When it is supplied it replaces the
+ * profile's general setting list entirely — being at the gym today is a stronger
+ * fact than usually going to the gym.
+ */
+export function matchesPreferences(
+  t: QuestTemplate,
+  p: Profile,
+  here?: Setting[],
+): boolean {
+  const places = here && here.length > 0 ? here : p.settingPreferences;
   return (
-    p.settingPreferences.includes(t.requiredSetting) &&
+    places.includes(t.requiredSetting) &&
     p.categoryPreferences.includes(t.category) &&
     t.difficulty === p.difficultyPreference
   );
@@ -64,9 +75,10 @@ export function eligible(
   profile: Profile,
   history: DailyQuest[],
   now: Date = new Date(),
+  here?: Setting[],
 ): QuestTemplate[] {
   return QUESTS.filter(
-    (t) => matchesPreferences(t, profile) && !inCooldown(t.id, history, now),
+    (t) => matchesPreferences(t, profile, here) && !inCooldown(t.id, history, now),
   );
 }
 
@@ -84,9 +96,10 @@ export function pickQuest(
   history: DailyQuest[],
   now: Date = new Date(),
   random: () => number = Math.random,
+  here?: Setting[],
 ): QuestTemplate | null {
-  let pool = eligible(profile, history, now);
-  if (pool.length === 0) pool = QUESTS.filter((t) => matchesPreferences(t, profile));
+  let pool = eligible(profile, history, now, here);
+  if (pool.length === 0) pool = QUESTS.filter((t) => matchesPreferences(t, profile, here));
   if (pool.length === 0) return null;
   return pool[Math.floor(random() * pool.length)];
 }

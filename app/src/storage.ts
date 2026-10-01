@@ -22,6 +22,7 @@ export const emptySave = (): SaveData => ({
   quests: [],
   items: [],
   settings: { sound: true },
+  checkIn: null,
 });
 
 /** In-memory fallback, used when the browser will not persist for us. */

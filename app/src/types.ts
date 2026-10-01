@@ -119,12 +119,26 @@ export interface Settings {
   sound: boolean;
 }
 
+/**
+ * Where the player actually is today.
+ *
+ * `Profile.settingPreferences` is where they go in general; this is where they
+ * are right now, asked once a day. Quests are filtered to this, so a gym quest
+ * never arrives on a day spent at home.
+ */
+export interface CheckIn {
+  /** local YYYY-MM-DD — a check-in is good for one calendar day */
+  date: string;
+  settings: Setting[];
+}
+
 export interface SaveData {
   schemaVersion: number;
   profile: Profile | null;
   quests: DailyQuest[];
   items: OwnedItem[];
   settings: Settings;
+  checkIn: CheckIn | null;
 }
 
 /* -------------------------------------------------------------- narrowing */

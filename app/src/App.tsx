@@ -7,6 +7,7 @@ import { GameProvider, useGame } from './state';
 import { Home } from './screens/Home';
 import { Onboarding } from './screens/Onboarding';
 import { Preferences } from './screens/Preferences';
+import { CheckIn } from './screens/CheckIn';
 
 const NAV = [
   { to: '/', glyph: '✦', label: 'Quest' },
@@ -37,12 +38,22 @@ function Nav() {
 /** No profile means the engine has nothing to filter on, so onboarding wins
  *  over any route — including a deep link someone pasted. */
 function Shell() {
-  const { profile, remembers } = useGame();
+  const { profile, remembers, here } = useGame();
 
   if (!profile) {
     return (
       <Routes>
         <Route path="*" element={<Onboarding />} />
+      </Routes>
+    );
+  }
+
+  /* A new day: ask where they are before anything else, because every quest
+     that follows depends on the answer. */
+  if (here === null) {
+    return (
+      <Routes>
+        <Route path="*" element={<CheckIn />} />
       </Routes>
     );
   }

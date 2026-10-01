@@ -228,3 +228,40 @@ describe('cooldown constant', () => {
     expect(DISMISSAL_COOLDOWN_DAYS).toBe(14);
   });
 });
+
+describe('the daily check-in', () => {
+  it('narrows quests to where the player actually is today', () => {
+    const p = profile({ settingPreferences: ['home', 'gym', 'park'] });
+    for (const t of eligible(p, [], AT, ['gym'])) {
+      expect(t.requiredSetting).toBe('gym');
+    }
+  });
+
+  it('accepts several places when the day moves around', () => {
+    const p = profile({ settingPreferences: ['home', 'gym', 'park'] });
+    const places = eligible(p, [], AT, ['home', 'park']).map((t) => t.requiredSetting);
+    expect(new Set(places)).toEqual(new Set(['home', 'park']));
+  });
+
+  it('falls back to the profile when no check-in is given', () => {
+    const p = profile({ settingPreferences: ['gym'] });
+    for (const t of eligible(p, [], AT)) expect(t.requiredSetting).toBe('gym');
+  });
+
+  it('still finds a quest for every single place the player could check in to', () => {
+    for (const s of SETTINGS as readonly Setting[]) {
+      const p = profile({
+        settingPreferences: [...SETTINGS],
+        categoryPreferences: [...CATEGORIES],
+        difficultyPreference: 'medium',
+      });
+      expect(pickQuest(p, [], AT, Math.random, [s]), s).not.toBeNull();
+    }
+  });
+
+  it('never serves somewhere the player is not, even if the profile allows it', () => {
+    const p = profile({ settingPreferences: [...SETTINGS], categoryPreferences: [...CATEGORIES] });
+    const picked = Array.from({ length: 40 }, () => pickQuest(p, [], AT, Math.random, ['park']));
+    for (const q of picked) expect(q?.requiredSetting).toBe('park');
+  });
+});

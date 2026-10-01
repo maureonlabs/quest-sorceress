@@ -58,6 +58,7 @@ export function Onboarding() {
           options={CATEGORY_OPTIONS}
           selected={categories}
           onChange={setCategories}
+          selectAll="random activities"
         />
       ),
     },

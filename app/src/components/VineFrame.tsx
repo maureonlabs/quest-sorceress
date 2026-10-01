@@ -1,166 +1,237 @@
 /**
  * The flowering vines that wrap the quest card.
  *
- * Drawn as four corner sprays rather than one stretched border, because a
- * stretched SVG distorts its leaves and blossoms at different card heights.
- * Corners stay in proportion; thin stems run along the edges between them.
+ * The earlier version drew four corner sprays into a fixed viewBox and let the
+ * browser stretch them over the card, so the flowers floated off its edge at
+ * any size but the one it was drawn for.
  *
- * The sprays sit ABOVE the glass and overhang its edge — per the art direction,
- * the vines must read as growing in front of the panel. A flat border printed
- * inside the edge collapses the whole look into ordinary glassmorphism.
+ * This version measures the card and draws at 1:1 pixel scale. The vine IS the
+ * card's own rounded-rectangle outline, and every leaf and blossom is placed by
+ * sampling that path with getPointAtLength and rotated to its tangent — so each
+ * one sits on the line, facing the way the stem runs, at every size.
  */
 
-const LEAF = 'M0,0 C4,-5 11,-6 15,-2 C11,3 4,4 0,0 Z';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-/** A five-petal blossom, the only warm note in a gold-and-green frame. */
-function Blossom({ x, y, s = 1, r = 0 }: { x: number; y: number; s?: number; r?: number }) {
-  return (
-    <g transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`}>
-      {[0, 72, 144, 216, 288].map((a) => (
-        <ellipse
-          key={a}
-          rx="3.4"
-          ry="4.6"
-          cy="-4"
-          transform={`rotate(${a})`}
-          fill="url(#petal)"
-        />
-      ))}
-      <circle r="1.7" fill="#F6E3A8" />
-    </g>
-  );
+interface Decor {
+  x: number;
+  y: number;
+  /** degrees, from the tangent of the stem at that point */
+  angle: number;
+  kind: 'leaf' | 'blossom' | 'bud';
+  scale: number;
+  side: 1 | -1;
 }
 
-function Leaf({ x, y, r = 0, s = 1 }: { x: number; y: number; r?: number; s?: number }) {
-  return (
-    <path
-      d={LEAF}
-      transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`}
-      fill="url(#leaf)"
-      opacity="0.9"
-    />
-  );
+/** Deterministic, so the same card is always wearing the same vine. */
+function rng(seed: number) {
+  let s = seed;
+  return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296);
 }
 
-/** One corner spray, drawn for the top-left and mirrored for the rest. */
-function Spray({ dense }: { dense: boolean }) {
+/** The card's outline as a path: a rounded rectangle, inset so the vine rides its edge. */
+function framePath(w: number, h: number, r: number, inset: number): string {
+  const x = inset;
+  const y = inset;
+  const ww = w - inset * 2;
+  const hh = h - inset * 2;
+  const rr = Math.max(0, Math.min(r, ww / 2, hh / 2));
+  return [
+    `M${x + rr},${y}`,
+    `H${x + ww - rr}`,
+    `A${rr},${rr} 0 0 1 ${x + ww},${y + rr}`,
+    `V${y + hh - rr}`,
+    `A${rr},${rr} 0 0 1 ${x + ww - rr},${y + hh}`,
+    `H${x + rr}`,
+    `A${rr},${rr} 0 0 1 ${x},${y + hh - rr}`,
+    `V${y + rr}`,
+    `A${rr},${rr} 0 0 1 ${x + rr},${y}`,
+    'Z',
+  ].join(' ');
+}
+
+export function VineFrame({ radius = 18 }: { radius?: number }) {
+  const host = useRef<HTMLDivElement>(null);
+  const measure = useRef<SVGPathElement>(null);
+  const [box, setBox] = useState({ w: 0, h: 0 });
+  const [decor, setDecor] = useState<Decor[]>([]);
+
+  /* Track the card's real size. */
+  useLayoutEffect(() => {
+    const el = host.current?.parentElement;
+    if (!el) return;
+    const read = () => {
+      const r = el.getBoundingClientRect();
+      setBox({ w: Math.round(r.width), h: Math.round(r.height) });
+    };
+    read();
+    const ro = new ResizeObserver(read);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  /* Walk the outline and hang things off it. */
+  useEffect(() => {
+    const path = measure.current;
+    if (!path || box.w === 0) return;
+
+    const total = path.getTotalLength();
+    if (!Number.isFinite(total) || total === 0) return;
+
+    const R = rng(4242);
+    const out: Decor[] = [];
+
+    // Growth is heaviest near the top-left and bottom-right, thinning on the
+    // other two corners, so the frame never reads as a symmetrical wreath.
+    const density = (t: number) => {
+      const near = (a: number) => {
+        const d = Math.min(Math.abs(t - a), 1 - Math.abs(t - a));
+        return Math.exp(-(d * d) / 0.012);
+      };
+      return 0.28 + 0.72 * Math.max(near(0.97), near(0.47));
+    };
+
+    const step = 13;
+    for (let d = 0; d < total; d += step) {
+      const t = d / total;
+      if (R() > density(t)) continue;
+
+      const p = path.getPointAtLength(d);
+      const q = path.getPointAtLength(Math.min(d + 1, total));
+      const angle = (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI;
+      const side: 1 | -1 = R() > 0.45 ? 1 : -1;
+
+      const roll = R();
+      const kind: Decor['kind'] = roll > 0.72 ? 'blossom' : roll > 0.52 ? 'bud' : 'leaf';
+
+      out.push({
+        x: p.x,
+        y: p.y,
+        angle,
+        kind,
+        scale: kind === 'blossom' ? 0.8 + R() * 0.5 : 0.65 + R() * 0.5,
+        side,
+      });
+    }
+    setDecor(out);
+  }, [box.w, box.h, radius]);
+
+  const d = framePath(box.w, box.h, radius, 0);
+
   return (
-    <g>
-      {/* main stem: up the left edge, around the corner, along the top */}
-      <path
-        d="M4,150 C10,120 14,92 26,68 C38,44 66,28 98,20 C122,14 146,12 170,11"
-        fill="none"
-        stroke="url(#stem)"
-        strokeWidth="3.4"
-        strokeLinecap="round"
-      />
-      {/* a second stem twisting around the first */}
-      <path
-        d="M11,148 C14,118 20,96 34,74 C50,49 76,36 104,28"
-        fill="none"
-        stroke="url(#stem)"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        opacity="0.75"
-      />
-      {/* branches reaching inward over the glass */}
-      <path
-        d="M26,68 C36,78 52,82 70,78"
-        fill="none"
-        stroke="url(#stem)"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        opacity="0.8"
-      />
-      <path
-        d="M98,20 C100,34 96,48 86,58"
-        fill="none"
-        stroke="url(#stem)"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        opacity="0.7"
-      />
-      {dense ? (
-        <path
-          d="M140,12 C142,26 138,40 128,50"
-          fill="none"
-          stroke="url(#stem)"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          opacity="0.6"
-        />
+    <div className="vines" ref={host} aria-hidden="true">
+      {box.w > 0 ? (
+        <svg width={box.w} height={box.h} viewBox={`0 0 ${box.w} ${box.h}`} overflow="visible">
+          <defs>
+            <linearGradient id="vf-stem" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#F0DCA2" />
+              <stop offset="35%" stopColor="#C9A34E" />
+              <stop offset="70%" stopColor="#8A6B2C" />
+              <stop offset="100%" stopColor="#E2C27C" />
+            </linearGradient>
+            <linearGradient id="vf-leaf" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#A9DEB0" />
+              <stop offset="55%" stopColor="#5E9A61" />
+              <stop offset="100%" stopColor="#38603D" />
+            </linearGradient>
+            <radialGradient id="vf-petal" cx="40%" cy="32%">
+              <stop offset="0%" stopColor="#FFF0F4" />
+              <stop offset="38%" stopColor="#F3BACB" />
+              <stop offset="80%" stopColor="#E08EA8" />
+              <stop offset="100%" stopColor="#B96881" />
+            </radialGradient>
+            <radialGradient id="vf-centre" cx="40%" cy="35%">
+              <stop offset="0%" stopColor="#FFF6D8" />
+              <stop offset="100%" stopColor="#D9A94C" />
+            </radialGradient>
+            <filter id="vf-glow" x="-25%" y="-25%" width="150%" height="150%">
+              <feGaussianBlur stdDeviation="3.2" result="b" />
+              <feMerge>
+                <feMergeNode in="b" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          {/* invisible, used only to sample positions along the card's outline */}
+          <path ref={measure} d={d} fill="none" stroke="none" />
+
+          <g filter="url(#vf-glow)">
+            {/* the stem, riding the card's own edge */}
+            <path
+              d={d}
+              fill="none"
+              stroke="url(#vf-stem)"
+              strokeWidth="3"
+              strokeLinecap="round"
+              opacity="0.95"
+            />
+            {/* a thinner stem twisting around it, offset outward */}
+            <path
+              d={framePath(box.w + 7, box.h + 7, radius + 3, -3.5)}
+              fill="none"
+              stroke="url(#vf-stem)"
+              strokeWidth="1.3"
+              strokeDasharray="34 18"
+              strokeLinecap="round"
+              opacity="0.6"
+            />
+            {/* and one inside, so the stem reads as braided rather than drawn */}
+            <path
+              d={framePath(box.w - 7, box.h - 7, Math.max(0, radius - 3), 3.5)}
+              fill="none"
+              stroke="url(#vf-stem)"
+              strokeWidth="1"
+              strokeDasharray="22 30"
+              strokeLinecap="round"
+              opacity="0.45"
+            />
+
+            {decor.map((it, i) => (
+              <g
+                key={i}
+                transform={`translate(${it.x} ${it.y}) rotate(${it.angle + it.side * 62})`}
+              >
+                {it.kind === 'leaf' ? (
+                  <g transform={`scale(${it.scale})`}>
+                    <path
+                      d="M0,0 C5,-7 14,-8 19,-2 C14,4 5,6 0,0 Z"
+                      fill="url(#vf-leaf)"
+                    />
+                    <path
+                      d="M1,0 C7,-2 13,-2 18,-2"
+                      stroke="#2E5235"
+                      strokeWidth=".7"
+                      fill="none"
+                      opacity=".55"
+                    />
+                  </g>
+                ) : it.kind === 'bud' ? (
+                  <g transform={`scale(${it.scale})`}>
+                    <ellipse cx="7" cy="0" rx="3.1" ry="4.2" fill="url(#vf-petal)" />
+                    <path d="M0,0 C3,-1 5,-1 7,0" stroke="#5E9A61" strokeWidth="1" fill="none" />
+                  </g>
+                ) : (
+                  <g transform={`scale(${it.scale})`}>
+                    {/* five petals, each a touch different, so no two flowers match */}
+                    {[0, 72, 144, 216, 288].map((a, k) => (
+                      <ellipse
+                        key={a}
+                        rx={3.3 + ((k % 2) * 0.5)}
+                        ry={4.7}
+                        cy={-4.6}
+                        transform={`rotate(${a + (k % 3) * 3})`}
+                        fill="url(#vf-petal)"
+                      />
+                    ))}
+                    <circle r="1.9" fill="url(#vf-centre)" />
+                  </g>
+                )}
+              </g>
+            ))}
+          </g>
+        </svg>
       ) : null}
-
-      <Leaf x={20} y={104} r={-60} s={0.9} />
-      <Leaf x={17} y={128} r={-100} s={0.75} />
-      <Leaf x={31} y={60} r={-30} s={0.85} />
-      <Leaf x={54} y={37} r={-5} s={0.9} />
-      <Leaf x={70} y={78} r={30} s={0.7} />
-      <Leaf x={92} y={23} r={10} s={0.85} />
-      <Leaf x={122} y={15} r={18} s={0.8} />
-      {dense ? <Leaf x={150} y={13} r={6} s={0.7} /> : null}
-      {dense ? <Leaf x={86} y={56} r={70} s={0.65} /> : null}
-
-      <Blossom x={14} y={118} s={1.05} r={-15} />
-      <Blossom x={30} y={74} s={0.8} r={20} />
-      <Blossom x={64} y={28} s={1.1} r={-8} />
-      {dense ? <Blossom x={108} y={18} s={0.9} r={14} /> : null}
-      {dense ? <Blossom x={74} y={76} s={0.7} r={40} /> : null}
-      {dense ? <Blossom x={136} y={14} s={0.85} r={-20} /> : null}
-    </g>
-  );
-}
-
-export function VineFrame() {
-  return (
-    <svg className="vines" viewBox="0 0 400 560" aria-hidden="true" focusable="false">
-      <defs>
-        <linearGradient id="stem" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#E7C878" />
-          <stop offset="45%" stopColor="#C9A34E" />
-          <stop offset="100%" stopColor="#8A6B2C" />
-        </linearGradient>
-        <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#9FD6A8" />
-          <stop offset="100%" stopColor="#4C7E52" />
-        </linearGradient>
-        <radialGradient id="petal">
-          <stop offset="0%" stopColor="#F7D3DE" />
-          <stop offset="70%" stopColor="#E9A3B8" />
-          <stop offset="100%" stopColor="#CE7E97" />
-        </radialGradient>
-        <filter id="vineglow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="4" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      {/* hairline stems running the long edges, joining the corner sprays */}
-      <g stroke="url(#stem)" fill="none" strokeWidth="1.1" opacity="0.45">
-        <path d="M6,150 C2,250 10,330 6,410" />
-        <path d="M394,150 C398,260 390,340 394,410" />
-      </g>
-
-      <g filter="url(#vineglow)">
-        {/* top-left, heaviest — the eye enters here */}
-        <g transform="translate(0 0)">
-          <Spray dense />
-        </g>
-        {/* bottom-right, the counterweight */}
-        <g transform="translate(400 560) rotate(180)">
-          <Spray dense />
-        </g>
-        {/* the quieter two, so the frame is never symmetrical */}
-        <g transform="translate(400 0) scale(-1 1)">
-          <Spray dense={false} />
-        </g>
-        <g transform="translate(0 560) scale(1 -1)">
-          <Spray dense={false} />
-        </g>
-      </g>
-    </svg>
+    </div>
   );
 }

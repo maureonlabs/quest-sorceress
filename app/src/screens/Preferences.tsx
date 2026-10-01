@@ -32,12 +32,18 @@ export function Preferences() {
   if (!profile) return null;
 
   /** Never let the player empty a list — the engine would have nothing to filter. */
-  const setSettings = (next: Setting[]) =>
-    next.length > 0 && saveProfile({ ...profile, settingPreferences: next });
-  const setCategories = (next: Category[]) =>
-    next.length > 0 && saveProfile({ ...profile, categoryPreferences: next });
-  const setDifficulty = (next: Difficulty[]) =>
-    next[0] && saveProfile({ ...profile, difficultyPreference: next[0] });
+  const setSettings = (update: (c: readonly Setting[]) => Setting[]) => {
+    const next = update(profile.settingPreferences);
+    if (next.length > 0) saveProfile({ ...profile, settingPreferences: next });
+  };
+  const setCategories = (update: (c: readonly Category[]) => Category[]) => {
+    const next = update(profile.categoryPreferences);
+    if (next.length > 0) saveProfile({ ...profile, categoryPreferences: next });
+  };
+  const setDifficulty = (update: (c: readonly Difficulty[]) => Difficulty[]) => {
+    const next = update([profile.difficultyPreference]);
+    if (next[0]) saveProfile({ ...profile, difficultyPreference: next[0] });
+  };
 
   const reset = () => {
     if (!confirm('Start over? Your streak, history and preferences will all go.')) return;
@@ -69,6 +75,7 @@ export function Preferences() {
           options={CATEGORY_OPTIONS}
           selected={profile.categoryPreferences}
           onChange={setCategories}
+          selectAll="random activities"
         />
       </section>
 
