@@ -2,10 +2,12 @@
  * Home. The whole point of the app lives here: one button, one quest.
  */
 
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useGame } from '../state';
 import { parseDescription } from '../game/text';
-import { CATEGORY_LABELS, DIFFICULTY_LABELS } from '../types';
+import { QuestComplete } from '../components/QuestComplete';
+import { CATEGORY_LABELS, DIFFICULTY_LABELS, type QuestTemplate } from '../types';
 
 export function Home() {
   const {
@@ -15,26 +17,44 @@ export function Home() {
     completedToday,
     generate,
     complete,
-    dismiss,
   } = useGame();
+
+  /** Held so the congratulations can name the quest after it has left the board. */
+  const [justFinished, setJustFinished] = useState<QuestTemplate | null>(null);
+
+  const onComplete = () => {
+    if (!pending || !pendingTemplate) return;
+    setJustFinished(pendingTemplate);
+    complete(pending.id);
+  };
+
+  /** Closing the congratulations draws the next quest, rather than dropping you
+   *  back onto an empty screen. */
+  const onNext = () => {
+    setJustFinished(null);
+    generate();
+  };
 
   return (
     <div className="content">
-      <header className="meta" style={{ borderTop: 'none', paddingTop: 0 }}>
+      <header className="topbar">
         <p className="eyebrow">Quest Sorceress</p>
-        <div className="streak">
-          <b>{streak}</b>
-          <span>{streak === 1 ? 'day' : 'days'}</span>
-        </div>
+        {streak > 0 ? (
+          <p className="streak">
+            <b>{streak}</b>
+            <span>{streak === 1 ? 'day streak' : 'day streak'}</span>
+          </p>
+        ) : null}
       </header>
 
       {pending && pendingTemplate ? (
+        /* "Not this" dismisses and deals again in one move — generate() already
+           records the replaced quest as dismissed. */
         <QuestCard
           key={pending.id}
-          onComplete={() => complete(pending.id)}
-          onDismiss={() => dismiss(pending.id)}
-          onReroll={generate}
           template={pendingTemplate}
+          onComplete={onComplete}
+          onNext={generate}
         />
       ) : (
         <section className="panel dealt">
@@ -50,11 +70,16 @@ export function Home() {
         </section>
       )}
 
-      <p className="center">
-        <Link to="/preferences" className="btn quiet" style={{ display: 'inline-block' }}>
-          Change what she asks of you
-        </Link>
-      </p>
+      <Link to="/preferences" className="btn tune">
+        <span className="glyph" aria-hidden="true">
+          ❖
+        </span>
+        Adjust your preferences
+      </Link>
+
+      {justFinished ? (
+        <QuestComplete title={justFinished.title} streak={streak} onNext={onNext} />
+      ) : null}
     </div>
   );
 }
@@ -62,53 +87,43 @@ export function Home() {
 function QuestCard({
   template,
   onComplete,
-  onDismiss,
-  onReroll,
+  onNext,
 }: {
-  template: import('../types').QuestTemplate;
+  template: QuestTemplate;
   onComplete: () => void;
-  onDismiss: () => void;
-  onReroll: () => void;
+  onNext: () => void;
 }) {
   const { flavor, steps } = parseDescription(template.description);
 
   return (
-    <>
-      <section className="panel dealt">
-        <p className="eyebrow">
-          {CATEGORY_LABELS[template.category]} · {DIFFICULTY_LABELS[template.difficulty]}
-        </p>
-        <h1>{template.title}</h1>
-        {flavor ? <p className="flavor">{flavor}</p> : null}
-
-        {steps.length > 0 ? (
-          <ul className="steps">
-            {steps.map((s, i) => (
-              <li key={i}>
-                <span className="bullet" aria-hidden="true">
-                  ◆
-                </span>
-                <span>{s}</span>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-
-        <div className="row">
-          <button type="button" className="btn primary" onClick={onComplete}>
-            Done
-          </button>
-          <button type="button" className="btn" onClick={onDismiss}>
-            Not this
-          </button>
-        </div>
-      </section>
-
-      <p className="center">
-        <button type="button" className="btn quiet" onClick={onReroll}>
-          Give me another instead
-        </button>
+    <section className="panel dealt">
+      <p className="eyebrow">
+        {CATEGORY_LABELS[template.category]} · {DIFFICULTY_LABELS[template.difficulty]}
       </p>
-    </>
+      <h1>{template.title}</h1>
+      {flavor ? <p className="flavor">{flavor}</p> : null}
+
+      {steps.length > 0 ? (
+        <ul className="steps">
+          {steps.map((s, i) => (
+            <li key={i}>
+              <span className="bullet" aria-hidden="true">
+                ◆
+              </span>
+              <span>{s}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      <div className="row">
+        <button type="button" className="btn primary" onClick={onComplete}>
+          Done
+        </button>
+        <button type="button" className="btn" onClick={onNext}>
+          Not this
+        </button>
+      </div>
+    </section>
   );
 }

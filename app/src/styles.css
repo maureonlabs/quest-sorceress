@@ -402,6 +402,48 @@ button {
   flex: none;
 }
 
+/* ---------------------------------------------------------------- topbar */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.5rem;
+}
+
+/* ----------------------------------------------------- preferences button */
+
+.btn.tune {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  padding: 0.7rem 1.3rem;
+  border-radius: 999px;
+  border-color: var(--gold-dim);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+}
+
+.btn.tune .glyph {
+  font-size: 0.85rem;
+  color: var(--gold);
+  transition: color 0.18s ease;
+}
+
+.btn.tune:hover {
+  border-color: var(--gold);
+  color: var(--gold-lit);
+  background: rgba(201, 163, 78, 0.08);
+}
+
+.btn.tune:hover .glyph {
+  color: var(--gold-lit);
+}
+
 /* ------------------------------------------------------------------- meta */
 
 .meta {
@@ -427,14 +469,18 @@ button {
 }
 
 .streak b {
-  font-size: 1.9rem;
+  font-size: 1.6rem;
   font-weight: 400;
   line-height: 1;
 }
 
+.streak {
+  margin: 0;
+}
+
 .streak span {
   font-family: var(--body);
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-dim);
@@ -482,6 +528,71 @@ input,
   outline: 2px solid var(--gold-lit);
 }
 
+/* ------------------------------------------------------------------ modal */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(6, 11, 9, 0.72);
+  backdrop-filter: blur(6px);
+  animation: fade 0.25s ease both;
+}
+
+.panel.modal {
+  width: 100%;
+  max-width: 26rem;
+  text-align: center;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+.panel.modal .flavor,
+.panel.modal .dim {
+  text-wrap: balance;
+}
+
+.panel.modal .btn {
+  margin-top: 0.4rem;
+}
+
+.close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 2.1rem;
+  height: 2.1rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.close:hover {
+  color: var(--gold-lit);
+  border-color: var(--gold-dim);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* ---------------------------------------------------------------- motion */
 
 @keyframes deal {
@@ -505,5 +616,139 @@ input,
   *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+/* ----------------------------------------------------------------- portal */
+
+/* The entrance: a green doorway opening in the dark, fairy lights rising
+   through it. Shown once per app start, then it dissolves into the app. */
+
+.portal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 45% at 50% 55%, rgba(111, 216, 192, 0.16), transparent 70%),
+    var(--forest-deep);
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+}
+
+.portal.leaving {
+  opacity: 0;
+  transform: scale(1.12);
+  pointer-events: none;
+}
+
+.portal-motes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Two rings, offset in time, so the doorway reads as opening rather than
+   simply appearing. */
+.portal-ring,
+.portal-ring.two {
+  position: absolute;
+  width: min(62vw, 20rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgba(111, 216, 192, 0.55);
+  box-shadow:
+    0 0 60px rgba(111, 216, 192, 0.3),
+    inset 0 0 70px rgba(111, 216, 192, 0.18);
+  animation: open 2.2s cubic-bezier(0.16, 0.7, 0.2, 1) both;
+}
+
+.portal-ring.two {
+  border-color: rgba(201, 163, 78, 0.4);
+  box-shadow: 0 0 40px rgba(201, 163, 78, 0.16);
+  animation-delay: 0.22s;
+}
+
+.portal-core {
+  position: absolute;
+  width: min(52vw, 16rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(139, 240, 210, 0.3),
+    rgba(111, 216, 192, 0.07) 55%,
+    transparent 72%
+  );
+  filter: blur(6px);
+  animation: breathe 2.4s ease-in-out both;
+}
+
+.portal-word {
+  position: relative;
+  margin: 0;
+  text-align: center;
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 7vw, 2.4rem);
+  line-height: 1.12;
+  letter-spacing: 0.04em;
+  color: var(--gold-lit);
+  text-shadow: 0 0 28px rgba(201, 163, 78, 0.45);
+  animation: arrive 1.6s ease 0.5s both;
+}
+
+@keyframes open {
+  from {
+    transform: scale(0.15);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes breathe {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  45% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    letter-spacing: 0.22em;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* Reduced motion keeps the doorway but stops it moving. */
+@media (prefers-reduced-motion: reduce) {
+  .portal-ring,
+  .portal-ring.two,
+  .portal-core,
+  .portal-word {
+    animation: none;
+    opacity: 1;
   }
 }

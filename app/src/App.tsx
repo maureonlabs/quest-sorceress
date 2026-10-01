@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Portal } from './components/Portal';
 import { GameProvider, useGame } from './state';
 import { Home } from './screens/Home';
 import { Onboarding } from './screens/Onboarding';
@@ -72,11 +74,16 @@ function Shell() {
 }
 
 export default function App() {
+  /* The portal runs once per app start, over the app rather than instead of it,
+     so everything is mounted and ready by the time it clears. */
+  const [entering, setEntering] = useState(true);
+
   return (
     <GameProvider>
       <HashRouter>
         <Shell />
       </HashRouter>
+      {entering ? <Portal onDone={() => setEntering(false)} /> : null}
     </GameProvider>
   );
 }
