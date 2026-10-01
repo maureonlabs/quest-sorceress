@@ -14,6 +14,7 @@
  */
 
 import { useLayoutEffect, useRef, useState } from 'react';
+import { Bud, Leaf, Lily, Rose, RoseDefs } from './Flowers';
 
 type Layer = 'back' | 'front';
 
@@ -21,7 +22,7 @@ interface Decor {
   x: number;
   y: number;
   angle: number;
-  kind: 'leaf' | 'bud' | 'blossom';
+  kind: 'leaf' | 'bud' | 'rose' | 'lily';
   scale: number;
 }
 
@@ -140,17 +141,23 @@ export function VineFrame({ layer }: { layer: Layer }) {
       const clusters = 2 + Math.floor(R() * 2);
       for (let c = 0; c < clusters; c++) {
         const centre = (0.12 + R() * 0.76) * len;
-        const n = 2 + Math.floor(R() * 4);
+        const clusterIsLily = R() > 0.58;
+        const n = 2 + Math.floor(R() * 3);
         for (let k = 0; k < n; k++) {
           const at = Math.max(0, Math.min(len, centre + (R() - 0.5) * 46));
           const p = path.getPointAtLength(at);
           const q = path.getPointAtLength(Math.min(at + 1, len));
+          // A cluster is mostly one species with the other appearing among it,
+          // which is how a climbing rose and a lily actually share a trellis.
+          const roll = R();
+          const kind: Decor['kind'] =
+            roll > 0.76 ? 'bud' : roll > (clusterIsLily ? 0.3 : 0.72) ? 'lily' : 'rose';
           decor.push({
-            x: p.x + (R() - 0.5) * 13,
-            y: p.y + (R() - 0.5) * 13,
-            angle: (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI + (R() - 0.5) * 70,
-            kind: R() > 0.45 ? 'blossom' : 'bud',
-            scale: 0.75 + R() * 0.6,
+            x: p.x + (R() - 0.5) * 15,
+            y: p.y + (R() - 0.5) * 15,
+            angle: (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI + (R() - 0.5) * 80,
+            kind,
+            scale: (kind === 'bud' ? 0.8 : 0.62) + R() * 0.38,
           });
         }
       }
@@ -164,7 +171,7 @@ export function VineFrame({ layer }: { layer: Layer }) {
           angle:
             (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI + (R() > 0.5 ? 58 : -58),
           kind: 'leaf',
-          scale: 0.6 + R() * 0.55,
+          scale: 0.55 + R() * 0.5,
         });
       }
 
@@ -192,21 +199,12 @@ export function VineFrame({ layer }: { layer: Layer }) {
               <stop offset="70%" stopColor="#7E621F" />
               <stop offset="100%" stopColor="#E8CB86" />
             </linearGradient>
-            <linearGradient id={`vf-leaf-${layer}`} x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id={`${layer}-leaf`} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#B6E6BC" />
-              <stop offset="55%" stopColor="#5E9A61" />
-              <stop offset="100%" stopColor="#2F5434" />
+              <stop offset="52%" stopColor="#56914F" />
+              <stop offset="100%" stopColor="#274B2C" />
             </linearGradient>
-            <radialGradient id={`vf-petal-${layer}`} cx="38%" cy="30%">
-              <stop offset="0%" stopColor="#FFF4F7" />
-              <stop offset="35%" stopColor="#F5C2D1" />
-              <stop offset="78%" stopColor="#DF89A5" />
-              <stop offset="100%" stopColor="#A85C76" />
-            </radialGradient>
-            <radialGradient id={`vf-centre-${layer}`} cx="38%" cy="32%">
-              <stop offset="0%" stopColor="#FFFBE8" />
-              <stop offset="100%" stopColor="#D7A544" />
-            </radialGradient>
+            <RoseDefs id={layer} />
             <filter id={`vf-glow-${layer}`} x="-40%" y="-40%" width="180%" height="180%">
               <feGaussianBlur stdDeviation="5" result="b" />
               <feMerge>
@@ -254,29 +252,13 @@ export function VineFrame({ layer }: { layer: Layer }) {
                   transform={`translate(${it.x.toFixed(1)} ${it.y.toFixed(1)}) rotate(${it.angle.toFixed(1)}) scale(${it.scale.toFixed(2)})`}
                 >
                   {it.kind === 'leaf' ? (
-                    <>
-                      <path d="M0,0 C5,-7 15,-8 20,-2 C15,4 5,6 0,0 Z" fill={`url(#vf-leaf-${layer})`} />
-                      <path d="M1,0 C8,-2 14,-2 19,-2" stroke="#2A4C30" strokeWidth=".7" fill="none" opacity=".5" />
-                    </>
+                    <Leaf id={layer} bloom={1} />
                   ) : it.kind === 'bud' ? (
-                    <>
-                      <ellipse cx="6" cy="0" rx="3.2" ry="4.4" fill={`url(#vf-petal-${layer})`} />
-                      <path d="M0,0 C2.5,-1 4,-1 6,0" stroke="#5E9A61" strokeWidth="1" fill="none" />
-                    </>
+                    <Bud id={layer} bloom={1} />
+                  ) : it.kind === 'lily' ? (
+                    <Lily id={layer} bloom={1} />
                   ) : (
-                    <>
-                      {[0, 72, 144, 216, 288].map((a, k) => (
-                        <ellipse
-                          key={a}
-                          rx={3.4 + (k % 2) * 0.6}
-                          ry={4.9}
-                          cy={-4.8}
-                          transform={`rotate(${a + (k % 3) * 4})`}
-                          fill={`url(#vf-petal-${layer})`}
-                        />
-                      ))}
-                      <circle r="2" fill={`url(#vf-centre-${layer})`} />
-                    </>
+                    <Rose id={layer} bloom={1} />
                   )}
                 </g>
               )),

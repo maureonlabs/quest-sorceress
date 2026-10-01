@@ -69,9 +69,12 @@ export function ForestScene() {
 
       // Three ranks of trees, each darker and sharper than the one behind it.
       const ranks = [
-        { n: 16, shade: '#2E5A4A', alpha: 0.45, blur: 11, top: 0.1, wide: 0.05 },
-        { n: 11, shade: '#1A3528', alpha: 0.7, blur: 5, top: 0.03, wide: 0.07 },
-        { n: 7, shade: '#0B1813', alpha: 0.9, blur: 1, top: -0.04, wide: 0.1 },
+        // Every rank is darker than the air it stands in — a trunk is a
+        // silhouette, never a lit band. Narrow, too: wide soft verticals are
+        // what made this read as drapery.
+        { n: 13, shade: '#0C1A15', alpha: 0.4, blur: 12, top: 0.16, wide: 0.022 },
+        { n: 9, shade: '#071210', alpha: 0.62, blur: 6, top: 0.1, wide: 0.03 },
+        { n: 5, shade: '#030807', alpha: 0.85, blur: 2, top: 0.04, wide: 0.042 },
       ];
 
       for (const rank of ranks) {
@@ -80,26 +83,48 @@ export function ForestScene() {
         g.globalAlpha = rank.alpha;
         g.fillStyle = rank.shade;
         for (let i = 0; i < rank.n; i++) {
-          const x = (i / (rank.n - 1)) * w + (R() - 0.5) * w * 0.08;
-          const trunkW = w * rank.wide * (0.18 + R() * 0.3);
-          const top = h * (rank.top + R() * 0.1);
-          // Trunk, tapering as it rises.
+          const x = (i / (rank.n - 1)) * w + (R() - 0.5) * w * 0.1;
+          const trunkW = w * rank.wide * (0.5 + R() * 0.8);
+          const top = h * (rank.top + R() * 0.12);
+          const lean = (R() - 0.5) * w * 0.035;
+          const base = h * 0.84;
+
+          // A trunk: narrow, leaning, and stopping at the ground rather than
+          // running off the bottom of the frame.
           g.beginPath();
-          g.moveTo(x - trunkW, h);
-          g.lineTo(x - trunkW * 0.45, top);
-          g.lineTo(x + trunkW * 0.45, top);
-          g.lineTo(x + trunkW, h);
+          g.moveTo(x - trunkW, base);
+          g.quadraticCurveTo(x - trunkW * 0.6 + lean, (top + base) / 2, x - trunkW * 0.3 + lean, top);
+          g.lineTo(x + trunkW * 0.3 + lean, top);
+          g.quadraticCurveTo(x + trunkW * 0.6 + lean, (top + base) / 2, x + trunkW, base);
           g.closePath();
           g.fill();
-          // Canopy mass hanging off it.
-          const leaves = 3 + Math.floor(R() * 3);
+
+          // A couple of boughs, so the vertical is broken.
+          for (let b = 0; b < 2; b++) {
+            const by = top + (R() * 0.4 + 0.1) * (base - top);
+            const dir = R() > 0.5 ? 1 : -1;
+            g.beginPath();
+            g.moveTo(x + lean, by);
+            g.quadraticCurveTo(
+              x + lean + dir * w * 0.05,
+              by - h * 0.03,
+              x + lean + dir * w * 0.09,
+              by - h * 0.07,
+            );
+            g.lineWidth = trunkW * 0.5;
+            g.strokeStyle = rank.shade;
+            g.stroke();
+          }
+
+          // Canopy, sitting on top rather than draped down the trunk.
+          const leaves = 4 + Math.floor(R() * 3);
           for (let k = 0; k < leaves; k++) {
             g.beginPath();
             g.ellipse(
-              x + (R() - 0.5) * w * 0.14,
-              top + R() * h * 0.16,
-              w * (0.05 + R() * 0.07),
-              h * (0.03 + R() * 0.05),
+              x + lean + (R() - 0.5) * w * 0.18,
+              top - h * 0.01 + (R() - 0.5) * h * 0.08,
+              w * (0.06 + R() * 0.08),
+              h * (0.025 + R() * 0.04),
               R() * Math.PI,
               0,
               Math.PI * 2,
@@ -180,26 +205,6 @@ export function ForestScene() {
       }
       g.restore();
 
-      // Shafts of moonlight coming down through the canopy.
-      g.save();
-      g.globalCompositeOperation = 'screen';
-      g.filter = 'blur(26px)';
-      for (let i = 0; i < 4; i++) {
-        const x = w * (0.12 + i * 0.26) + (R() - 0.5) * w * 0.1;
-        const shaft = g.createLinearGradient(x, 0, x + w * 0.1, h);
-        shaft.addColorStop(0, 'rgba(160, 230, 205, 0.1)');
-        shaft.addColorStop(1, 'transparent');
-        g.fillStyle = shaft;
-        g.beginPath();
-        g.moveTo(x - w * 0.03, 0);
-        g.lineTo(x + w * 0.05, 0);
-        g.lineTo(x + w * 0.16, h);
-        g.lineTo(x - w * 0.06, h);
-        g.closePath();
-        g.fill();
-      }
-      g.restore();
-
       // Bokeh — the big soft out-of-focus lights that give the scene its depth.
       g.save();
       g.filter = 'blur(10px)';
@@ -226,17 +231,18 @@ export function ForestScene() {
       const bandTop = h * 0.1;
       const bandH = h * 0.72;
 
-      // lit trunk edges, bright enough to survive a heavy blur
-      g.filter = 'blur(2px)';
-      for (let i = 0; i < 7; i++) {
-        const x = bandX + (R() - 0.5) * w * 0.78;
-        const tw = w * (0.012 + R() * 0.03);
-        const grad = g.createLinearGradient(x - tw, 0, x + tw, 0);
-        grad.addColorStop(0, 'rgba(90, 150, 120, 0)');
-        grad.addColorStop(0.45, `rgba(126, 196, 160, ${(0.16 + R() * 0.2).toFixed(3)})`);
-        grad.addColorStop(1, 'rgba(90, 150, 120, 0)');
-        g.fillStyle = grad;
-        g.fillRect(x - tw, bandTop, tw * 2, bandH);
+      // Lit foliage catching light from deeper in the wood. Soft organic masses
+      // rather than bands — anything vertical here reads as a curtain, not a forest.
+      g.filter = 'blur(9px)';
+      for (let i = 0; i < 14; i++) {
+        const lx = bandX + (R() - 0.5) * w * 0.8;
+        const ly = bandTop + R() * bandH;
+        const lw = w * (0.05 + R() * 0.1);
+        const lh = lw * (0.45 + R() * 0.5);
+        g.beginPath();
+        g.ellipse(lx, ly, lw, lh, R() * Math.PI, 0, Math.PI * 2);
+        g.fillStyle = `rgba(104, 178, 142, ${(0.07 + R() * 0.12).toFixed(3)})`;
+        g.fill();
       }
 
       // a dense cluster of bright bokeh behind the card's footprint
