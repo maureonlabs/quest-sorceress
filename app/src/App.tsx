@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Portal } from './components/Portal';
+import { ForestScene } from './components/ForestScene';
 import * as sound from './sound';
 import { GameProvider, useGame } from './state';
 import { Home } from './screens/Home';
@@ -90,6 +91,7 @@ export default function App() {
 
   return (
     <GameProvider>
+      <ForestScene />
       <HashRouter>
         <Shell />
       </HashRouter>

@@ -98,6 +98,7 @@ function QuestCard({
 
   return (
     <section className="panel card dealt">
+      <span className="sheen" aria-hidden="true" />
       <VineFrame />
 
       <div className="card-body">

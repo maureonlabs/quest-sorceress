@@ -1,0 +1,268 @@
+<title>Quest Sorceress Sound Sets</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Mulish:wght@300;400;600;700&family=Pinyon+Script&display=swap">
+
+<style>
+:root{
+  --forest-deep:#0B1210; --forest-mid:#16211C;
+  --glass:rgba(226,240,234,.07); --glass-edge:rgba(255,249,232,.22);
+  --gold:#C9A34E; --gold-lit:#F0D695; --gold-dim:rgba(201,163,78,.35);
+  --blossom:#E9A3B8; --mint:#6FD8C0; --mint-dim:rgba(111,216,192,.18);
+  --text:#F2EDE1; --text-dim:#A8B5AE;
+  --display:'Marcellus',Georgia,serif; --body:'Mulish',Helvetica,Arial,sans-serif;
+  --brand:'Pinyon Script','Snell Roundhand',cursive;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;
+  background:
+    radial-gradient(90% 55% at 50% -10%,rgba(201,163,78,.1),transparent 60%),
+    radial-gradient(70% 50% at 20% 110%,rgba(111,216,192,.06),transparent 60%),
+    linear-gradient(170deg,var(--forest-mid),var(--forest-deep) 60%);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:44rem;margin:0 auto;padding:3rem 1.1rem 5rem;display:flex;flex-direction:column;gap:1.6rem}
+
+header{text-align:center;display:flex;flex-direction:column;gap:.5rem;margin-bottom:.5rem}
+.brand{
+  font-family:var(--brand);font-size:clamp(2.2rem,9vw,3.2rem);line-height:1.05;
+  color:var(--gold-lit);
+  background:linear-gradient(168deg,#FFF6DC,#F0D695 22%,#C9A34E 52%,#E7C878 72%,#FBF0CF);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 14px rgba(201,163,78,.45)) drop-shadow(0 0 34px rgba(233,163,184,.22));
+  padding-bottom:.08em;margin:0;
+}
+header p{margin:0;color:var(--text-dim);font-size:.95rem;text-wrap:balance}
+
+.hint{
+  background:var(--mint-dim);border:1px solid rgba(111,216,192,.4);border-radius:10px;
+  padding:.85rem 1rem;font-size:.92rem;color:var(--text-dim);text-align:center;
+}
+.hint b{color:var(--mint)}
+
+.set{
+  position:relative;background:var(--glass);backdrop-filter:blur(18px);
+  border:1px solid var(--glass-edge);border-radius:16px;padding:1.4rem 1.25rem;
+  display:flex;flex-direction:column;gap:.9rem;
+}
+.set::before{content:'';position:absolute;inset:7px;border:1px solid var(--gold-dim);border-radius:11px;pointer-events:none}
+.set>*{position:relative}
+.set.on{border-color:var(--mint);box-shadow:0 0 40px -18px var(--mint)}
+
+.set h2{font-family:var(--display);font-weight:400;font-size:1.5rem;margin:0;color:var(--gold-lit);
+  display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.num{font-family:var(--body);font-size:.66rem;font-weight:700;letter-spacing:.18em;
+  color:var(--gold);background:rgba(201,163,78,.14);padding:.25rem .5rem;border-radius:5px}
+.set p.desc{margin:0;color:var(--text-dim);font-size:.93rem}
+
+.cues{display:flex;flex-wrap:wrap;gap:.45rem}
+.cue{
+  font-family:var(--body);font-size:.78rem;font-weight:600;letter-spacing:.04em;
+  padding:.55rem .9rem;border-radius:999px;border:1px solid var(--glass-edge);
+  background:transparent;color:var(--text);cursor:pointer;
+  transition:border-color .18s,color .18s,background .18s,transform .1s;
+}
+.cue:hover{border-color:var(--gold);color:var(--gold-lit)}
+.cue:active{transform:scale(.96)}
+.cue.hero{border-color:var(--mint);color:var(--mint);background:var(--mint-dim)}
+.cue.hero:hover{background:rgba(111,216,192,.28);color:#D4F6EE}
+
+.playall{align-self:flex-start;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  background:none;border:1px solid var(--gold-dim);border-radius:999px;padding:.5rem 1rem;
+  color:var(--text-dim);font-family:var(--body);cursor:pointer}
+.playall:hover{border-color:var(--gold);color:var(--gold-lit)}
+
+footer{text-align:center;color:var(--text-dim);font-size:.88rem;padding-top:1rem;border-top:1px solid var(--gold-dim)}
+:focus-visible{outline:2px solid var(--gold-lit);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.001s!important}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <p class="brand">Quest Sorceress</p>
+  <p>Five sound sets. Listen, then tell me which number you want — or mix and match cues across sets.</p>
+</header>
+
+<div class="hint">
+  <b>Turn your sound on.</b> Every cue is a short rising progression, never a single beep.
+  Start with <b>Complete</b> in each set — it is the sound you will hear most, and the one that has to feel like a reward.
+</div>
+
+<div id="sets"></div>
+
+<footer>
+  Set 1 is what is currently in the app. Nothing here changes it until you choose.
+</footer>
+
+</div>
+
+<script>
+/* ---------------------------------------------------------------- audio ---
+   One synth, five voices. Each set differs in waveform, envelope, detune,
+   reverb and the progression itself — so they are genuinely different
+   characters, not the same bells at different pitches.                      */
+
+let ctx = null, master = null, wetGain = null, delay = null;
+
+function audio(){
+  if (ctx) return ctx;
+  const C = window.AudioContext || window.webkitAudioContext;
+  if (!C) return null;
+  ctx = new C();
+  master = ctx.createGain(); master.gain.value = .26;
+  delay = ctx.createDelay(1); delay.delayTime.value = .18;
+  const fb = ctx.createGain(); fb.gain.value = .22;
+  wetGain = ctx.createGain(); wetGain.gain.value = .3;
+  master.connect(ctx.destination);
+  master.connect(delay); delay.connect(fb); fb.connect(delay);
+  delay.connect(wetGain); wetGain.connect(ctx.destination);
+  return ctx;
+}
+
+const N = {C3:130.81,G3:196,A3:220,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,
+           C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880,B4:493.88,
+           C6:1046.5,D6:1174.66,E6:1318.51,G6:1567.98,A6:1760,C7:2093};
+
+const SETS = [
+  {
+    name:'Crystal Bells', desc:'Pure sine bells with a shimmering octave above. Bright, clean, slightly ceremonial. This is what is in the app now.',
+    voice:{ base:'sine', top:'triangle', topRatio:2.01, topGain:.22, attack:.012, release:1, delay:.18, fb:.22, wet:.3 },
+    cues:{
+      enter:[[N.C4,0,1.6,.3],[N.G4,.16,1.5],[N.C5,.32,1.4],[N.E5,.5,1.3],[N.G5,.68,1.2],[N.C6,.88,1.6,.5],[N.E6,1.04,1.4,.3]],
+      deal:[[N.E5,0,.5],[N.G5,.07,.55],[N.C6,.14,.8,.5]],
+      complete:[[N.C5,0,.7],[N.E5,.09,.7],[N.G5,.18,.8],[N.C6,.27,1,.55],[N.E6,.36,1.1,.4],[N.G6,.46,1.3,.26],[N.C6,.62,1.4,.2]],
+      dismiss:[[N.A5,0,.4,.3],[N.D5,.08,.6,.26]],
+      select:[[N.A5,0,.22,.18]],
+    }
+  },
+  {
+    name:'Fairy Harp', desc:'Plucked and quick, like a hand running up harp strings. Lighter and more playful, with a lot of notes close together.',
+    voice:{ base:'triangle', top:'sine', topRatio:3.01, topGain:.14, attack:.004, release:.55, delay:.12, fb:.28, wet:.34 },
+    cues:{
+      enter:[[N.C4,0,.9],[N.E4,.06,.9],[N.G4,.12,.9],[N.C5,.18,.9],[N.E5,.24,.9],[N.G5,.3,.9],[N.C6,.36,1.1,.5],[N.E6,.42,1.1,.4],[N.G6,.48,1.2,.3],[N.C7,.56,1.3,.2]],
+      deal:[[N.G5,0,.35],[N.A5,.05,.35],[N.C6,.1,.4],[N.E6,.15,.55,.45]],
+      complete:[[N.C5,0,.45],[N.E5,.05,.45],[N.G5,.1,.45],[N.C6,.15,.5],[N.E6,.2,.55],[N.G6,.25,.6,.45],[N.C7,.32,.9,.3],[N.G6,.42,.9,.22],[N.C7,.5,1.1,.18]],
+      dismiss:[[N.E5,0,.3,.28],[N.C5,.06,.45,.24],[N.A4,.12,.5,.2]],
+      select:[[N.E6,0,.16,.16]],
+    }
+  },
+  {
+    name:'Deep Chime', desc:'Low temple bells with a long tail and plenty of air. Calmer and more serious — the sound of a quiet wood rather than a sparkle.',
+    voice:{ base:'sine', top:'sine', topRatio:1.5, topGain:.3, attack:.02, release:2.2, delay:.3, fb:.38, wet:.42 },
+    cues:{
+      enter:[[N.C3,0,2.6,.34],[N.G3,.3,2.4],[N.C4,.62,2.2],[N.E4,.95,2],[N.G4,1.25,2.2,.4]],
+      deal:[[N.G3,0,1.1,.34],[N.C4,.16,1.2],[N.E4,.32,1.5,.42]],
+      complete:[[N.C3,0,2,.36],[N.G3,.18,1.9],[N.C4,.36,1.9],[N.E4,.54,2],[N.G4,.74,2.2,.45],[N.C5,.96,2.6,.34]],
+      dismiss:[[N.E4,0,.9,.28],[N.A3,.14,1.3,.24]],
+      select:[[N.C4,0,.5,.18]],
+    }
+  },
+  {
+    name:'Music Box', desc:'Tinkly and nostalgic, with a touch of detune so it sounds like a real wound mechanism. Sweet, a little fragile.',
+    voice:{ base:'triangle', top:'square', topRatio:2.004, topGain:.07, attack:.002, release:.45, delay:.09, fb:.16, wet:.24, detune:7 },
+    cues:{
+      enter:[[N.C5,0,.8],[N.E5,.12,.8],[N.G5,.24,.8],[N.C6,.36,.9],[N.E6,.5,1,.45],[N.C6,.66,1.1,.3]],
+      deal:[[N.C6,0,.4],[N.E6,.08,.45,.45]],
+      complete:[[N.C5,0,.5],[N.G5,.1,.5],[N.E6,.2,.6,.5],[N.C6,.3,.6],[N.E6,.4,.7,.45],[N.G6,.52,.9,.3],[N.E6,.66,1,.22]],
+      dismiss:[[N.G5,0,.35,.28],[N.E5,.08,.5,.22]],
+      select:[[N.C6,0,.18,.16]],
+    }
+  },
+  {
+    name:'Woodland Flute', desc:'Breathy and organic, with a slow vibrato. The least magical and the most natural — more woodland than wizardry.',
+    voice:{ base:'sine', top:'sine', topRatio:2, topGain:.1, attack:.09, release:.9, delay:.24, fb:.3, wet:.38, vibrato:5.5 },
+    cues:{
+      enter:[[N.G4,0,1.4,.34],[N.C5,.26,1.4],[N.D5,.5,1.3],[N.G5,.76,1.6,.45]],
+      deal:[[N.D5,0,.6],[N.G5,.14,.8,.45]],
+      complete:[[N.C5,0,.8],[N.D5,.16,.8],[N.G5,.32,.9],[N.A5,.5,1,.5],[N.C6,.7,1.4,.42]],
+      dismiss:[[N.G5,0,.5,.3],[N.D5,.14,.7,.26]],
+      select:[[N.D5,0,.28,.18]],
+    }
+  },
+];
+
+function note(set, f, at, dur, gain, t0){
+  const v = set.voice;
+  const start = t0 + at;
+  const peak = gain ?? .4;
+  const rel = Math.min(dur, v.release);
+
+  const osc = ctx.createOscillator();
+  osc.type = v.base; osc.frequency.value = f;
+  if (v.detune) osc.detune.value = (Math.random()-.5) * v.detune * 2;
+
+  const top = ctx.createOscillator();
+  top.type = v.top; top.frequency.value = f * v.topRatio;
+
+  const g = ctx.createGain(), gt = ctx.createGain();
+  g.gain.setValueAtTime(.0001, start);
+  g.gain.exponentialRampToValueAtTime(peak, start + v.attack);
+  g.gain.exponentialRampToValueAtTime(.0001, start + dur);
+  gt.gain.setValueAtTime(.0001, start);
+  gt.gain.exponentialRampToValueAtTime(peak * v.topGain, start + v.attack*.7);
+  gt.gain.exponentialRampToValueAtTime(.0001, start + rel*.7);
+
+  if (v.vibrato){
+    const lfo = ctx.createOscillator(); lfo.frequency.value = v.vibrato;
+    const amt = ctx.createGain(); amt.gain.value = f * .012;
+    lfo.connect(amt).connect(osc.frequency);
+    lfo.start(start); lfo.stop(start + dur + .05);
+  }
+
+  osc.connect(g).connect(master);
+  top.connect(gt).connect(master);
+  osc.start(start); top.start(start);
+  osc.stop(start + dur + .05); top.stop(start + dur + .05);
+}
+
+function play(setIndex, cue){
+  const c = audio(); if (!c) return;
+  if (c.state === 'suspended') c.resume();
+  const set = SETS[setIndex];
+  delay.delayTime.value = set.voice.delay;
+  wetGain.gain.value = set.voice.wet;
+  const t0 = c.currentTime + .02;
+  for (const [f, at, dur, gain] of set.cues[cue]) note(set, f, at, dur, gain, t0);
+
+  document.querySelectorAll('.set').forEach((el,i)=>el.classList.toggle('on', i===setIndex));
+}
+
+async function playAll(i){
+  const order = ['enter','deal','complete','dismiss','select'];
+  const gaps  = [2200, 900, 1800, 900, 600];
+  for (let k=0;k<order.length;k++){
+    play(i, order[k]);
+    await new Promise(r=>setTimeout(r, gaps[k]));
+  }
+}
+
+/* ------------------------------------------------------------------ view */
+const CUE_LABELS = [
+  ['complete','Complete', true],
+  ['deal','New quest', false],
+  ['enter','Portal', false],
+  ['dismiss','Not this', false],
+  ['select','Tap', false],
+];
+
+document.getElementById('sets').innerHTML = SETS.map((s,i)=>`
+  <section class="set">
+    <h2><span class="num">SET ${i+1}</span> ${s.name}</h2>
+    <p class="desc">${s.desc}</p>
+    <div class="cues">
+      ${CUE_LABELS.map(([cue,label,hero])=>
+        `<button class="cue${hero?' hero':''}" data-set="${i}" data-cue="${cue}">▶ ${label}</button>`).join('')}
+    </div>
+    <button class="playall" data-all="${i}">Play the whole set</button>
+  </section>
+`).join('');
+
+document.getElementById('sets').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  if (b.dataset.all !== undefined) playAll(+b.dataset.all);
+  else play(+b.dataset.set, b.dataset.cue);
+});
+</script>
