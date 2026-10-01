@@ -97,9 +97,12 @@ function QuestCard({
   const { flavor, steps } = parseDescription(template.description);
 
   return (
-    <section className="panel card dealt">
-      <span className="sheen" aria-hidden="true" />
-      <VineFrame />
+    <div className="card-stage dealt">
+      {/* behind the glass */}
+      <VineFrame layer="back" />
+
+      <section className="panel card">
+        <span className="sheen" aria-hidden="true" />
 
       <div className="card-body">
         <p className="eyebrow">
@@ -122,14 +125,18 @@ function QuestCard({
         ) : null}
       </div>
 
-      <div className="row">
-        <button type="button" className="btn primary" onClick={onComplete}>
-          Done
-        </button>
-        <button type="button" className="btn" onClick={onNext}>
-          Not this
-        </button>
-      </div>
-    </section>
+        <div className="row">
+          <button type="button" className="btn primary" onClick={onComplete}>
+            Done
+          </button>
+          <button type="button" className="btn" onClick={onNext}>
+            Not this
+          </button>
+        </div>
+      </section>
+
+      {/* and in front of it, so the plant wraps the pane */}
+      <VineFrame layer="front" />
+    </div>
   );
 }

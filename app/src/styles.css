@@ -790,7 +790,7 @@ input,
     inset -2px 0 0 -1px rgba(0, 0, 0, 0.25);
 
   /* Standing slightly turned, as a pane leaning in a clearing would. */
-  transform: perspective(1600px) rotateY(-1.6deg) rotateX(0.8deg);
+  transform: perspective(1500px) rotateY(-4deg) rotateX(1deg);
   transform-style: preserve-3d;
 }
 
@@ -831,7 +831,8 @@ input,
 /* The inner gold rule, pulled further in so the vines have room to overlap it. */
 .card::before {
   inset: 12px;
-  border-color: rgba(201, 163, 78, 0.4);
+  border-color: rgba(222, 186, 104, 0.72);
+  box-shadow: 0 0 18px -4px rgba(201, 163, 78, 0.5);
 }
 
 /* A soft light pooling at the foot of the card, as if it stands on the ground. */
@@ -848,14 +849,40 @@ input,
   pointer-events: none;
 }
 
-/* The vines sit above the glass and overhang its edge. */
+
+.card-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The stage is the vines' sizing reference; both layers match the card exactly
+   and overhang it freely. */
 .vines {
   position: absolute;
   inset: 0;
-  z-index: 2;
   pointer-events: none;
   overflow: visible;
   line-height: 0;
+}
+
+/* Behind the glass: dimmer and cooler, as something seen through 22px of blur
+   would be. */
+.vines-back {
+  z-index: 0;
+  opacity: 0.72;
+  filter: blur(1.4px) saturate(0.85);
+}
+
+/* In front: full strength, and casting a shadow onto the pane so it lifts. */
+.vines-front {
+  z-index: 3;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55));
+}
+
+.card-stage > .card {
+  position: relative;
+  z-index: 1;
 }
 
 /* Card contents sit above the glass but below the vines, so a leaf can fall

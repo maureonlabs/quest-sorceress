@@ -61,9 +61,9 @@ export function ForestScene() {
 
       // Night air, lighter toward the clearing in the middle.
       const sky = g.createRadialGradient(w * 0.5, h * 0.42, 0, w * 0.5, h * 0.5, h * 0.9);
-      sky.addColorStop(0, '#2A5547');
-      sky.addColorStop(0.45, '#1A332A');
-      sky.addColorStop(1, '#09120F');
+      sky.addColorStop(0, '#1A3A30');
+      sky.addColorStop(0.45, '#102019');
+      sky.addColorStop(1, '#050A08');
       g.fillStyle = sky;
       g.fillRect(0, 0, w, h);
 
@@ -136,6 +136,50 @@ export function ForestScene() {
       g.fillStyle = pool;
       g.fillRect(0, h * 0.55, w, h * 0.45);
 
+      // The ground: a silhouetted mass with a broken top edge, so there is a
+      // visible line where the wood meets the earth rather than a soft wash.
+      g.save();
+      const horizon = h * 0.8;
+      g.beginPath();
+      g.moveTo(0, h);
+      g.lineTo(0, horizon);
+      for (let x = 0; x <= w; x += w / 36) {
+        const n =
+          Math.sin(x * 0.011) * h * 0.012 +
+          Math.sin(x * 0.027 + 1.7) * h * 0.008 +
+          (R() - 0.5) * h * 0.006;
+        g.lineTo(x, horizon + n);
+      }
+      g.lineTo(w, h);
+      g.closePath();
+      g.fillStyle = '#060E0A';
+      g.fill();
+
+      // mossy sheen catching the light along the top of it
+      g.filter = 'blur(5px)';
+      g.strokeStyle = 'rgba(120, 190, 150, 0.22)';
+      g.lineWidth = 2.5;
+      g.stroke();
+      g.restore();
+
+      // Orbs resting in the grass — static, unlike the drifting motes above.
+      g.save();
+      g.filter = 'blur(4px)';
+      for (let i = 0; i < 9; i++) {
+        const ox = R() * w;
+        const oy = horizon + R() * (h - horizon) * 0.75;
+        const orr = (4 + R() * 9) * (w / 900);
+        const halo = g.createRadialGradient(ox, oy, 0, ox, oy, orr * 5);
+        halo.addColorStop(0, 'rgba(255, 248, 225, 0.95)');
+        halo.addColorStop(0.18, 'rgba(250, 214, 140, 0.5)');
+        halo.addColorStop(1, 'transparent');
+        g.fillStyle = halo;
+        g.beginPath();
+        g.arc(ox, oy, orr * 5, 0, Math.PI * 2);
+        g.fill();
+      }
+      g.restore();
+
       // Shafts of moonlight coming down through the canopy.
       g.save();
       g.globalCompositeOperation = 'screen';
@@ -173,10 +217,48 @@ export function ForestScene() {
       }
       g.restore();
 
+      // The card stands in the middle and blurs whatever is behind it. A smooth
+      // gradient blurred by 22px is the same smooth gradient — so the glass only
+      // reads as glass if there is real detail here to soften. This band exists
+      // to be looked at THROUGH.
+      g.save();
+      const bandX = w * 0.5;
+      const bandTop = h * 0.1;
+      const bandH = h * 0.72;
+
+      // lit trunk edges, bright enough to survive a heavy blur
+      g.filter = 'blur(2px)';
+      for (let i = 0; i < 7; i++) {
+        const x = bandX + (R() - 0.5) * w * 0.78;
+        const tw = w * (0.012 + R() * 0.03);
+        const grad = g.createLinearGradient(x - tw, 0, x + tw, 0);
+        grad.addColorStop(0, 'rgba(90, 150, 120, 0)');
+        grad.addColorStop(0.45, `rgba(126, 196, 160, ${(0.16 + R() * 0.2).toFixed(3)})`);
+        grad.addColorStop(1, 'rgba(90, 150, 120, 0)');
+        g.fillStyle = grad;
+        g.fillRect(x - tw, bandTop, tw * 2, bandH);
+      }
+
+      // a dense cluster of bright bokeh behind the card's footprint
+      g.filter = 'blur(7px)';
+      for (let i = 0; i < 22; i++) {
+        const bx = bandX + (R() - 0.5) * w * 0.72;
+        const by = bandTop + R() * bandH;
+        const br = (5 + R() * 20) * (w / 900);
+        g.beginPath();
+        g.arc(bx, by, br, 0, Math.PI * 2);
+        g.fillStyle =
+          R() > 0.4
+            ? `rgba(252, 224, 152, ${(0.18 + R() * 0.3).toFixed(3)})`
+            : `rgba(158, 250, 218, ${(0.12 + R() * 0.22).toFixed(3)})`;
+        g.fill();
+      }
+      g.restore();
+
       // Vignette, so the eye goes to the middle where the card stands.
       const vig = g.createRadialGradient(w * 0.5, h * 0.5, h * 0.25, w * 0.5, h * 0.5, h * 0.85);
       vig.addColorStop(0, 'transparent');
-      vig.addColorStop(1, 'rgba(3, 7, 6, 0.55)');
+      vig.addColorStop(1, 'rgba(2, 5, 4, 0.78)');
       g.fillStyle = vig;
       g.fillRect(0, 0, w, h);
 
@@ -221,9 +303,17 @@ export function ForestScene() {
         if (m.blur) ctx.filter = `blur(${m.blur}px)`;
         ctx.beginPath();
         ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
-        ctx.fillStyle = m.warm
-          ? `rgba(246, 220, 150, ${(twinkle * 0.75).toFixed(3)})`
-          : `rgba(150, 240, 212, ${(twinkle * 0.6).toFixed(3)})`;
+        const halo = ctx.createRadialGradient(m.x, m.y, 0, m.x, m.y, m.r * 4);
+        halo.addColorStop(0, `rgba(255, 250, 232, ${(twinkle * 0.95).toFixed(3)})`);
+        halo.addColorStop(
+          0.3,
+          m.warm
+            ? `rgba(250, 214, 140, ${(twinkle * 0.5).toFixed(3)})`
+            : `rgba(150, 240, 212, ${(twinkle * 0.45).toFixed(3)})`,
+        );
+        halo.addColorStop(1, 'transparent');
+        ctx.fillStyle = halo;
+        ctx.arc(m.x, m.y, m.r * 4, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }

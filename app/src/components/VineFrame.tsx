@@ -1,62 +1,99 @@
 /**
- * The flowering vines that wrap the quest card.
+ * The flowering vines.
  *
- * The earlier version drew four corner sprays into a fixed viewBox and let the
- * browser stretch them over the card, so the flowers floated off its edge at
- * any size but the one it was drawn for.
+ * Two earlier attempts failed in instructive ways. The first stretched a fixed
+ * drawing over the card, so flowers floated off its edge. The second walked the
+ * card's own outline at an even step, which put every flower exactly on the
+ * line at identical spacing — a wallpaper trim, not a plant.
  *
- * This version measures the card and draws at 1:1 pixel scale. The vine IS the
- * card's own rounded-rectangle outline, and every leaf and blossom is placed by
- * sampling that path with getPointAtLength and rotated to its tangent — so each
- * one sits on the line, facing the way the stem runs, at every size.
+ * This one grows stems that WANDER: Bézier curves that leave the frame by
+ * 20–60px and come back, cross each other, and carry blossoms in irregular
+ * clusters with long bare stretches between. Half the stems render behind the
+ * glass and half in front, which is what makes the card read as a pane with a
+ * plant growing around it rather than a panel with a border.
  */
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+
+type Layer = 'back' | 'front';
 
 interface Decor {
   x: number;
   y: number;
-  /** degrees, from the tangent of the stem at that point */
   angle: number;
-  kind: 'leaf' | 'blossom' | 'bud';
+  kind: 'leaf' | 'bud' | 'blossom';
   scale: number;
-  side: 1 | -1;
 }
 
-/** Deterministic, so the same card is always wearing the same vine. */
+interface Stem {
+  d: string;
+  width: number;
+  decor: Decor[];
+}
+
 function rng(seed: number) {
   let s = seed;
   return () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296);
 }
 
-/** The card's outline as a path: a rounded rectangle, inset so the vine rides its edge. */
-function framePath(w: number, h: number, r: number, inset: number): string {
-  const x = inset;
-  const y = inset;
-  const ww = w - inset * 2;
-  const hh = h - inset * 2;
-  const rr = Math.max(0, Math.min(r, ww / 2, hh / 2));
-  return [
-    `M${x + rr},${y}`,
-    `H${x + ww - rr}`,
-    `A${rr},${rr} 0 0 1 ${x + ww},${y + rr}`,
-    `V${y + hh - rr}`,
-    `A${rr},${rr} 0 0 1 ${x + ww - rr},${y + hh}`,
-    `H${x + rr}`,
-    `A${rr},${rr} 0 0 1 ${x},${y + hh - rr}`,
-    `V${y + rr}`,
-    `A${rr},${rr} 0 0 1 ${x + rr},${y}`,
-    'Z',
-  ].join(' ');
+/**
+ * Grow one stem along a stretch of the card's perimeter, pushed off the edge by
+ * a wandering amount so it never traces the rectangle.
+ */
+function growStem(
+  w: number,
+  h: number,
+  from: number,
+  to: number,
+  R: () => number,
+  /**
+   * Front stems are biased outward so they overhang the pane's edge without
+   * wandering across the writing — a vine in front of the glass is beautiful,
+   * a vine across the title is a bug. Back stems are free to cross, because
+   * they are behind 22px of blur and cannot obscure anything.
+   */
+  outwardOnly = false,
+): { d: string; pts: Array<{ x: number; y: number }> } {
+  // Walk the perimeter as a parameter 0..1 and displace outward/inward.
+  const at = (t: number) => {
+    const per = 2 * (w + h);
+    let d = ((t % 1) + 1) % 1 * per;
+    if (d < w) return { x: d, y: 0, nx: 0, ny: -1 };
+    d -= w;
+    if (d < h) return { x: w, y: d, nx: 1, ny: 0 };
+    d -= h;
+    if (d < w) return { x: w - d, y: h, nx: 0, ny: 1 };
+    d -= w;
+    return { x: 0, y: h - d, nx: -1, ny: 0 };
+  };
+
+  const steps = 9;
+  const pts: Array<{ x: number; y: number }> = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = from + ((to - from) * i) / steps;
+    const p = at(t);
+    const wave = Math.sin(i * 1.15 + R() * 0.6);
+    const swing = outwardOnly
+      ? Math.abs(wave) * (16 + R() * 30) + 4
+      : wave * (30 + R() * 38) - 10;
+    pts.push({ x: p.x + p.nx * swing, y: p.y + p.ny * swing });
+  }
+
+  let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const mx = (pts[i].x + pts[i + 1].x) / 2;
+    const my = (pts[i].y + pts[i + 1].y) / 2;
+    d += ` Q${pts[i].x.toFixed(1)},${pts[i].y.toFixed(1)} ${mx.toFixed(1)},${my.toFixed(1)}`;
+  }
+  return { d, pts };
 }
 
-export function VineFrame({ radius = 18 }: { radius?: number }) {
+export function VineFrame({ layer }: { layer: Layer }) {
   const host = useRef<HTMLDivElement>(null);
-  const measure = useRef<SVGPathElement>(null);
+  const probe = useRef<SVGSVGElement>(null);
   const [box, setBox] = useState({ w: 0, h: 0 });
-  const [decor, setDecor] = useState<Decor[]>([]);
+  const [stems, setStems] = useState<Stem[]>([]);
 
-  /* Track the card's real size. */
   useLayoutEffect(() => {
     const el = host.current?.parentElement;
     if (!el) return;
@@ -70,82 +107,108 @@ export function VineFrame({ radius = 18 }: { radius?: number }) {
     return () => ro.disconnect();
   }, []);
 
-  /* Walk the outline and hang things off it. */
-  useEffect(() => {
-    const path = measure.current;
-    if (!path || box.w === 0) return;
+  useLayoutEffect(() => {
+    const svg = probe.current;
+    if (!svg || box.w === 0) return;
 
-    const total = path.getTotalLength();
-    if (!Number.isFinite(total) || total === 0) return;
+    // Each layer gets its own stems, seeded so they interleave rather than overlap.
+    const R = rng(layer === 'back' ? 9091 : 3137);
+    const runs: Array<[number, number]> =
+      layer === 'back'
+        ? [
+            [0.86, 1.12],
+            [0.36, 0.6],
+          ]
+        : [
+            [0.9, 1.18],
+            [0.4, 0.66],
+            [0.12, 0.26],
+          ];
 
-    const R = rng(4242);
-    const out: Decor[] = [];
+    const made: Stem[] = runs.map(([a, b], si) => {
+      const { d } = growStem(box.w, box.h, a, b, R, layer === 'front');
 
-    // Growth is heaviest near the top-left and bottom-right, thinning on the
-    // other two corners, so the frame never reads as a symmetrical wreath.
-    const density = (t: number) => {
-      const near = (a: number) => {
-        const d = Math.min(Math.abs(t - a), 1 - Math.abs(t - a));
-        return Math.exp(-(d * d) / 0.012);
-      };
-      return 0.28 + 0.72 * Math.max(near(0.97), near(0.47));
-    };
+      // Measure the curve so decorations can sit on it and face along it.
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', d);
+      svg.appendChild(path);
+      const len = path.getTotalLength();
 
-    const step = 13;
-    for (let d = 0; d < total; d += step) {
-      const t = d / total;
-      if (R() > density(t)) continue;
+      const decor: Decor[] = [];
+      // Blossoms arrive in clusters with bare stem between them — punctuation,
+      // not texture, which is what the art direction asks for.
+      const clusters = 2 + Math.floor(R() * 2);
+      for (let c = 0; c < clusters; c++) {
+        const centre = (0.12 + R() * 0.76) * len;
+        const n = 2 + Math.floor(R() * 4);
+        for (let k = 0; k < n; k++) {
+          const at = Math.max(0, Math.min(len, centre + (R() - 0.5) * 46));
+          const p = path.getPointAtLength(at);
+          const q = path.getPointAtLength(Math.min(at + 1, len));
+          decor.push({
+            x: p.x + (R() - 0.5) * 13,
+            y: p.y + (R() - 0.5) * 13,
+            angle: (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI + (R() - 0.5) * 70,
+            kind: R() > 0.45 ? 'blossom' : 'bud',
+            scale: 0.75 + R() * 0.6,
+          });
+        }
+      }
+      // Leaves run the whole length, sparser.
+      for (let d2 = 10; d2 < len; d2 += 26 + R() * 30) {
+        const p = path.getPointAtLength(d2);
+        const q = path.getPointAtLength(Math.min(d2 + 1, len));
+        decor.push({
+          x: p.x,
+          y: p.y,
+          angle:
+            (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI + (R() > 0.5 ? 58 : -58),
+          kind: 'leaf',
+          scale: 0.6 + R() * 0.55,
+        });
+      }
 
-      const p = path.getPointAtLength(d);
-      const q = path.getPointAtLength(Math.min(d + 1, total));
-      const angle = (Math.atan2(q.y - p.y, q.x - p.x) * 180) / Math.PI;
-      const side: 1 | -1 = R() > 0.45 ? 1 : -1;
+      svg.removeChild(path);
+      return { d, width: 5.5 - si * 1.3, decor };
+    });
 
-      const roll = R();
-      const kind: Decor['kind'] = roll > 0.72 ? 'blossom' : roll > 0.52 ? 'bud' : 'leaf';
-
-      out.push({
-        x: p.x,
-        y: p.y,
-        angle,
-        kind,
-        scale: kind === 'blossom' ? 0.8 + R() * 0.5 : 0.65 + R() * 0.5,
-        side,
-      });
-    }
-    setDecor(out);
-  }, [box.w, box.h, radius]);
-
-  const d = framePath(box.w, box.h, radius, 0);
+    setStems(made);
+  }, [box.w, box.h, layer]);
 
   return (
-    <div className="vines" ref={host} aria-hidden="true">
+    <div className={`vines vines-${layer}`} ref={host} aria-hidden="true">
       {box.w > 0 ? (
-        <svg width={box.w} height={box.h} viewBox={`0 0 ${box.w} ${box.h}`} overflow="visible">
+        <svg
+          ref={probe}
+          width={box.w}
+          height={box.h}
+          viewBox={`0 0 ${box.w} ${box.h}`}
+          overflow="visible"
+        >
           <defs>
-            <linearGradient id="vf-stem" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#F0DCA2" />
-              <stop offset="35%" stopColor="#C9A34E" />
-              <stop offset="70%" stopColor="#8A6B2C" />
-              <stop offset="100%" stopColor="#E2C27C" />
+            <linearGradient id={`vf-stem-${layer}`} x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#F3E2B0" />
+              <stop offset="30%" stopColor="#CDA55A" />
+              <stop offset="70%" stopColor="#7E621F" />
+              <stop offset="100%" stopColor="#E8CB86" />
             </linearGradient>
-            <linearGradient id="vf-leaf" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#A9DEB0" />
+            <linearGradient id={`vf-leaf-${layer}`} x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#B6E6BC" />
               <stop offset="55%" stopColor="#5E9A61" />
-              <stop offset="100%" stopColor="#38603D" />
+              <stop offset="100%" stopColor="#2F5434" />
             </linearGradient>
-            <radialGradient id="vf-petal" cx="40%" cy="32%">
-              <stop offset="0%" stopColor="#FFF0F4" />
-              <stop offset="38%" stopColor="#F3BACB" />
-              <stop offset="80%" stopColor="#E08EA8" />
-              <stop offset="100%" stopColor="#B96881" />
+            <radialGradient id={`vf-petal-${layer}`} cx="38%" cy="30%">
+              <stop offset="0%" stopColor="#FFF4F7" />
+              <stop offset="35%" stopColor="#F5C2D1" />
+              <stop offset="78%" stopColor="#DF89A5" />
+              <stop offset="100%" stopColor="#A85C76" />
             </radialGradient>
-            <radialGradient id="vf-centre" cx="40%" cy="35%">
-              <stop offset="0%" stopColor="#FFF6D8" />
-              <stop offset="100%" stopColor="#D9A94C" />
+            <radialGradient id={`vf-centre-${layer}`} cx="38%" cy="32%">
+              <stop offset="0%" stopColor="#FFFBE8" />
+              <stop offset="100%" stopColor="#D7A544" />
             </radialGradient>
-            <filter id="vf-glow" x="-25%" y="-25%" width="150%" height="150%">
-              <feGaussianBlur stdDeviation="3.2" result="b" />
+            <filter id={`vf-glow-${layer}`} x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="5" result="b" />
               <feMerge>
                 <feMergeNode in="b" />
                 <feMergeNode in="SourceGraphic" />
@@ -153,82 +216,71 @@ export function VineFrame({ radius = 18 }: { radius?: number }) {
             </filter>
           </defs>
 
-          {/* invisible, used only to sample positions along the card's outline */}
-          <path ref={measure} d={d} fill="none" stroke="none" />
-
-          <g filter="url(#vf-glow)">
-            {/* the stem, riding the card's own edge */}
-            <path
-              d={d}
-              fill="none"
-              stroke="url(#vf-stem)"
-              strokeWidth="3"
-              strokeLinecap="round"
-              opacity="0.95"
-            />
-            {/* a thinner stem twisting around it, offset outward */}
-            <path
-              d={framePath(box.w + 7, box.h + 7, radius + 3, -3.5)}
-              fill="none"
-              stroke="url(#vf-stem)"
-              strokeWidth="1.3"
-              strokeDasharray="34 18"
-              strokeLinecap="round"
-              opacity="0.6"
-            />
-            {/* and one inside, so the stem reads as braided rather than drawn */}
-            <path
-              d={framePath(box.w - 7, box.h - 7, Math.max(0, radius - 3), 3.5)}
-              fill="none"
-              stroke="url(#vf-stem)"
-              strokeWidth="1"
-              strokeDasharray="22 30"
-              strokeLinecap="round"
-              opacity="0.45"
-            />
-
-            {decor.map((it, i) => (
-              <g
-                key={i}
-                transform={`translate(${it.x} ${it.y}) rotate(${it.angle + it.side * 62})`}
-              >
-                {it.kind === 'leaf' ? (
-                  <g transform={`scale(${it.scale})`}>
-                    <path
-                      d="M0,0 C5,-7 14,-8 19,-2 C14,4 5,6 0,0 Z"
-                      fill="url(#vf-leaf)"
-                    />
-                    <path
-                      d="M1,0 C7,-2 13,-2 18,-2"
-                      stroke="#2E5235"
-                      strokeWidth=".7"
-                      fill="none"
-                      opacity=".55"
-                    />
-                  </g>
-                ) : it.kind === 'bud' ? (
-                  <g transform={`scale(${it.scale})`}>
-                    <ellipse cx="7" cy="0" rx="3.1" ry="4.2" fill="url(#vf-petal)" />
-                    <path d="M0,0 C3,-1 5,-1 7,0" stroke="#5E9A61" strokeWidth="1" fill="none" />
-                  </g>
-                ) : (
-                  <g transform={`scale(${it.scale})`}>
-                    {/* five petals, each a touch different, so no two flowers match */}
-                    {[0, 72, 144, 216, 288].map((a, k) => (
-                      <ellipse
-                        key={a}
-                        rx={3.3 + ((k % 2) * 0.5)}
-                        ry={4.7}
-                        cy={-4.6}
-                        transform={`rotate(${a + (k % 3) * 3})`}
-                        fill="url(#vf-petal)"
-                      />
-                    ))}
-                    <circle r="1.9" fill="url(#vf-centre)" />
-                  </g>
-                )}
+          <g filter={`url(#vf-glow-${layer})`}>
+            {stems.map((st, i) => (
+              <g key={i}>
+                {/* a dark underside first, then the lit stem on top of it, which
+                    is what gives a flat stroke the look of something round */}
+                <path
+                  d={st.d}
+                  fill="none"
+                  stroke="rgba(32, 24, 8, 0.55)"
+                  strokeWidth={st.width + 2}
+                  strokeLinecap="round"
+                  transform="translate(1.2 1.6)"
+                />
+                <path
+                  d={st.d}
+                  fill="none"
+                  stroke={`url(#vf-stem-${layer})`}
+                  strokeWidth={st.width}
+                  strokeLinecap="round"
+                />
+                <path
+                  d={st.d}
+                  fill="none"
+                  stroke="rgba(255, 244, 206, 0.45)"
+                  strokeWidth={Math.max(0.8, st.width * 0.28)}
+                  strokeLinecap="round"
+                  transform="translate(-0.6 -0.9)"
+                />
               </g>
             ))}
+
+            {stems.flatMap((st, si) =>
+              st.decor.map((it, i) => (
+                <g
+                  key={`${si}-${i}`}
+                  transform={`translate(${it.x.toFixed(1)} ${it.y.toFixed(1)}) rotate(${it.angle.toFixed(1)}) scale(${it.scale.toFixed(2)})`}
+                >
+                  {it.kind === 'leaf' ? (
+                    <>
+                      <path d="M0,0 C5,-7 15,-8 20,-2 C15,4 5,6 0,0 Z" fill={`url(#vf-leaf-${layer})`} />
+                      <path d="M1,0 C8,-2 14,-2 19,-2" stroke="#2A4C30" strokeWidth=".7" fill="none" opacity=".5" />
+                    </>
+                  ) : it.kind === 'bud' ? (
+                    <>
+                      <ellipse cx="6" cy="0" rx="3.2" ry="4.4" fill={`url(#vf-petal-${layer})`} />
+                      <path d="M0,0 C2.5,-1 4,-1 6,0" stroke="#5E9A61" strokeWidth="1" fill="none" />
+                    </>
+                  ) : (
+                    <>
+                      {[0, 72, 144, 216, 288].map((a, k) => (
+                        <ellipse
+                          key={a}
+                          rx={3.4 + (k % 2) * 0.6}
+                          ry={4.9}
+                          cy={-4.8}
+                          transform={`rotate(${a + (k % 3) * 4})`}
+                          fill={`url(#vf-petal-${layer})`}
+                        />
+                      ))}
+                      <circle r="2" fill={`url(#vf-centre-${layer})`} />
+                    </>
+                  )}
+                </g>
+              )),
+            )}
           </g>
         </svg>
       ) : null}
