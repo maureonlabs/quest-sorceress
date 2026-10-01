@@ -109,9 +109,9 @@ footer{color:var(--muted);font-size:.82rem;text-align:center;padding-top:1rem;bo
 <div class="wrap">
 
 <header>
-  <div class="eyebrow">Step by step</div>
+  <div class="eyebrow">Progress tracker</div>
   <h1>Quest Sorceress Build Guide</h1>
-  <p class="sub">Eight phases, in the order your spec says to build them. Tick things off as you go — your progress is remembered on this device.</p>
+  <p class="sub">Eight phases, in the order the spec says to build them. Claude writes the code; the ticked items are things that are done or things you need to look at. Progress is remembered on this device.</p>
 </header>
 
 <div class="progress">
@@ -119,129 +119,111 @@ footer{color:var(--muted);font-size:.82rem;text-align:center;padding-top:1rem;bo
   <div class="pct" id="pct">0 of 0</div>
 </div>
 
-<!-- ============ 0 ============ -->
 <section class="phase">
-  <h2><span class="num">PHASE 0</span> Accounts and setup</h2>
-  <p>Nothing can be built until these exist. Do all of it before you write a single prompt.</p>
+  <h2><span class="num">PHASE 0</span> Project setup</h2>
+  <p>No accounts to create and nothing to pay for. The app is a static site with no backend.</p>
   <ul class="steps">
-    <li><input type="checkbox" id="c0a"><label for="c0a"><b>Create a Base44 account</b><span class="hint">base44.com — free to sign up. Use the same email you use for GitHub to keep things simple.</span></label></li>
-    <li><input type="checkbox" id="c0b"><label for="c0b"><b>Upgrade to the Builder plan — start month-to-month</b><span class="hint">$50 monthly, or $40/month billed yearly (~$480 up front). Pay monthly until you have shipped this; the extra $10 is cheap insurance against a year you might not use. Builder is the lowest tier with GitHub sync. It gives unlimited apps and 250 AI messages a month, pooled across everything you build.</span></label></li>
-    <li><input type="checkbox" id="c0c"><label for="c0c"><b>Ask support what happens to a live app if you downgrade</b><span class="hint">Get it in writing before you rely on this as a portfolio link. A dead link is worse than no link.</span></label></li>
-    <li><input type="checkbox" id="c0d"><label for="c0d"><b>Create two projects: <code>quest-sorceress-dev</code> and <code>quest-sorceress</code></b><span class="hint">Your spec requires separate dev and production environments so you never test against real user data.</span></label></li>
-    <li><input type="checkbox" id="c0e"><label for="c0e"><b>Connect the dev project to GitHub</b><span class="hint">Dashboard → GitHub icon → authorise → select <code>maureonlabs</code> → connect. Only the app owner can do the first connection.</span></label></li>
+    <li><input type="checkbox" id="c0a"><label for="c0a"><b>Scaffold React + Vite + TypeScript in the repo</b><span class="hint">Replaces the single-file prototype. The old <code>index.html</code> stays until the new app is ready.</span></label></li>
+    <li><input type="checkbox" id="c0b"><label for="c0b"><b>Confirm Vercel still auto-deploys</b><span class="hint">Vercel needs to run the build now rather than serve one file. One settings change.</span></label></li>
+    <li><input type="checkbox" id="c0c"><label for="c0c"><b>Apply the palette tokens from the art direction</b></label></li>
   </ul>
-  <div class="warn"><b>Once GitHub sync is on, you cannot roll back to versions from before it.</b> Connect early, while there is nothing worth rolling back to.</div>
+  <div class="note"><b>Nothing here costs money.</b> No Base44, no Supabase, no database. Everything lives in the visitor&rsquo;s browser, and the Vercel hosting you already have is free.</div>
 </section>
 
-<!-- ============ 1 ============ -->
 <section class="phase">
-  <h2><span class="num">PHASE 1</span> Data model</h2>
-  <p>First, because it is the most expensive thing to change later. Five entities, no screens yet.</p>
+  <h2><span class="num">PHASE 1</span> Data model and storage</h2>
+  <p>First, because it is the most expensive thing to change later.</p>
   <ul class="steps">
-    <li><input type="checkbox" id="c1a"><label for="c1a"><b>Paste <code>BUILD-PROMPT.md</code> into Base44 as your first prompt</b><span class="hint">The whole file. It contains spec sections 1–8 plus the art direction.</span></label></li>
-    <li><input type="checkbox" id="c1b"><label for="c1b"><b>Tell it to build the data model only, and stop</b><span class="hint">"Build the data model from section 3 and nothing else. Do not create screens yet."</span></label></li>
-    <li><input type="checkbox" id="c1c"><label for="c1c"><b>Check all five entities exist</b><span class="hint">User, QuestTemplate, DailyQuest, Item, UserItem — with the fields listed in <code>DATA-MODEL.md</code>.</span></label></li>
-    <li><input type="checkbox" id="c1d"><label for="c1d"><b>Check the enums are exactly right</b><span class="hint">7 settings, 6 categories, 3 difficulties, 3 statuses. A typo here breaks the quest import later.</span></label></li>
-    <li><input type="checkbox" id="c1e"><label for="c1e"><b>Confirm <code>email</code> is unique and <code>equipped</code> is not exclusive</b><span class="hint">Several items can be worn at once.</span></label></li>
-  </ul>
-  <div class="note"><b>Streak is not a field.</b> It is calculated from DailyQuest rows. If Base44 tries to add a <code>streak</code> column, tell it no — a stored counter drifts out of sync with the quests that justify it.</div>
-</section>
-
-<!-- ============ 2 ============ -->
-<section class="phase">
-  <h2><span class="num">PHASE 2</span> Load the quest library</h2>
-  <p>269 quests are already written and validated. You are importing, not authoring.</p>
-  <ul class="steps">
-    <li><input type="checkbox" id="c2a"><label for="c2a"><b>Import <code>content/quests.csv</code> into QuestTemplate</b><span class="hint">Columns map straight onto the fields: title, description, category, difficulty, requiredSetting.</span></label></li>
-    <li><input type="checkbox" id="c2b"><label for="c2b"><b>Confirm 269 rows imported</b><span class="hint">Not 268, not 270. If the count is off, the CSV had a parsing problem.</span></label></li>
-    <li><input type="checkbox" id="c2c"><label for="c2c"><b>Spot-check five quests read correctly</b><span class="hint">Especially the numbered steps inside the description — line breaks survive CSV badly.</span></label></li>
-  </ul>
-  <div class="note"><b>Every one of the 126 setting × category × difficulty combinations has at least one quest.</b> That is what stops a user ever seeing an empty screen, and it is why no fallback logic is needed.</div>
-</section>
-
-<!-- ============ 3 ============ -->
-<section class="phase">
-  <h2><span class="num">PHASE 3</span> The core flow</h2>
-  <p>Flow 1 end to end, before anything else. If this does not feel good, nothing else matters.</p>
-  <ul class="steps">
-    <li><input type="checkbox" id="c3a"><label for="c3a"><b>Build Home with the "Give me a quest" button</b><span class="hint">One quest at a time. No daily batch, no list.</span></label></li>
-    <li><input type="checkbox" id="c3b"><label for="c3b"><b>Wire up the eligibility filter</b><span class="hint">Setting in the user's settings, category in their categories, difficulty matching theirs.</span></label></li>
-    <li><input type="checkbox" id="c3c"><label for="c3c"><b>Add Complete and Dismiss</b></label></li>
-    <li><input type="checkbox" id="c3d"><label for="c3d"><b>Add the 14-day dismissal cooldown</b><span class="hint">A dismissed quest cannot come back for 14 days.</span></label></li>
-    <li><input type="checkbox" id="c3e"><label for="c3e"><b>Build Quest Preferences</b><span class="hint">Settings and categories are multi-select. Difficulty is single-select — one of three.</span></label></li>
-    <li><input type="checkbox" id="c3f"><label for="c3f"><b>Test: generate 20 quests in a row</b><span class="hint">Check for repeats, broken text, and quests that don't match your chosen setting.</span></label></li>
+    <li><input type="checkbox" id="c1a"><label for="c1a"><b>Types and enums</b><span class="hint">Profile, QuestTemplate, DailyQuest, Item, OwnedItem — plus the four fixed value sets.</span></label></li>
+    <li><input type="checkbox" id="c1b"><label for="c1b"><b>One storage module</b><span class="hint">All persistence through a single file, so real accounts can be added later without touching the rest of the app.</span></label></li>
+    <li><input type="checkbox" id="c1c"><label for="c1c"><b>Load the 269-quest catalogue</b><span class="hint">Bundled with the app, read-only, never written at runtime.</span></label></li>
+    <li><input type="checkbox" id="c1d"><label for="c1d"><b>Survives a reload and a browser restart</b></label></li>
+    <li><input type="checkbox" id="c1e"><label for="c1e"><b>Still runs in a private window</b><span class="hint">Where storage is blocked it must work for the session, not crash — it just won&rsquo;t remember.</span></label></li>
   </ul>
 </section>
 
-<!-- ============ 4 ============ -->
 <section class="phase">
-  <h2><span class="num">PHASE 4</span> Auth and ownership</h2>
-  <p>The part that can actually harm someone if it is wrong. Take it slowly.</p>
+  <h2><span class="num">PHASE 2</span> The core flow</h2>
+  <p>Flow 1 end to end. If this does not feel good, nothing else matters.</p>
   <ul class="steps">
-    <li><input type="checkbox" id="c4a"><label for="c4a"><b>Turn on email + password and Google sign-in</b></label></li>
-    <li><input type="checkbox" id="c4b"><label for="c4b"><b>Scope every DailyQuest and UserItem to its owner</b><span class="hint">Enforced server side, not hidden in the UI.</span></label></li>
-    <li><input type="checkbox" id="c4c"><label for="c4c"><b>Create a second test account</b><span class="hint">You cannot test this with one account. This step is not optional.</span></label></li>
-    <li><input type="checkbox" id="c4d"><label for="c4d"><b>Try to read account A's quests while signed in as account B</b><span class="hint">It must fail. If it succeeds, stop and fix it before building anything else.</span></label></li>
-    <li><input type="checkbox" id="c4e"><label for="c4e"><b>Try the same while signed out</b></label></li>
-  </ul>
-  <div class="warn"><b>This bug looks fine in normal testing</b>, because you are only ever logged in as yourself. The second account is the only way to catch it.</div>
-</section>
-
-<!-- ============ 5 ============ -->
-<section class="phase">
-  <h2><span class="num">PHASE 5</span> Streaks and unlocks</h2>
-  <ul class="steps">
-    <li><input type="checkbox" id="c5a"><label for="c5a"><b>Calculate the streak from completed quests</b><span class="hint">Consecutive days with at least one completion. Not a stored counter.</span></label></li>
-    <li><input type="checkbox" id="c5b"><label for="c5b"><b>Reset to zero after a full missed day</b></label></li>
-    <li><input type="checkbox" id="c5c"><label for="c5c"><b>Create the Item catalogue with weekly unlock milestones</b><span class="hint">7, 14, 21 days and so on. No XP anywhere.</span></label></li>
-    <li><input type="checkbox" id="c5d"><label for="c5d"><b>Build the milestone unlock screen</b></label></li>
-    <li><input type="checkbox" id="c5e"><label for="c5e"><b>Build Avatar and Inventory</b><span class="hint">Several items equipped at once. Locked items dimmed, not hidden, so the next unlock is visible.</span></label></li>
+    <li><input type="checkbox" id="c2a"><label for="c2a"><b>Onboarding: pick settings, categories, difficulty</b><span class="hint">Settings and categories multi-select; difficulty single-select, shown as Apprentice / Adept / Master.</span></label></li>
+    <li><input type="checkbox" id="c2b"><label for="c2b"><b>Home with the &ldquo;Give me a quest&rdquo; button</b></label></li>
+    <li><input type="checkbox" id="c2c"><label for="c2c"><b>Eligibility filter</b><span class="hint">Setting, category and difficulty all have to match.</span></label></li>
+    <li><input type="checkbox" id="c2d"><label for="c2d"><b>Complete and Dismiss</b></label></li>
+    <li><input type="checkbox" id="c2e"><label for="c2e"><b>14-day dismissal cooldown</b></label></li>
+    <li><input type="checkbox" id="c2f"><label for="c2f"><b><u>You try it</u> — generate 20 quests and see how it feels</b><span class="hint">This is the moment to change your mind about the flow, while it is still cheap.</span></label></li>
   </ul>
 </section>
 
-<!-- ============ 6 ============ -->
 <section class="phase">
-  <h2><span class="num">PHASE 6</span> The look</h2>
+  <h2><span class="num">PHASE 3</span> Streaks</h2>
+  <ul class="steps">
+    <li><input type="checkbox" id="c3a"><label for="c3a"><b>Derive the streak from completed quests</b><span class="hint">Calculated, never stored, so it cannot drift out of sync.</span></label></li>
+    <li><input type="checkbox" id="c3b"><label for="c3b"><b>Reset to zero after a full missed day</b></label></li>
+    <li><input type="checkbox" id="c3c"><label for="c3c"><b>Streak counter on Home</b></label></li>
+  </ul>
+</section>
+
+<section class="phase">
+  <h2><span class="num">PHASE 4</span> Avatar and unlocks</h2>
+  <ul class="steps">
+    <li><input type="checkbox" id="c4a"><label for="c4a"><b>Item catalogue with weekly unlock milestones</b><span class="hint">7, 14, 21 days and so on. No XP anywhere.</span></label></li>
+    <li><input type="checkbox" id="c4b"><label for="c4b"><b>Milestone unlock screen</b></label></li>
+    <li><input type="checkbox" id="c4c"><label for="c4c"><b>Avatar and Inventory screens</b><span class="hint">Several items equipped at once. Locked items dimmed, not hidden, so the next unlock is visible.</span></label></li>
+    <li><input type="checkbox" id="c4d"><label for="c4d"><b><u>You supply</u> — avatar and item artwork</b><span class="hint">The direction is set; the individual pieces are not drawn. Placeholders until then.</span></label></li>
+  </ul>
+  <div class="warn"><b>This is the one thing blocking a finished-looking app.</b> Everything else can be built without you, but the avatar needs real artwork to stop looking like a wireframe.</div>
+</section>
+
+<section class="phase">
+  <h2><span class="num">PHASE 5</span> The look</h2>
   <p>Now, not earlier. Styling a flow that still changes is wasted work.</p>
   <ul class="steps">
-    <li><input type="checkbox" id="c6a"><label for="c6a"><b>Feed Base44 the art direction</b><span class="hint">The art direction section at the end of <code>BUILD-PROMPT.md</code>, plus both reference images.</span></label></li>
-    <li><input type="checkbox" id="c6b"><label for="c6b"><b>Apply the palette tokens</b><span class="hint">Forest ground, frosted glass panels, gold frames, blossom pink, one mint accent.</span></label></li>
-    <li><input type="checkbox" id="c6c"><label for="c6c"><b>Check the vines overlap the panel edges</b><span class="hint">They must read as growing in front of the glass. Flat printed borders collapse the whole look into ordinary glassmorphism.</span></label></li>
-    <li><input type="checkbox" id="c6d"><label for="c6d"><b>Mint is used for one thing per screen</b><span class="hint">On Home, that is the "Give me a quest" button.</span></label></li>
-    <li><input type="checkbox" id="c6e"><label for="c6e"><b>Check it on a phone</b><span class="hint">Sidebar collapses to a bottom bar on narrow viewports.</span></label></li>
+    <li><input type="checkbox" id="c5a"><label for="c5a"><b>Forest ground, frosted glass panels, ornate gold frames</b></label></li>
+    <li><input type="checkbox" id="c5b"><label for="c5b"><b>Vines overlap the panel edges</b><span class="hint">They must read as growing in front of the glass. Flat borders collapse the look into ordinary glassmorphism.</span></label></li>
+    <li><input type="checkbox" id="c5c"><label for="c5c"><b>One mint accent per screen</b><span class="hint">On Home that is the &ldquo;Give me a quest&rdquo; button.</span></label></li>
+    <li><input type="checkbox" id="c5d"><label for="c5d"><b>Quest-complete animation</b><span class="hint">Something blooming, not bouncing.</span></label></li>
+    <li><input type="checkbox" id="c5e"><label for="c5e"><b>Sidebar collapses to a bottom bar on phones</b></label></li>
   </ul>
 </section>
 
-<!-- ============ 7 ============ -->
 <section class="phase">
-  <h2><span class="num">PHASE 7</span> QA — your spec's acceptance criteria</h2>
-  <p>These are written so they can actually be tested. Walk every one before you share the link.</p>
+  <h2><span class="num">PHASE 6</span> Works offline</h2>
   <ul class="steps">
-    <li><input type="checkbox" id="c7a"><label for="c7a">A new user can choose preferences, tap "Give me a quest" and get one, with no crashes</label></li>
-    <li><input type="checkbox" id="c7b"><label for="c7b">Tapping the button returns exactly one quest, never a list</label></li>
-    <li><input type="checkbox" id="c7c"><label for="c7c">Completing a quest marks it Completed and updates the streak immediately</label></li>
+    <li><input type="checkbox" id="c6a"><label for="c6a"><b>Service worker caches the app shell</b></label></li>
+    <li><input type="checkbox" id="c6b"><label for="c6b"><b>Installable on a phone home screen</b></label></li>
+    <li><input type="checkbox" id="c6c"><label for="c6c"><b>Test with the network switched off</b><span class="hint">With no server and bundled quests there is nothing to sync — the whole app should simply work.</span></label></li>
+  </ul>
+</section>
+
+<section class="phase">
+  <h2><span class="num">PHASE 7</span> QA — the spec&rsquo;s acceptance criteria</h2>
+  <p>Written so they can actually be tested. Walk every one before sharing the link.</p>
+  <ul class="steps">
+    <li><input type="checkbox" id="c7a"><label for="c7a">A new visitor can choose preferences, tap the button and get a quest, with no crashes</label></li>
+    <li><input type="checkbox" id="c7b"><label for="c7b">The button returns exactly one quest, never a list</label></li>
+    <li><input type="checkbox" id="c7c"><label for="c7c">Completing a quest updates the streak immediately</label></li>
     <li><input type="checkbox" id="c7d"><label for="c7d">A dismissed quest does not reappear for 14 days</label></li>
     <li><input type="checkbox" id="c7e"><label for="c7e">Generating while one is pending replaces it, and the replaced one records as dismissed</label></li>
-    <li><input type="checkbox" id="c7f"><label for="c7f">A gym-only quest never reaches a user who selected only home</label></li>
+    <li><input type="checkbox" id="c7f"><label for="c7f">A gym quest never reaches someone who only chose home</label></li>
     <li><input type="checkbox" id="c7g"><label for="c7g">Every setting × category × difficulty combination returns a quest</label></li>
-    <li><input type="checkbox" id="c7h"><label for="c7h">Reaching a weekly milestone unlocks an item and shows the unlock screen</label></li>
-    <li><input type="checkbox" id="c7i"><label for="c7i"><b>A different logged-in user cannot see your quests — checked at the API, not the UI</b></label></li>
-    <li><input type="checkbox" id="c7j"><label for="c7j">Streak resets to 0 after a full day with no completion</label></li>
-    <li><input type="checkbox" id="c7k"><label for="c7k">The core flow works offline, then syncs when reconnected</label></li>
+    <li><input type="checkbox" id="c7h"><label for="c7h">A weekly milestone unlocks an item and shows the unlock screen</label></li>
+    <li><input type="checkbox" id="c7i"><label for="c7i">Streak resets to 0 after a full day with no completion</label></li>
+    <li><input type="checkbox" id="c7j"><label for="c7j">Progress survives a reload and a full browser restart</label></li>
+    <li><input type="checkbox" id="c7k"><label for="c7k">The whole app works with the browser offline</label></li>
     <li><input type="checkbox" id="c7l"><label for="c7l">Home loads in under a second</label></li>
   </ul>
 </section>
 
-<!-- ============ 8 ============ -->
 <section class="phase">
   <h2><span class="num">PHASE 8</span> Ship it</h2>
   <ul class="steps">
-    <li><input type="checkbox" id="c8a"><label for="c8a"><b>Promote from dev to your production project</b></label></li>
-    <li><input type="checkbox" id="c8b"><label for="c8b"><b>Confirm the code is in your GitHub repo</b><span class="hint">github.com/maureonlabs/quest-sorceress — the commit history is portfolio evidence in its own right.</span></label></li>
-    <li><input type="checkbox" id="c8c"><label for="c8c"><b>Update <code>SPEC.md</code> if anything changed during the build</b><span class="hint">A spec that no longer matches the app is worse than no spec.</span></label></li>
-    <li><input type="checkbox" id="c8d"><label for="c8d"><b>Retire the Vercel prototype</b><span class="hint">Point people at the real app. Two live URLs for one product confuses everyone, including you.</span></label></li>
-    <li><input type="checkbox" id="c8e"><label for="c8e"><b>Share the link with a few people and watch them use it</b><span class="hint">You will learn more from three minutes of watching than from an hour of guessing.</span></label></li>
+    <li><input type="checkbox" id="c8a"><label for="c8a"><b>Replace the prototype at quest-sorceress.vercel.app</b></label></li>
+    <li><input type="checkbox" id="c8b"><label for="c8b"><b>Update <code>SPEC.md</code> if anything changed during the build</b><span class="hint">A spec that no longer matches the app is worse than no spec.</span></label></li>
+    <li><input type="checkbox" id="c8c"><label for="c8c"><b>Check it on a real phone, not just a resized window</b></label></li>
+    <li><input type="checkbox" id="c8d"><label for="c8d"><b>Share it with a few people and watch them use it</b><span class="hint">You will learn more from three minutes of watching than an hour of guessing.</span></label></li>
   </ul>
+  <div class="note"><b>Accounts and cross-device sync are the obvious v2.</b> All persistence goes through one module, so adding them later is a contained change rather than a rewrite.</div>
 </section>
 
 <footer>
