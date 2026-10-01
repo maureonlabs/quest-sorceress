@@ -5,6 +5,8 @@
  * the only difference is whether choosing one clears the others.
  */
 
+import * as sound from '../sound';
+
 interface Option<T extends string> {
   value: T;
   label: string;
@@ -29,6 +31,7 @@ export function ChipGroup<T extends string>({
   wide = false,
 }: Props<T>) {
   const toggle = (value: T) => {
+    sound.play('select');
     if (single) {
       onChange([value]);
       return;

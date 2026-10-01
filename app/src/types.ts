@@ -115,11 +115,16 @@ export interface OwnedItem {
 
 /* ------------------------------------------------------------ saved state */
 
+export interface Settings {
+  sound: boolean;
+}
+
 export interface SaveData {
   schemaVersion: number;
   profile: Profile | null;
   quests: DailyQuest[];
   items: OwnedItem[];
+  settings: Settings;
 }
 
 /* -------------------------------------------------------------- narrowing */

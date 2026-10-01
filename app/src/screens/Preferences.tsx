@@ -27,7 +27,7 @@ const DIFFICULTY_OPTIONS = DIFFICULTIES.map((v) => ({
 }));
 
 export function Preferences() {
-  const { profile, saveProfile, startOver } = useGame();
+  const { profile, saveProfile, startOver, soundOn, setSound } = useGame();
   const navigate = useNavigate();
   if (!profile) return null;
 
@@ -82,6 +82,23 @@ export function Preferences() {
           single
           wide
         />
+      </section>
+
+      <section className="panel">
+        <h2>Sound</h2>
+        <p className="dim">Chimes when a quest is dealt, finished or set aside.</p>
+        <button
+          type="button"
+          className="toggle"
+          role="switch"
+          aria-checked={soundOn}
+          onClick={() => setSound(!soundOn)}
+        >
+          <span className="track" aria-hidden="true">
+            <span className="knob" />
+          </span>
+          {soundOn ? 'Sound on' : 'Sound off'}
+        </button>
       </section>
 
       <p className="center">

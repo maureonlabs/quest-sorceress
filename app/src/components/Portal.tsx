@@ -7,6 +7,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import * as sound from '../sound';
 
 const DURATION = 2400;
 const REDUCED_DURATION = 700;
@@ -21,6 +22,7 @@ export function Portal({ onDone }: { onDone: () => void }) {
   const total = reduced ? REDUCED_DURATION : DURATION;
 
   useEffect(() => {
+    sound.play('enter');
     const fade = setTimeout(() => setLeaving(true), total - 450);
     const done = setTimeout(onDone, total);
     return () => {

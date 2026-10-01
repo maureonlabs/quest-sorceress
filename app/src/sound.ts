@@ -1,0 +1,189 @@
+/**
+ * Magic, synthesised.
+ *
+ * Every sound is generated with the Web Audio API rather than shipped as audio
+ * files: no assets to license or download, a couple of kilobytes of code, and
+ * each progression can be tuned by ear rather than re-exported.
+ *
+ * Voices are bell-like — a fast attack and a long exponential decay, with a
+ * quieter octave above for shimmer — and every cue is a short rising
+ * progression on a pentatonic scale, which has no semitone clashes and so
+ * cannot sound sour whichever notes land together.
+ *
+ * Browsers refuse to start audio before the visitor has interacted with the
+ * page, so the context is created lazily and resumed on the first gesture.
+ * Anything that tries to play before then is skipped silently rather than
+ * throwing.
+ */
+
+type Cue = 'enter' | 'deal' | 'complete' | 'dismiss' | 'select' | 'unlock';
+
+/* Pentatonic — C major with the 4th and 7th removed. */
+const N = {
+  C4: 261.63,
+  G4: 392.0,
+  A4: 440.0,
+  C5: 523.25,
+  D5: 587.33,
+  E5: 659.25,
+  G5: 783.99,
+  A5: 880.0,
+  C6: 1046.5,
+  D6: 1174.66,
+  E6: 1318.51,
+  G6: 1567.98,
+};
+
+interface Note {
+  f: number;
+  /** seconds after the cue starts */
+  at: number;
+  dur?: number;
+  gain?: number;
+}
+
+/**
+ * One progression per cue. Rising for anything good, gently falling for a
+ * dismissal — which should still sound courteous, because declining a quest is
+ * a legitimate move and not a failure.
+ */
+const CUES: Record<Cue, Note[]> = {
+  // The portal opening: a slow shimmer climbing two octaves.
+  enter: [
+    { f: N.C4, at: 0, dur: 1.6, gain: 0.3 },
+    { f: N.G4, at: 0.16, dur: 1.5 },
+    { f: N.C5, at: 0.32, dur: 1.4 },
+    { f: N.E5, at: 0.5, dur: 1.3 },
+    { f: N.G5, at: 0.68, dur: 1.2 },
+    { f: N.C6, at: 0.88, dur: 1.6, gain: 0.5 },
+    { f: N.E6, at: 1.04, dur: 1.4, gain: 0.3 },
+  ],
+  // A card dealt: three quick bright notes.
+  deal: [
+    { f: N.E5, at: 0, dur: 0.5 },
+    { f: N.G5, at: 0.07, dur: 0.55 },
+    { f: N.C6, at: 0.14, dur: 0.8, gain: 0.5 },
+  ],
+  // Finishing something: the longest, brightest climb, with a sparkle on top.
+  complete: [
+    { f: N.C5, at: 0, dur: 0.7 },
+    { f: N.E5, at: 0.09, dur: 0.7 },
+    { f: N.G5, at: 0.18, dur: 0.8 },
+    { f: N.C6, at: 0.27, dur: 1.0, gain: 0.55 },
+    { f: N.E6, at: 0.36, dur: 1.1, gain: 0.4 },
+    { f: N.G6, at: 0.46, dur: 1.3, gain: 0.26 },
+    { f: N.C6, at: 0.62, dur: 1.4, gain: 0.2 },
+  ],
+  // Declining: two soft notes stepping down. Courteous, not a buzzer.
+  dismiss: [
+    { f: N.A5, at: 0, dur: 0.4, gain: 0.3 },
+    { f: N.D5, at: 0.08, dur: 0.6, gain: 0.26 },
+  ],
+  // Choosing a chip: one short tap.
+  select: [{ f: N.A5, at: 0, dur: 0.22, gain: 0.18 }],
+  // Reserved for streak-milestone unlocks in a later phase.
+  unlock: [
+    { f: N.C5, at: 0, dur: 0.9 },
+    { f: N.G5, at: 0.12, dur: 0.9 },
+    { f: N.C6, at: 0.24, dur: 1.1 },
+    { f: N.D6, at: 0.4, dur: 1.2, gain: 0.45 },
+    { f: N.G6, at: 0.56, dur: 1.6, gain: 0.35 },
+  ],
+};
+
+let ctx: AudioContext | null = null;
+let master: GainNode | null = null;
+let enabled = true;
+
+function ensure(): AudioContext | null {
+  if (typeof window === 'undefined') return null;
+  if (ctx) return ctx;
+  const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!Ctor) return null;
+  try {
+    ctx = new Ctor();
+    master = ctx.createGain();
+    master.gain.value = 0.26;
+
+    // A short feedback delay stands in for reverb — enough to suggest a space
+    // without the weight of a convolution impulse.
+    const delay = ctx.createDelay(1);
+    delay.delayTime.value = 0.18;
+    const feedback = ctx.createGain();
+    feedback.gain.value = 0.22;
+    const wet = ctx.createGain();
+    wet.gain.value = 0.3;
+
+    master.connect(ctx.destination);
+    master.connect(delay);
+    delay.connect(feedback);
+    feedback.connect(delay);
+    delay.connect(wet);
+    wet.connect(ctx.destination);
+  } catch {
+    ctx = null;
+  }
+  return ctx;
+}
+
+/** Call once from a real user gesture so the browser lets audio start. */
+export function unlock(): void {
+  const c = ensure();
+  if (c && c.state === 'suspended') void c.resume();
+}
+
+export function setEnabled(on: boolean): void {
+  enabled = on;
+  if (on) unlock();
+}
+
+export function isEnabled(): boolean {
+  return enabled;
+}
+
+function bell(c: AudioContext, out: GainNode, n: Note, t0: number): void {
+  const dur = n.dur ?? 0.6;
+  const peak = n.gain ?? 0.4;
+  const start = t0 + n.at;
+
+  const osc = c.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = n.f;
+
+  // The octave above, quiet and slightly detuned, gives the strike its shimmer.
+  const high = c.createOscillator();
+  high.type = 'triangle';
+  high.frequency.value = n.f * 2.01;
+
+  const g = c.createGain();
+  const gh = c.createGain();
+
+  g.gain.setValueAtTime(0.0001, start);
+  g.gain.exponentialRampToValueAtTime(peak, start + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+
+  gh.gain.setValueAtTime(0.0001, start);
+  gh.gain.exponentialRampToValueAtTime(peak * 0.22, start + 0.008);
+  gh.gain.exponentialRampToValueAtTime(0.0001, start + dur * 0.6);
+
+  osc.connect(g).connect(out);
+  high.connect(gh).connect(out);
+
+  osc.start(start);
+  high.start(start);
+  osc.stop(start + dur + 0.05);
+  high.stop(start + dur + 0.05);
+}
+
+export function play(cue: Cue): void {
+  if (!enabled) return;
+  const c = ensure();
+  if (!c || !master) return;
+  // Blocked until the first gesture — skip rather than throw.
+  if (c.state === 'suspended') {
+    void c.resume();
+    if (c.state === 'suspended') return;
+  }
+  const t0 = c.currentTime + 0.02;
+  for (const n of CUES[cue]) bell(c, master, n, t0);
+}

@@ -752,3 +752,153 @@ input,
     opacity: 1;
   }
 }
+
+/* ------------------------------------------------------- the quest card */
+
+/* Portrait, like a card held upright — not a square panel. The vines need
+   vertical run to read as growing along an edge. */
+.card {
+  position: relative;
+  min-height: min(76vh, 33rem);
+  padding: 2.4rem 2rem 2rem;
+  justify-content: flex-start;
+  gap: 1.1rem;
+  overflow: visible;
+
+  /* Thicker glass than the plain panels: a brighter rim, a sheen across the
+     top-left, and more blur so the forest behind genuinely softens. */
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 252, 240, 0.1) 0%,
+      rgba(226, 240, 234, 0.04) 38%,
+      rgba(226, 240, 234, 0.07) 100%
+    ),
+    var(--glass);
+  backdrop-filter: blur(26px) saturate(1.1);
+  border-color: rgba(255, 249, 232, 0.3);
+  box-shadow:
+    0 30px 70px -35px #000,
+    0 0 50px -20px rgba(111, 216, 192, 0.25),
+    inset 0 1px 0 rgba(255, 252, 240, 0.18);
+}
+
+/* The inner gold rule, pulled further in so the vines have room to overlap it. */
+.card::before {
+  inset: 12px;
+  border-color: rgba(201, 163, 78, 0.4);
+}
+
+/* A soft light pooling at the foot of the card, as if it stands on the ground. */
+.card::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -14px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(201, 163, 78, 0.28), transparent 70%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+/* The vines sit above the glass and overhang its edge. */
+.vines {
+  position: absolute;
+  inset: -26px;
+  width: calc(100% + 52px);
+  height: calc(100% + 52px);
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Card contents sit above the glass but below the vines, so a leaf can fall
+   across the edge of the panel without covering the words. */
+.card > *:not(.vines) {
+  z-index: 1;
+}
+
+.card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  flex: 1;
+}
+
+.card .row {
+  margin-top: auto;
+}
+
+@media (max-width: 26rem) {
+  .card {
+    padding: 2rem 1.5rem 1.75rem;
+    min-height: min(72vh, 30rem);
+  }
+  .vines {
+    inset: -18px;
+    width: calc(100% + 36px);
+    height: calc(100% + 36px);
+  }
+}
+
+/* ----------------------------------------------------------------- toggle */
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  align-self: flex-start;
+  padding: 0.5rem 0.9rem 0.5rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--glass-edge);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 0.82rem;
+  transition:
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.toggle:hover {
+  border-color: var(--gold-dim);
+}
+
+.toggle .track {
+  width: 2.4rem;
+  height: 1.3rem;
+  border-radius: 999px;
+  background: rgba(226, 240, 234, 0.1);
+  border: 1px solid var(--glass-edge);
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  transition: background 0.18s ease;
+}
+
+.toggle .knob {
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  background: var(--text-dim);
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.75, 0.25, 1),
+    background 0.18s ease;
+}
+
+.toggle[aria-checked='true'] {
+  border-color: var(--mint);
+  color: var(--mint);
+}
+
+.toggle[aria-checked='true'] .track {
+  background: var(--mint-dim);
+  border-color: var(--mint);
+}
+
+.toggle[aria-checked='true'] .knob {
+  transform: translateX(1.1rem);
+  background: var(--mint);
+}

@@ -14,6 +14,7 @@ import {
   type ReactNode,
 } from 'react';
 import * as store from './storage';
+import * as sound from './sound';
 import { pickQuest, streak, streakWeeks, templateById, today } from './game/quests';
 import type { DailyQuest, Profile, QuestTemplate, SaveData } from './types';
 
@@ -28,6 +29,8 @@ interface Game {
   completedToday: number;
   /** False when the browser refuses to persist — private windows, blocked data. */
   remembers: boolean;
+  soundOn: boolean;
+  setSound: (on: boolean) => void;
 
   saveProfile: (p: Profile) => void;
   generate: () => void;
@@ -44,7 +47,11 @@ const newId = () =>
     : `q-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<SaveData>(() => store.load());
+  const [data, setData] = useState<SaveData>(() => {
+    const loaded = store.load();
+    sound.setEnabled(loaded.settings.sound);
+    return loaded;
+  });
 
   const apply = useCallback((fn: (current: SaveData) => SaveData) => {
     setData(store.update(fn));
@@ -74,6 +81,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
       const template = pickQuest(d.profile, quests, now);
       if (!template) return { ...d, quests };
+      sound.play('deal');
 
       const next: DailyQuest = {
         id: newId(),
@@ -88,7 +96,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [apply]);
 
   const complete = useCallback(
-    (id: string) =>
+    (id: string) => (
+      sound.play('complete'),
       apply((d) => ({
         ...d,
         quests: d.quests.map((q) =>
@@ -96,12 +105,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
             ? { ...q, status: 'completed' as const, completedAt: new Date().toISOString() }
             : q,
         ),
-      })),
+      }))
+    ),
     [apply],
   );
 
   const dismiss = useCallback(
-    (id: string) =>
+    (id: string) => (
+      sound.play('dismiss'),
       apply((d) => ({
         ...d,
         quests: d.quests.map((q) =>
@@ -109,7 +120,17 @@ export function GameProvider({ children }: { children: ReactNode }) {
             ? { ...q, status: 'dismissed' as const, dismissedAt: new Date().toISOString() }
             : q,
         ),
-      })),
+      }))
+    ),
+    [apply],
+  );
+
+  const setSound = useCallback(
+    (on: boolean) => {
+      sound.setEnabled(on);
+      if (on) sound.play('select');
+      apply((d) => ({ ...d, settings: { ...d.settings, sound: on } }));
+    },
     [apply],
   );
 
@@ -132,13 +153,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
         (q) => q.status === 'completed' && q.date === today(now),
       ).length,
       remembers: store.isPersistent(),
+      soundOn: data.settings.sound,
+      setSound,
       saveProfile,
       generate,
       complete,
       dismiss,
       startOver,
     };
-  }, [data, saveProfile, generate, complete, dismiss, startOver]);
+  }, [data, saveProfile, generate, complete, dismiss, startOver, setSound]);
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }

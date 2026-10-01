@@ -88,6 +88,40 @@ Respect `prefers-reduced-motion`: keep the scene, stop the drift.
 
 ---
 
+## Sound
+
+Synthesised in the browser with the Web Audio API — no audio files, nothing to
+license or download, and each cue tunable by ear.
+
+**The voice:** bell-like. A fast attack, a long exponential decay, and a quieter
+octave above detuned very slightly, which is what gives a struck bell its shimmer.
+A short feedback delay suggests a space without the weight of a reverb impulse.
+
+**The scale:** C major pentatonic — the 4th and 7th removed. With no semitones in
+the set, no two notes landing together can sound sour, however they overlap.
+
+**The progressions.** Every cue is a short progression, never a single beep:
+
+| Cue | Shape | Notes |
+|---|---|---|
+| **Enter** (portal) | slow shimmer, two octaves | C4 · G4 · C5 · E5 · G5 · C6 · E6 over 1.1s |
+| **Deal** (new quest) | three quick bright notes | E5 · G5 · C6, 70ms apart |
+| **Complete** | the longest climb, with a sparkle | C5 · E5 · G5 · C6 · E6 · G6, settling on C6 |
+| **Dismiss** | two soft steps down | A5 · D5 — courteous, not a buzzer |
+| **Select** (a chip) | one short tap | A5 |
+| **Unlock** (milestone) | the fullest flourish | C5 · G5 · C6 · D6 · G6 |
+
+**Rules.** Rising for anything good. Dismissal falls, but gently — declining a
+quest is a legitimate move, not a failure, and must never sound like one.
+Completion is the brightest and longest sound in the app; nothing else should
+compete with it.
+
+**Browsers block audio before the first interaction**, so the very first portal of
+a session may open in silence. One listener unlocks it, after which every later
+cue sounds.
+
+---
+
 ## Applying it to the screens
 
 | Screen | Treatment |

@@ -8,6 +8,7 @@
 - **Problem it solves:** The app removes the blank-page problem by generating a task for you on request, instead of leaving the user to fill in an empty list.
 - **Platform(s):** Web (responsive, browser-based) for v1; native iOS/Android apps are a later phase.
 - **Success looks like:** A user completes at least 3 generated quests a day, 5 days a week, by their second week using the app. (Unchanged by on-demand generation — it is a usage target, not a generation schedule.)
+- **Sound:** Short rising chime progressions on every action — dealt, finished, set aside — synthesised in the browser, not shipped as audio files. Silenceable from Preferences.
 - **Visual style:** Enchanted glass panels in a moonlit forest — frosted translucent cards in ornate gold frames, wrapped in golden vines and pink cherry blossom, lit by drifting bioluminescence. Full treatment, palette and tokens in `design/ART-DIRECTION.md`; reference images in `design/reference/`.
 
 ## 2. Core user flows
@@ -126,6 +127,7 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
 - Streak-milestone avatar/item unlocks (weekly)
 - Quest preferences (categories, difficulty, setting)
 - Sharing the app link via the browser's native share sheet
+- Magical sound cues on every action, with a toggle to silence them
 
 **Out of scope (later):**
 

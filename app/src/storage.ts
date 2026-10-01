@@ -21,6 +21,7 @@ export const emptySave = (): SaveData => ({
   profile: null,
   quests: [],
   items: [],
+  settings: { sound: true },
 });
 
 /** In-memory fallback, used when the browser will not persist for us. */
@@ -46,8 +47,15 @@ export function isPersistent(): boolean {
  * future schema change can move people's data instead of discarding it.
  */
 function migrate(data: SaveData): SaveData {
-  if (data.schemaVersion === SCHEMA_VERSION) return data;
-  return { ...emptySave(), ...data, schemaVersion: SCHEMA_VERSION };
+  const base = emptySave();
+  // Spread defaults underneath so a save written before a field existed gains
+  // it rather than arriving as undefined.
+  return {
+    ...base,
+    ...data,
+    settings: { ...base.settings, ...(data.settings ?? {}) },
+    schemaVersion: SCHEMA_VERSION,
+  };
 }
 
 /** Shape-check a parsed save. A corrupt or hand-edited blob must not crash the app. */

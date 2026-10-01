@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useGame } from '../state';
 import { parseDescription } from '../game/text';
 import { QuestComplete } from '../components/QuestComplete';
+import { VineFrame } from '../components/VineFrame';
 import { CATEGORY_LABELS, DIFFICULTY_LABELS, type QuestTemplate } from '../types';
 
 export function Home() {
@@ -96,25 +97,29 @@ function QuestCard({
   const { flavor, steps } = parseDescription(template.description);
 
   return (
-    <section className="panel dealt">
-      <p className="eyebrow">
-        {CATEGORY_LABELS[template.category]} · {DIFFICULTY_LABELS[template.difficulty]}
-      </p>
-      <h1>{template.title}</h1>
-      {flavor ? <p className="flavor">{flavor}</p> : null}
+    <section className="panel card dealt">
+      <VineFrame />
 
-      {steps.length > 0 ? (
-        <ul className="steps">
-          {steps.map((s, i) => (
-            <li key={i}>
-              <span className="bullet" aria-hidden="true">
-                ◆
-              </span>
-              <span>{s}</span>
-            </li>
-          ))}
-        </ul>
-      ) : null}
+      <div className="card-body">
+        <p className="eyebrow">
+          {CATEGORY_LABELS[template.category]} · {DIFFICULTY_LABELS[template.difficulty]}
+        </p>
+        <h1>{template.title}</h1>
+        {flavor ? <p className="flavor">{flavor}</p> : null}
+
+        {steps.length > 0 ? (
+          <ul className="steps">
+            {steps.map((s, i) => (
+              <li key={i}>
+                <span className="bullet" aria-hidden="true">
+                  ◆
+                </span>
+                <span>{s}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
 
       <div className="row">
         <button type="button" className="btn primary" onClick={onComplete}>

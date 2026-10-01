@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HashRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Portal } from './components/Portal';
+import * as sound from './sound';
 import { GameProvider, useGame } from './state';
 import { Home } from './screens/Home';
 import { Onboarding } from './screens/Onboarding';
@@ -77,6 +78,19 @@ export default function App() {
   /* The portal runs once per app start, over the app rather than instead of it,
      so everything is mounted and ready by the time it clears. */
   const [entering, setEntering] = useState(true);
+
+  /* Browsers block audio until the visitor has interacted, so the very first
+     portal of a session may open in silence. One listener unlocks it, after
+     which every later cue — and every later portal — sounds. */
+  useEffect(() => {
+    const go = () => sound.unlock();
+    window.addEventListener('pointerdown', go, { once: true });
+    window.addEventListener('keydown', go, { once: true });
+    return () => {
+      window.removeEventListener('pointerdown', go);
+      window.removeEventListener('keydown', go);
+    };
+  }, []);
 
   return (
     <GameProvider>
