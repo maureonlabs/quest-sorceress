@@ -8,6 +8,7 @@ import { useGame } from '../state';
 import { parseDescription } from '../game/text';
 import { QuestComplete } from '../components/QuestComplete';
 import { VineFrame } from '../components/VineFrame';
+import { Filigree } from '../components/Filigree';
 import { CATEGORY_LABELS, DIFFICULTY_LABELS, type QuestTemplate } from '../types';
 
 export function Home() {
@@ -103,6 +104,7 @@ function QuestCard({
 
       <section className="panel card">
         <span className="sheen" aria-hidden="true" />
+        <Filigree size={56} />
 
       <div className="card-body">
         <p className="eyebrow">

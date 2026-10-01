@@ -5,6 +5,8 @@
 
 import { useNavigate } from 'react-router-dom';
 import { ChipGroup } from '../components/ChipGroup';
+import { Filigree } from '../components/Filigree';
+import { VineFrame } from '../components/VineFrame';
 import { useGame } from '../state';
 import {
   CATEGORIES,
@@ -58,17 +60,23 @@ export function Preferences() {
         <h1>What she asks of you</h1>
       </header>
 
-      <section className="panel">
-        <h2>Where you go</h2>
-        <p className="dim">She will only send you somewhere on this list.</p>
-        <ChipGroup
-          options={SETTING_OPTIONS}
-          selected={profile.settingPreferences}
-          onChange={setSettings}
-        />
-      </section>
+      <div className="card-stage">
+        <VineFrame layer="back" />
+        <section className="panel settings-lead">
+          <Filigree size={48} />
+          <h2>Where you go</h2>
+          <p className="dim">She will only send you somewhere on this list.</p>
+          <ChipGroup
+            options={SETTING_OPTIONS}
+            selected={profile.settingPreferences}
+            onChange={setSettings}
+          />
+        </section>
+        <VineFrame layer="front" />
+      </div>
 
       <section className="panel">
+        <Filigree size={44} />
         <h2>What kind</h2>
         <p className="dim">More choices, more variety.</p>
         <ChipGroup
@@ -80,6 +88,7 @@ export function Preferences() {
       </section>
 
       <section className="panel">
+        <Filigree size={44} />
         <h2>How hard</h2>
         <p className="dim">One rank at a time.</p>
         <ChipGroup
@@ -92,6 +101,7 @@ export function Preferences() {
       </section>
 
       <section className="panel">
+        <Filigree size={44} />
         <h2>Sound</h2>
         <p className="dim">Chimes when a quest is dealt, finished or set aside.</p>
         <button
