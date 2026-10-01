@@ -5,10 +5,13 @@
  * files: no assets to license or download, a couple of kilobytes of code, and
  * each progression can be tuned by ear rather than re-exported.
  *
- * Voices are bell-like — a fast attack and a long exponential decay, with a
- * quieter octave above for shimmer — and every cue is a short rising
- * progression on a pentatonic scale, which has no semitone clashes and so
- * cannot sound sour whichever notes land together.
+ * The chosen voice is "Fairy Harp": plucked rather than struck — a very fast
+ * attack, a short decay, and a quiet twelfth above rather than an octave, which
+ * is what makes a plucked string read as a string and not a bell. Every cue is a
+ * run of notes close together, like a hand drawn across harp strings.
+ *
+ * All of it sits on a pentatonic scale, which has no semitones and so cannot
+ * sound sour however the notes overlap.
  *
  * Browsers refuse to start audio before the visitor has interacted with the
  * page, so the context is created lazily and resumed on the first gesture.
@@ -21,6 +24,7 @@ type Cue = 'enter' | 'deal' | 'complete' | 'dismiss' | 'select' | 'unlock';
 /* Pentatonic — C major with the 4th and 7th removed. */
 const N = {
   C4: 261.63,
+  E4: 329.63,
   G4: 392.0,
   A4: 440.0,
   C5: 523.25,
@@ -32,6 +36,8 @@ const N = {
   D6: 1174.66,
   E6: 1318.51,
   G6: 1567.98,
+  A6: 1760.0,
+  C7: 2093.0,
 };
 
 interface Note {
@@ -48,46 +54,56 @@ interface Note {
  * a legitimate move and not a failure.
  */
 const CUES: Record<Cue, Note[]> = {
-  // The portal opening: a slow shimmer climbing two octaves.
+  // The portal: a hand running the full length of the strings, two octaves up.
   enter: [
-    { f: N.C4, at: 0, dur: 1.6, gain: 0.3 },
-    { f: N.G4, at: 0.16, dur: 1.5 },
-    { f: N.C5, at: 0.32, dur: 1.4 },
-    { f: N.E5, at: 0.5, dur: 1.3 },
-    { f: N.G5, at: 0.68, dur: 1.2 },
-    { f: N.C6, at: 0.88, dur: 1.6, gain: 0.5 },
-    { f: N.E6, at: 1.04, dur: 1.4, gain: 0.3 },
+    { f: N.C4, at: 0, dur: 0.9 },
+    { f: N.E4, at: 0.06, dur: 0.9 },
+    { f: N.G4, at: 0.12, dur: 0.9 },
+    { f: N.C5, at: 0.18, dur: 0.9 },
+    { f: N.E5, at: 0.24, dur: 0.9 },
+    { f: N.G5, at: 0.3, dur: 0.9 },
+    { f: N.C6, at: 0.36, dur: 1.1, gain: 0.5 },
+    { f: N.E6, at: 0.42, dur: 1.1, gain: 0.4 },
+    { f: N.G6, at: 0.48, dur: 1.2, gain: 0.3 },
+    { f: N.C7, at: 0.56, dur: 1.3, gain: 0.2 },
   ],
-  // A card dealt: three quick bright notes.
+  // A card dealt: four quick notes, bright and over almost at once.
   deal: [
-    { f: N.E5, at: 0, dur: 0.5 },
-    { f: N.G5, at: 0.07, dur: 0.55 },
-    { f: N.C6, at: 0.14, dur: 0.8, gain: 0.5 },
+    { f: N.G5, at: 0, dur: 0.35 },
+    { f: N.A5, at: 0.05, dur: 0.35 },
+    { f: N.C6, at: 0.1, dur: 0.4 },
+    { f: N.E6, at: 0.15, dur: 0.55, gain: 0.45 },
   ],
-  // Finishing something: the longest, brightest climb, with a sparkle on top.
+  // Finishing: the longest run, climbing past the top and falling back to rest.
   complete: [
-    { f: N.C5, at: 0, dur: 0.7 },
-    { f: N.E5, at: 0.09, dur: 0.7 },
-    { f: N.G5, at: 0.18, dur: 0.8 },
-    { f: N.C6, at: 0.27, dur: 1.0, gain: 0.55 },
-    { f: N.E6, at: 0.36, dur: 1.1, gain: 0.4 },
-    { f: N.G6, at: 0.46, dur: 1.3, gain: 0.26 },
-    { f: N.C6, at: 0.62, dur: 1.4, gain: 0.2 },
+    { f: N.C5, at: 0, dur: 0.45 },
+    { f: N.E5, at: 0.05, dur: 0.45 },
+    { f: N.G5, at: 0.1, dur: 0.45 },
+    { f: N.C6, at: 0.15, dur: 0.5 },
+    { f: N.E6, at: 0.2, dur: 0.55 },
+    { f: N.G6, at: 0.25, dur: 0.6, gain: 0.45 },
+    { f: N.C7, at: 0.32, dur: 0.9, gain: 0.3 },
+    { f: N.G6, at: 0.42, dur: 0.9, gain: 0.22 },
+    { f: N.C7, at: 0.5, dur: 1.1, gain: 0.18 },
   ],
-  // Declining: two soft notes stepping down. Courteous, not a buzzer.
+  // Declining: three soft notes stepping down. Courteous, not a buzzer —
+  // setting a quest aside is a legitimate move, not a failure.
   dismiss: [
-    { f: N.A5, at: 0, dur: 0.4, gain: 0.3 },
-    { f: N.D5, at: 0.08, dur: 0.6, gain: 0.26 },
+    { f: N.E5, at: 0, dur: 0.3, gain: 0.28 },
+    { f: N.C5, at: 0.06, dur: 0.45, gain: 0.24 },
+    { f: N.A4, at: 0.12, dur: 0.5, gain: 0.2 },
   ],
-  // Choosing a chip: one short tap.
-  select: [{ f: N.A5, at: 0, dur: 0.22, gain: 0.18 }],
+  // Choosing a chip: one plucked string.
+  select: [{ f: N.E6, at: 0, dur: 0.16, gain: 0.16 }],
   // Reserved for streak-milestone unlocks in a later phase.
   unlock: [
-    { f: N.C5, at: 0, dur: 0.9 },
-    { f: N.G5, at: 0.12, dur: 0.9 },
-    { f: N.C6, at: 0.24, dur: 1.1 },
-    { f: N.D6, at: 0.4, dur: 1.2, gain: 0.45 },
-    { f: N.G6, at: 0.56, dur: 1.6, gain: 0.35 },
+    { f: N.C5, at: 0, dur: 0.5 },
+    { f: N.G5, at: 0.06, dur: 0.5 },
+    { f: N.C6, at: 0.12, dur: 0.55 },
+    { f: N.E6, at: 0.18, dur: 0.6 },
+    { f: N.G6, at: 0.24, dur: 0.7, gain: 0.5 },
+    { f: N.A6, at: 0.32, dur: 0.9, gain: 0.4 },
+    { f: N.C7, at: 0.42, dur: 1.2, gain: 0.3 },
   ],
 };
 
@@ -108,11 +124,11 @@ function ensure(): AudioContext | null {
     // A short feedback delay stands in for reverb — enough to suggest a space
     // without the weight of a convolution impulse.
     const delay = ctx.createDelay(1);
-    delay.delayTime.value = 0.18;
+    delay.delayTime.value = 0.12;
     const feedback = ctx.createGain();
-    feedback.gain.value = 0.22;
+    feedback.gain.value = 0.28;
     const wet = ctx.createGain();
-    wet.gain.value = 0.3;
+    wet.gain.value = 0.34;
 
     master.connect(ctx.destination);
     master.connect(delay);
@@ -147,24 +163,26 @@ function bell(c: AudioContext, out: GainNode, n: Note, t0: number): void {
   const start = t0 + n.at;
 
   const osc = c.createOscillator();
-  osc.type = 'sine';
+  osc.type = 'triangle';
   osc.frequency.value = n.f;
 
-  // The octave above, quiet and slightly detuned, gives the strike its shimmer.
+  // A twelfth above rather than an octave: the interval a plucked string
+  // actually rings at, which is what separates a harp from a bell.
   const high = c.createOscillator();
-  high.type = 'triangle';
-  high.frequency.value = n.f * 2.01;
+  high.type = 'sine';
+  high.frequency.value = n.f * 3.01;
 
   const g = c.createGain();
   const gh = c.createGain();
 
+  // Plucked: almost no attack at all, then straight into the decay.
   g.gain.setValueAtTime(0.0001, start);
-  g.gain.exponentialRampToValueAtTime(peak, start + 0.012);
+  g.gain.exponentialRampToValueAtTime(peak, start + 0.004);
   g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
 
   gh.gain.setValueAtTime(0.0001, start);
-  gh.gain.exponentialRampToValueAtTime(peak * 0.22, start + 0.008);
-  gh.gain.exponentialRampToValueAtTime(0.0001, start + dur * 0.6);
+  gh.gain.exponentialRampToValueAtTime(peak * 0.14, start + 0.003);
+  gh.gain.exponentialRampToValueAtTime(0.0001, start + dur * 0.55);
 
   osc.connect(g).connect(out);
   high.connect(gh).connect(out);

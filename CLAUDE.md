@@ -64,13 +64,34 @@ the whole look into ordinary glassmorphism.
 
 ## Deployment
 
-- **Live:** https://quest-sorceress.vercel.app (currently the old prototype)
+- **Live:** https://quest-sorceress.vercel.app
 - **Repo:** https://github.com/maureonlabs/quest-sorceress (public)
-- Vercel auto-deploys on every push to `main`. No manual deploy step.
+
+`git push` to `main` is the whole deploy. Vercel watches the repo, runs
+`cd app && npm ci && npm run build` (set in `vercel.json`), and serves
+`app/dist`. No manual deploy step, and no Vercel command to remember.
+
+**If the build fails, the live site does not change** — Vercel only swaps in a
+deployment that built successfully. A broken push is a failed deploy, never a
+broken site.
+
+Hash routing (`#/preferences`) is deliberate: a static host needs no rewrite
+rules for deep links to work.
+
+The original single-file prototype was removed once the real app took over the
+URL. It is still in git history if it is ever wanted.
 
 ## Conventions
 
 - Commit with `git add -A && git commit -m "..." && git push` — Vercel does the rest.
+  `-A` stages **deletions** as well as edits, which is what keeps GitHub free of
+  files that no longer exist locally. Deleting a file and pushing removes it from
+  GitHub; it survives only in history.
+- Run `npm run check` in `app/` before pushing anything substantial. It runs lint,
+  typecheck, tests and a production build in one go — the same build Vercel will run.
+- Dead code fails the build, it does not linger: `noUnusedLocals` and
+  `noUnusedParameters` are on, so an unused variable, import or parameter is a
+  compile error. When a feature is removed, its leftovers cannot quietly survive.
 - Never commit credentials. `.gitignore` covers `Codes/`, `*recovery-codes*`, `.env*`,
   `*.key`, `*.pem`.
 - All persistence goes through one storage module, so accounts can be added later
