@@ -31,11 +31,6 @@ export function today(now: Date = new Date()): string {
   return `${y}-${m}-${d}`;
 }
 
-function daysBetween(a: string, b: string): number {
-  const ms = Date.parse(`${b}T00:00:00`) - Date.parse(`${a}T00:00:00`);
-  return Math.round(ms / 86_400_000);
-}
-
 /* ------------------------------------------------------------ eligibility */
 
 /** A template matches the player's stated preferences. */

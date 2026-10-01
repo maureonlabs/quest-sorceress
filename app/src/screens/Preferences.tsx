@@ -1,0 +1,94 @@
+/**
+ * Change the three answers from onboarding. Saves on every change — there is no
+ * "save" button, because there is nothing to lose by changing your mind.
+ */
+
+import { useNavigate } from 'react-router-dom';
+import { ChipGroup } from '../components/ChipGroup';
+import { useGame } from '../state';
+import {
+  CATEGORIES,
+  CATEGORY_LABELS,
+  DIFFICULTIES,
+  DIFFICULTY_LABELS,
+  SETTINGS,
+  SETTING_LABELS,
+  type Category,
+  type Difficulty,
+  type Setting,
+} from '../types';
+
+const SETTING_OPTIONS = SETTINGS.map((v) => ({ value: v, label: SETTING_LABELS[v] }));
+const CATEGORY_OPTIONS = CATEGORIES.map((v) => ({ value: v, label: CATEGORY_LABELS[v] }));
+const DIFFICULTY_OPTIONS = DIFFICULTIES.map((v) => ({
+  value: v,
+  label: DIFFICULTY_LABELS[v],
+  sub: v,
+}));
+
+export function Preferences() {
+  const { profile, saveProfile, startOver } = useGame();
+  const navigate = useNavigate();
+  if (!profile) return null;
+
+  /** Never let the player empty a list — the engine would have nothing to filter. */
+  const setSettings = (next: Setting[]) =>
+    next.length > 0 && saveProfile({ ...profile, settingPreferences: next });
+  const setCategories = (next: Category[]) =>
+    next.length > 0 && saveProfile({ ...profile, categoryPreferences: next });
+  const setDifficulty = (next: Difficulty[]) =>
+    next[0] && saveProfile({ ...profile, difficultyPreference: next[0] });
+
+  const reset = () => {
+    if (!confirm('Start over? Your streak, history and preferences will all go.')) return;
+    startOver();
+    navigate('/');
+  };
+
+  return (
+    <div className="content">
+      <header>
+        <p className="eyebrow">Preferences</p>
+        <h1>What she asks of you</h1>
+      </header>
+
+      <section className="panel">
+        <h2>Where you go</h2>
+        <p className="dim">She will only send you somewhere on this list.</p>
+        <ChipGroup
+          options={SETTING_OPTIONS}
+          selected={profile.settingPreferences}
+          onChange={setSettings}
+        />
+      </section>
+
+      <section className="panel">
+        <h2>What kind</h2>
+        <p className="dim">More choices, more variety.</p>
+        <ChipGroup
+          options={CATEGORY_OPTIONS}
+          selected={profile.categoryPreferences}
+          onChange={setCategories}
+        />
+      </section>
+
+      <section className="panel">
+        <h2>How hard</h2>
+        <p className="dim">One rank at a time.</p>
+        <ChipGroup
+          options={DIFFICULTY_OPTIONS}
+          selected={[profile.difficultyPreference]}
+          onChange={setDifficulty}
+          single
+          wide
+        />
+      </section>
+
+      <p className="center">
+        <button type="button" className="btn quiet" onClick={reset}>
+          Start over
+        </button>
+      </p>
+    </div>
+  );
+}
