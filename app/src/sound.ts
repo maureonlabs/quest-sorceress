@@ -14,9 +14,15 @@
  * sound sour however the notes overlap.
  *
  * Browsers refuse to start audio before the visitor has interacted with the
- * page, so the context is created lazily and resumed on the first gesture.
- * Anything that tries to play before then is skipped silently rather than
- * throwing.
+ * page, so the context is created lazily and resumed on a gesture. Anything
+ * that tries to play before then waits for the resume rather than being
+ * dropped.
+ *
+ * **On iPhone the hardware silent switch mutes this**, as it mutes all Web
+ * Audio in Safari, and no amount of code changes that — short of claiming the
+ * 'playback' audio session, which would also stop whatever the visitor is
+ * listening to. The sound test in Preferences exists so that case is
+ * identifiable rather than mysterious.
  */
 
 type Cue = 'enter' | 'deal' | 'complete' | 'dismiss' | 'select' | 'unlock';
@@ -142,15 +148,34 @@ function ensure(): AudioContext | null {
   return ctx;
 }
 
-/** Call once from a real user gesture so the browser lets audio start. */
-export function unlock(): void {
+/**
+ * Ask the browser to start audio. Safe to call as often as you like.
+ *
+ * This used to run once, from one `{ once: true }` listener. On a phone that is
+ * a coin flip: if the very first touch does not succeed in starting the context
+ * — and on iOS it often does not — the listener has already been removed and
+ * the app is silent for the rest of the session with no way back. Call it on
+ * every interaction until `isRunning()` is true instead.
+ */
+export function arm(): void {
   const c = ensure();
-  if (c && c.state === 'suspended') void c.resume();
+  if (c && c.state !== 'running') void c.resume();
+}
+
+/** True once the browser has actually let audio start. */
+export function isRunning(): boolean {
+  return ctx?.state === 'running';
+}
+
+/** What the audio context is doing, for the sound test in Preferences. */
+export function state(): 'unsupported' | AudioContextState {
+  const c = ensure();
+  return c ? c.state : 'unsupported';
 }
 
 export function setEnabled(on: boolean): void {
   enabled = on;
-  if (on) unlock();
+  if (on) arm();
 }
 
 export function isEnabled(): boolean {
@@ -193,15 +218,35 @@ function bell(c: AudioContext, out: GainNode, n: Note, t0: number): void {
   high.stop(start + dur + 0.05);
 }
 
+function sound(c: AudioContext, out: GainNode, cue: Cue): void {
+  const t0 = c.currentTime + 0.02;
+  for (const n of CUES[cue]) bell(c, out, n, t0);
+}
+
 export function play(cue: Cue): void {
   if (!enabled) return;
   const c = ensure();
   if (!c || !master) return;
-  // Blocked until the first gesture — skip rather than throw.
-  if (c.state === 'suspended') {
-    void c.resume();
-    if (c.state === 'suspended') return;
+  const out = master;
+
+  if (c.state === 'running') {
+    sound(c, out, cue);
+    return;
   }
-  const t0 = c.currentTime + 0.02;
-  for (const n of CUES[cue]) bell(c, master, n, t0);
+
+  /* Not running yet. `resume()` is a PROMISE — the old code called it and then
+   * re-read `c.state` on the very next line, which is of course still
+   * 'suspended', so it returned every time and nothing ever played. Wait for
+   * the resume and play on the other side of it.
+   *
+   * This matters most on a phone, where the first cue of a session is usually
+   * triggered by the same tap that is also unblocking audio. */
+  void c
+    .resume()
+    .then(() => {
+      if (enabled && c.state === 'running') sound(c, out, cue);
+    })
+    .catch(() => {
+      /* Still blocked. The next gesture will arm it. */
+    });
 }

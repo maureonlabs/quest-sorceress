@@ -6,11 +6,13 @@
  * deliberately absent: those belong to the daily check-in.
  */
 
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChipGroup } from '../components/ChipGroup';
 import { Filigree } from '../components/Filigree';
 import { VineFrame } from '../components/VineFrame';
 import { useGame } from '../state';
+import * as sound from '../sound';
 import {
   AGE_LABELS,
   AGE_RANGES,
@@ -34,6 +36,16 @@ const AGE_OPTIONS = AGE_RANGES.map((v) => ({ value: v, label: AGE_LABELS[v] }));
 export function Preferences() {
   const { profile, saveProfile, startOver, soundOn, setSound } = useGame();
   const navigate = useNavigate();
+
+  /* A phone that plays nothing is nearly always one of three things, and the
+     visitor cannot tell which. This says which. */
+  const [tested, setTested] = useState<string | null>(null);
+  const test = () => {
+    sound.arm();
+    sound.play('complete');
+    // Give the resume a moment to settle before reporting what happened.
+    window.setTimeout(() => setTested(sound.state()), 350);
+  };
   if (!profile) return null;
 
   /** Never let the player empty the list — the check-in would have nothing to offer. */
@@ -119,6 +131,23 @@ export function Preferences() {
           </span>
           {soundOn ? 'Sound on' : 'Sound off'}
         </button>
+
+        {soundOn ? (
+          <>
+            <button type="button" className="btn" onClick={test}>
+              Play a test chime
+            </button>
+            {tested ? (
+              <p className="dim sm-note" role="status">
+                {tested === 'running'
+                  ? 'Audio is running. If you heard nothing, check the silent switch on the side of your phone — it mutes web audio in Safari, and no website can override it.'
+                  : tested === 'suspended'
+                    ? 'Your browser is still blocking audio. Tap anywhere on the page, then try again.'
+                    : 'This browser will not play audio at all.'}
+              </p>
+            ) : null}
+          </>
+        ) : null}
       </section>
 
       <p className="center">

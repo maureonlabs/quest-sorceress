@@ -1228,3 +1228,12 @@ input,
   color: var(--gold-lit);
   font-weight: 500;
 }
+
+/* A diagnostic result, not a label — it wraps to several lines and should read
+   as prose rather than as a caption. */
+.sm-note {
+  margin: 0.3rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+}

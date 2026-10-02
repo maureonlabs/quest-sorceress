@@ -87,16 +87,25 @@ export default function App() {
   const [entering, setEntering] = useState(true);
 
   /* Browsers block audio until the visitor has interacted, so the very first
-     portal of a session may open in silence. One listener unlocks it, after
-     which every later cue — and every later portal — sounds. */
+     portal of a session may open in silence.
+     
+     Every interaction tries again until audio is actually running, and only
+     then do the listeners come off. A single `{ once: true }` listener was the
+     bug: on a phone the first touch frequently fails to start the context, and
+     once that listener had removed itself there was no second chance for the
+     rest of the session.
+     
+     `touchend` and `click` are here as well as `pointerdown` because not every
+     mobile browser treats those as the same gesture for audio purposes. */
   useEffect(() => {
-    const go = () => sound.unlock();
-    window.addEventListener('pointerdown', go, { once: true });
-    window.addEventListener('keydown', go, { once: true });
-    return () => {
-      window.removeEventListener('pointerdown', go);
-      window.removeEventListener('keydown', go);
+    const events = ['pointerdown', 'touchend', 'click', 'keydown'] as const;
+    const go = () => {
+      sound.arm();
+      if (sound.isRunning()) stop();
     };
+    const stop = () => events.forEach((e) => window.removeEventListener(e, go));
+    events.forEach((e) => window.addEventListener(e, go));
+    return stop;
   }, []);
 
   return (
