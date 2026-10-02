@@ -12,6 +12,34 @@
  */
 
 import { CLOTHS, METALS, type Ramp } from './palette';
+import { HAIR_SWATCHES } from '../types';
+
+const channels = (hex: string) =>
+  [1, 3, 5].map((i) => (parseInt(hex.slice(i, i + 2), 16) / 255).toFixed(3));
+
+/**
+ * Map a greyscale hair image onto one of the eight colours: luminance drives a
+ * two-stop ramp from the shadow tone to the lit tone. This is what lets a
+ * single painted hair style serve every colour instead of needing eight
+ * renders of each.
+ */
+function hairTint(name: string, lit: string, dark: string) {
+  const [lr, lg, lb] = channels(lit);
+  const [dr, dg, db] = channels(dark);
+  return (
+    <filter key={name} id={`qs-hair-${name}`} colorInterpolationFilters="sRGB">
+      <feColorMatrix
+        type="matrix"
+        values="0.33 0.5 0.17 0 0  0.33 0.5 0.17 0 0  0.33 0.5 0.17 0 0  0 0 0 1 0"
+      />
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues={`${dr} ${lr}`} />
+        <feFuncG type="table" tableValues={`${dg} ${lg}`} />
+        <feFuncB type="table" tableValues={`${db} ${lb}`} />
+      </feComponentTransfer>
+    </filter>
+  );
+}
 
 /** One three-stop gradient per ramp, lit from the upper left like the scene. */
 function rampStops(id: string, r: Ramp) {
@@ -37,6 +65,7 @@ export function AvatarDefs() {
         {/* Every material in the wardrobe, emitted once for the whole page. */}
         {Object.entries(METALS).map(([k, r]) => rampStops(`qs-m-${k}`, r))}
         {Object.entries(CLOTHS).map(([k, r]) => rampStops(`qs-c-${k}`, r))}
+        {Object.entries(HAIR_SWATCHES).map(([k, c]) => hairTint(k, c.lit, c.dark))}
 
         {/* Gold, lit from the upper left like everything else in the scene. */}
         <linearGradient id="qs-gold" x1="0" y1="0" x2="1" y2="1">
@@ -100,6 +129,24 @@ export function AvatarDefs() {
           <stop offset="0.6" stopColor="#c9a34e" stopOpacity="0.12" />
           <stop offset="1" stopColor="#c9a34e" stopOpacity="0" />
         </radialGradient>
+
+        {/* A cast shadow, offset from the light rather than centred under the
+            figure. A symmetrical pool reads as a glow; an offset one reads as a
+            body standing on ground. */}
+        <radialGradient id="qs-shade" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#000000" stopOpacity="0.55" />
+          <stop offset="0.55" stopColor="#000000" stopOpacity="0.22" />
+          <stop offset="1" stopColor="#000000" stopOpacity="0" />
+        </radialGradient>
+
+        {/* Form shading: one soft wrap from the lit side to the shadow side,
+            laid over any shape to give it a round rather than a flat face. */}
+        <linearGradient id="qs-form" x1="0.05" y1="0.1" x2="0.95" y2="0.9">
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.2" />
+          <stop offset="0.35" stopColor="#ffffff" stopOpacity="0.02" />
+          <stop offset="0.72" stopColor="#000000" stopOpacity="0.12" />
+          <stop offset="1" stopColor="#000000" stopOpacity="0.34" />
+        </linearGradient>
 
         <radialGradient id="qs-spark" cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stopColor="#fffaf0" />

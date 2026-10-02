@@ -54,9 +54,14 @@ checklist.
   figure and the wardrobe slot. Items come from **nine parameterised families** in
   `components/ItemArt.tsx` — a new item is a line of data, not a new path. A test fails
   if an item draws nothing.
-- **The figure is a placeholder for a painted one.** The agreed direction is hybrid:
-  raster bodies, vector items on top. `Sorceress.tsx` keeps the whole body in one `<g>`
-  so that swap touches nothing else.
+- **Any layer can be replaced by an image, one at a time.** Drop a file into
+  `app/src/assets/avatar/` and it takes over that layer; everything with no image keeps
+  its drawing. Vite resolves the folder at build time, so there is no manifest and no
+  script to run. Canvas, landmarks and names: `design/AVATAR-ASSETS.md`, with a guide
+  at `design/avatar-template.svg`.
+- **The target look is Sims-style character renders**, which cannot be reached in
+  vector — the drawings are a placeholder that gets as close as drawing allows. Do not
+  spend effort chasing photorealism in SVG; spend it on the asset pipeline instead.
 - **Unlocks are one-way.** An item earned at seven days is kept when the streak
   breaks. Granting happens inside the same write as the completion, plus a silent
   catch-up when the app loads.

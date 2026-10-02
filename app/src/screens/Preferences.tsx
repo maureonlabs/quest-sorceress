@@ -12,6 +12,7 @@ import { Filigree } from '../components/Filigree';
 import { HairPicker } from '../components/HairPicker';
 import { VineFrame } from '../components/VineFrame';
 import { useGame } from '../state';
+import { artCount } from '../art/assets';
 import {
   AGE_LABELS,
   AGE_RANGES,
@@ -119,6 +120,24 @@ export function Preferences() {
         <ChipGroup options={BODY_OPTIONS} selected={[profile.bodyType]} onChange={setBody} single wide />
         <p className="dim sm">Hair</p>
         <HairPicker value={profile.hairColor} onChange={setHairColor} />
+      </section>
+
+      <section className="panel">
+        <Filigree size={44} />
+        <h2>Painted art</h2>
+        {artCount() === 0 ? (
+          <p className="dim">
+            None installed — every figure and item is using its drawing. Drop images into{' '}
+            <code>app/src/assets/avatar/</code> and they take over one at a time. See{' '}
+            <code>design/AVATAR-ASSETS.md</code> for the canvas and the names.
+          </p>
+        ) : (
+          <p className="dim">
+            <b className="gold">{artCount()}</b> painted{' '}
+            {artCount() === 1 ? 'file is' : 'files are'} installed. Everything else is still
+            using its drawing.
+          </p>
+        )}
       </section>
 
       <section className="panel">

@@ -8,6 +8,7 @@
  * revisits.
  */
 
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AvatarDefs } from '../components/AvatarDefs';
 import { Filigree } from '../components/Filigree';
@@ -20,6 +21,7 @@ import { BODY_LABELS, SLOT_LABELS } from '../types';
 
 export function Avatar() {
   const { profile, items, equipped, unequip, nextUnlock, streak, setHairColor } = useGame();
+  const [frame, setFrame] = useState<'full' | 'bust'>('full');
   if (!profile) return null;
 
   const ownedCount = ladder().filter((i) => owns(items, i.id)).length;
@@ -49,7 +51,28 @@ export function Avatar() {
             hairColor={profile.hairColor}
             equipped={equipped}
             label={described}
+            frame={frame}
           />
+          {/* Full length to judge an outfit, close up to judge a face. Both are
+              the same drawing at a different crop, so this costs nothing. */}
+          <div className="frame-toggle" role="group" aria-label="View">
+            <button
+              type="button"
+              className={frame === 'full' ? 'on' : ''}
+              aria-pressed={frame === 'full'}
+              onClick={() => setFrame('full')}
+            >
+              Full length
+            </button>
+            <button
+              type="button"
+              className={frame === 'bust' ? 'on' : ''}
+              aria-pressed={frame === 'bust'}
+              onClick={() => setFrame('bust')}
+            >
+              Portrait
+            </button>
+          </div>
         </section>
         <VineFrame layer="front" />
       </div>

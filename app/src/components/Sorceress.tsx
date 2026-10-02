@@ -18,9 +18,11 @@
 import type { ReactNode } from 'react';
 import { HAIR_SWATCHES, type BodyType, type HairColor, type ItemSlot } from '../types';
 import type { WardrobeItem } from '../game/items';
+import { artUrl } from '../art/assets';
+import { ArtLayer } from './ArtLayer';
+import { Face } from './Face';
 import { drawHair, drawItem, type ArtContext, type ArtSpec } from './ItemArt';
 import {
-  HAIR_PATH,
   HEM_PATH,
   HEM_PATH_M,
   ROBE_PATH,
@@ -35,15 +37,24 @@ const BEHIND = new Set<ItemSlot>(['aura', 'cloak', 'wings']);
 /** Slots painted over the finished figure. */
 const IN_FRONT = new Set<ItemSlot>(['crown', 'staff', 'familiar']);
 
+/** `bust` crops to head and shoulders, the framing the reference renders use. */
+const VIEWBOX = { full: `0 0 ${STAGE.w} ${STAGE.h}`, bust: '58 38 84 100' } as const;
+
 interface Props {
   bodyType: BodyType;
   hairColor: HairColor;
   equipped: readonly WardrobeItem[];
   /** Describes the figure for anyone who cannot see it. */
   label: string;
+  /**
+   * How much of the figure to show. The whole wardrobe needs `full` — shoes and
+   * a hem cannot be judged from a portrait — but the character screen leads
+   * with `bust`, because that is where a face is worth looking at.
+   */
+  frame?: keyof typeof VIEWBOX;
 }
 
-export function Sorceress({ bodyType, hairColor, equipped, label }: Props) {
+export function Sorceress({ bodyType, hairColor, equipped, label, frame = 'full' }: Props) {
   const feminine = bodyType === 'sorceress';
   const ctx: ArtContext = {
     hair: HAIR_SWATCHES[hairColor],
@@ -51,13 +62,28 @@ export function Sorceress({ bodyType, hairColor, equipped, label }: Props) {
     hemPath: feminine ? HEM_PATH : HEM_PATH_M,
   };
 
-  const wearing = (slot: ItemSlot) => equipped.find((i) => i.type === slot) ?? null;
+  /* A portrait crop shows what a portrait shows. A staff, a pair of wings and
+     a spell ring all extend well past the head, so in `bust` they arrive as
+     stray fragments at the edge of the frame rather than as items. */
+  const BUST_HIDES = new Set<ItemSlot>(['staff', 'wings', 'aura', 'shoes']);
+  const visible =
+    frame === 'bust' ? equipped.filter((i) => !BUST_HIDES.has(i.type)) : equipped;
+
+  const wearing = (slot: ItemSlot) => visible.find((i) => i.type === slot) ?? null;
+
+  /* A painted file for this item if one has been installed, preferring a cut
+     made for this body over the shared one. */
+  const imageFor = (id: string) => artUrl(`items/${id}.${bodyType}`, `items/${id}`);
 
   const draw = (items: readonly WardrobeItem[]): ReactNode[] =>
-    items.map((i) => <g key={i.id}>{drawItem(i.art, ctx)}</g>);
+    items.map((i) => (
+      <ArtLayer key={i.id} src={imageFor(i.id)}>
+        <g>{drawItem(i.art, ctx)}</g>
+      </ArtLayer>
+    ));
 
-  const behind = draw(equipped.filter((i) => BEHIND.has(i.type)));
-  const front = draw(equipped.filter((i) => IN_FRONT.has(i.type)));
+  const behind = draw(visible.filter((i) => BEHIND.has(i.type)));
+  const front = draw(visible.filter((i) => IN_FRONT.has(i.type)));
   const robeItem = wearing('robe');
   const shoeItem = wearing('shoes');
 
@@ -67,22 +93,26 @@ export function Sorceress({ bodyType, hairColor, equipped, label }: Props) {
     ArtSpec,
     { kind: 'hair' }
   >;
-  const hair = hairItem ? drawHair(hairSpec, ctx) : null;
+  /* Always routed through the same drawing, item or not, so the default style
+     gets the same sheen and strands as anything unlocked. */
+  const hair = drawHair(hairSpec, ctx);
 
   return (
-    <svg
-      className="sorceress"
-      viewBox={`0 0 ${STAGE.w} ${STAGE.h}`}
-      role="img"
-      aria-label={label}
-    >
-      {/* Light pooling at the feet, the way it pools under the glass panels. */}
-      <ellipse cx="100" cy="286" rx="80" ry="15" fill="url(#qs-pool)" />
+    <svg className="sorceress" viewBox={VIEWBOX[frame]} role="img" aria-label={label}>
+      {frame === 'full' ? (
+        <>
+          {/* A cast shadow offset away from the light, then the warm pool the
+              panels sit in. Centred, the shadow reads as a glow; offset, it
+              reads as a body standing on ground. */}
+          <ellipse cx="108" cy="288" rx="62" ry="12" fill="url(#qs-shade)" />
+          <ellipse cx="100" cy="286" rx="80" ry="15" fill="url(#qs-pool)" />
+        </>
+      ) : null}
 
       <g className="sorceress-figure">
         {behind}
 
-        {hair ? hair.back : <path d={HAIR_PATH} fill={ctx.hair.dark} />}
+        {hair.back}
 
         {/* Throat and shoulders, so the head is attached to a body. */}
         <path d="M 93 88 L 93 106 C 93 111, 107 111, 107 106 L 107 88 Z" fill="url(#qs-skin)" />
@@ -97,26 +127,37 @@ export function Sorceress({ bodyType, hairColor, equipped, label }: Props) {
             only the foot shows below the hem; a tunic and trousers do not, so
             the boot is drawn over them and the shaft shows. Painting them on
             top in every case put knee boots on the outside of a ball gown. */}
-        {feminine && shoeItem ? <g>{drawItem(shoeItem.art, ctx)}</g> : null}
-        <Body feminine={feminine} dressed={robeItem !== null} />
-        {!feminine && shoeItem ? <g>{drawItem(shoeItem.art, ctx)}</g> : null}
-        {robeItem ? <g>{drawItem(robeItem.art, ctx)}</g> : null}
+        {feminine && shoeItem ? (
+          <ArtLayer src={imageFor(shoeItem.id)}>
+            <g>{drawItem(shoeItem.art, ctx)}</g>
+          </ArtLayer>
+        ) : null}
 
-        <ellipse cx="100" cy="76" rx="17" ry="20" fill="url(#qs-skin)" />
-        {hair ? (
-          hair.front
-        ) : (
-          <path
-            d="M 83 72 C 83 55, 117 55, 117 72 C 112 62, 106 66, 100 64 C 93 63, 87 64, 83 72 Z"
-            fill={ctx.hair.dark}
-          />
-        )}
+        <ArtLayer src={artUrl(`figures/${bodyType}`)}>
+          <>
+            <Body feminine={feminine} dressed={robeItem !== null} />
+            <Face masculine={!feminine} />
+          </>
+        </ArtLayer>
 
-        {/* Eyes closed. Not watching you; listening to the wood. */}
-        <path d="M 90 80 C 92 83, 95.5 83, 97.5 80" fill="none" stroke="#4a3326" strokeWidth="1" strokeLinecap="round" />
-        <path d="M 102.5 80 C 104.5 83, 108 83, 110 80" fill="none" stroke="#4a3326" strokeWidth="1" strokeLinecap="round" />
-        <ellipse cx="88" cy="86" rx="3.2" ry="2" fill="#e9a3b8" opacity="0.25" />
-        <ellipse cx="112" cy="86" rx="3.2" ry="2" fill="#e9a3b8" opacity="0.25" />
+        {!feminine && shoeItem ? (
+          <ArtLayer src={imageFor(shoeItem.id)}>
+            <g>{drawItem(shoeItem.art, ctx)}</g>
+          </ArtLayer>
+        ) : null}
+        {robeItem ? (
+          <ArtLayer src={imageFor(robeItem.id)}>
+            <g>{drawItem(robeItem.art, ctx)}</g>
+          </ArtLayer>
+        ) : null}
+
+        {/* The fringe, over the face. */}
+        <ArtLayer
+          src={hairItem ? artUrl(`hair/${hairSpec.style}`) : artUrl('hair/long')}
+          filter={`url(#qs-hair-${hairColor})`}
+        >
+          <>{hair.front}</>
+        </ArtLayer>
 
         {front}
       </g>

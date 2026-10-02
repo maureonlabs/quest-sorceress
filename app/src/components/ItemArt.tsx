@@ -138,23 +138,68 @@ const HAIR_SHAPES: Record<
 
 function hair({ style }: Extract<ArtSpec, { kind: 'hair' }>, ctx: ArtContext) {
   const shape = HAIR_SHAPES[style];
+
+  /* Individual strands, and a band of sheen across the crown. In the reference
+     renders the sheen is the single most recognisable thing about the hair —
+     more than the cut — so it gets drawn explicitly rather than left to a
+     gradient. */
+  const strands = (n: number, y0: number, y1: number) => (
+    <g>
+      {Array.from({ length: n }, (_, i) => {
+        /* Irregular spacing and weight on purpose. Evenly spaced strands of
+           equal weight read as corduroy, which is exactly what the first
+           attempt looked like. */
+        const t = (i + 0.5) / n;
+        const jitter = Math.sin(i * 12.9898) * 0.5;
+        const x = 70 + (t + jitter * 0.04) * 60;
+        const sweep = (t - 0.5) * 26;
+        return (
+          <path
+            key={i}
+            d={`M ${x.toFixed(1)} ${y0} C ${(x + sweep * 0.3).toFixed(1)} ${y0 + (y1 - y0) * 0.35}, ${(x + sweep * 0.8).toFixed(1)} ${y0 + (y1 - y0) * 0.75}, ${(x + sweep).toFixed(1)} ${y1}`}
+            fill="none"
+            stroke={ctx.hair.lit}
+            strokeWidth={0.5 + Math.abs(jitter) * 0.8}
+            strokeLinecap="round"
+            opacity={0.12 + 0.2 * Math.abs(Math.sin(i * 2.4))}
+          />
+        );
+      })}
+    </g>
+  );
+
   return {
     back: (
       <g>
         <path d={shape.back} fill={ctx.hair.dark} />
-        <path d={shape.back} fill={ctx.hair.lit} opacity="0.28" transform="translate(-2,-2)" />
+        <clipPath id={`qs-hairclip-${style}`}>
+          <path d={shape.back} />
+        </clipPath>
+        <g clipPath={`url(#qs-hairclip-${style})`}>
+          <path d={shape.back} fill={ctx.hair.lit} opacity="0.2" transform="translate(-1.5,-2)" />
+          {strands(9, 56, 178)}
+          {/* The sheen band, around the CROWN of the head. Lower down it reads
+              as a headband drawn across the forehead, which is what the first
+              attempt looked like. */}
+          <ellipse cx="100" cy="58" rx="27" ry="7" fill={ctx.hair.lit} opacity="0.26" />
+          <ellipse cx="100" cy="56" rx="18" ry="3.4" fill="#ffffff" opacity="0.16" />
+        </g>
         {shape.extra ? <path d={shape.extra} fill={ctx.hair.dark} /> : null}
+        {shape.extra ? (
+          <path d={shape.extra} fill={ctx.hair.lit} opacity="0.22" transform="translate(-1.5,-2)" />
+        ) : null}
       </g>
     ),
     front: (
       <g>
         <path d={shape.fringe} fill={ctx.hair.dark} />
-        <path
-          d={shape.fringe}
-          fill={ctx.hair.lit}
-          opacity="0.35"
-          transform="translate(-1.5,-1.5)"
-        />
+        <clipPath id={`qs-fringeclip-${style}`}>
+          <path d={shape.fringe} />
+        </clipPath>
+        <g clipPath={`url(#qs-fringeclip-${style})`}>
+          <path d={shape.fringe} fill={ctx.hair.lit} opacity="0.28" transform="translate(-1.5,-2)" />
+          <ellipse cx="100" cy="60" rx="15" ry="3" fill="#ffffff" opacity="0.14" />
+        </g>
       </g>
     ),
   };

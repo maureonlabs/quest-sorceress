@@ -1557,3 +1557,60 @@ input,
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
+/* ------------------------------------------------------- figure framing */
+
+.frame-toggle {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+  padding: 0.22rem;
+  border-radius: 999px;
+  border: 1px solid var(--glass-edge);
+  background: rgba(8, 15, 12, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.frame-toggle button {
+  padding: 0.28rem 0.85rem;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--text-dim);
+  font-family: var(--body);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.frame-toggle button.on {
+  background: rgba(201, 163, 78, 0.18);
+  color: var(--gold-lit);
+}
+
+.frame-toggle button:hover:not(.on) {
+  color: var(--text);
+}
+
+/* The portrait crop is squarer than the full figure, so the panel would jump
+   height between the two. Pin it. */
+.avatar-panel .sorceress {
+  height: 21rem;
+  width: auto;
+  max-width: 100%;
+}
+
+/* A file path is data the reader may need to type, so it gets a monospace
+   treatment rather than being left to blend into the sentence. */
+.panel code {
+  padding: 0.05em 0.35em;
+  border-radius: 5px;
+  background: rgba(226, 240, 234, 0.1);
+  color: var(--gold-lit);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.86em;
+  overflow-wrap: anywhere;
+}
