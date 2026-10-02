@@ -171,12 +171,20 @@ export function ForestScene() {
       g.fillStyle = ground;
       g.fillRect(0, h * 0.72, w, h * 0.28);
 
+      /* Painted over the whole canvas, not a band of it.
+       *
+       * This gradient is centred near the bottom with a radius of 0.6 × the
+       * WIDTH, so on a wide window it still has plenty of colour left at 55%
+       * of the height — and filling only from there down sliced it off
+       * mid-falloff, drawing a hard horizontal line across the entire screen.
+       * A radial gradient fades itself out; it does not need to be clipped,
+       * and clipping it is how you get a seam. */
       const pool = g.createRadialGradient(w * 0.5, h * 0.86, 0, w * 0.5, h * 0.86, w * 0.6);
       pool.addColorStop(0, 'rgba(201, 163, 78, 0.26)');
       pool.addColorStop(0.5, 'rgba(111, 216, 192, 0.09)');
       pool.addColorStop(1, 'transparent');
       g.fillStyle = pool;
-      g.fillRect(0, h * 0.55, w, h * 0.45);
+      g.fillRect(0, 0, w, h);
 
       // The ground: a silhouetted mass with a broken top edge, so there is a
       // visible line where the wood meets the earth rather than a soft wash.
