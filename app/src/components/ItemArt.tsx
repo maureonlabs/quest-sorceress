@@ -23,7 +23,11 @@ import { GLOWS, clothId, metalId, type Cloth, type Glow, type Metal } from './pa
 
 export type ArtSpec =
   | { kind: 'crown'; metal: Metal; gem: Glow; points: number; height: number }
-  | { kind: 'hair'; style: 'long' | 'braid' | 'short' | 'waves' | 'bun' | 'tail' }
+  | {
+      kind: 'hair';
+      /** `swept` is the sorcerer's default cut and is not an unlockable item. */
+      style: 'long' | 'braid' | 'short' | 'waves' | 'bun' | 'tail' | 'swept';
+    }
   | { kind: 'robe'; cloth: Cloth; trim: Metal; motif: 'vine' | 'stars' | 'panels' | 'plain' }
   | { kind: 'cloak'; cloth: Cloth; edge: Metal; clasp: Glow; long: boolean }
   | { kind: 'shoes'; cloth: Cloth; trim: Metal; height: 'low' | 'mid' | 'tall' }
@@ -108,30 +112,34 @@ const HAIR_SHAPES: Record<
 > = {
   long: {
     back: 'M 100 48 C 76 48, 66 68, 69 94 C 72 128, 65 158, 58 180 C 76 176, 90 162, 94 138 L 106 138 C 110 162, 124 176, 142 180 C 135 158, 128 128, 131 94 C 134 68, 124 48, 100 48 Z',
-    fringe: 'M 83 72 C 83 55, 117 55, 117 72 C 112 62, 106 66, 100 64 C 93 63, 87 64, 83 72 Z',
+    fringe: 'M 81 76 C 80 35, 120 35, 119 76 C 115 61, 107 64, 100 63 C 92 62, 85 65, 81 76 Z',
   },
   waves: {
     back: 'M 100 47 C 74 47, 64 69, 68 96 C 72 122, 60 138, 66 158 C 70 174, 58 182, 54 196 C 76 192, 92 170, 95 140 L 105 140 C 108 170, 124 192, 146 196 C 142 182, 130 174, 134 158 C 140 138, 128 122, 132 96 C 136 69, 126 47, 100 47 Z',
-    fringe: 'M 82 73 C 84 54, 116 54, 118 73 C 113 64, 108 70, 100 66 C 91 63, 86 65, 82 73 Z',
+    fringe: 'M 80 78 C 80 34, 120 34, 120 76 C 116 62, 108 66, 100 64 C 91 62, 84 66, 80 78 Z',
   },
   short: {
     back: 'M 100 48 C 77 48, 67 68, 70 93 C 72 110, 68 120, 65 128 C 76 126, 84 118, 87 108 L 113 108 C 116 118, 124 126, 135 128 C 132 120, 128 110, 130 93 C 133 68, 123 48, 100 48 Z',
-    fringe: 'M 82 71 C 84 54, 116 54, 118 71 C 111 61, 105 68, 99 64 C 92 61, 86 64, 82 71 Z',
+    fringe: 'M 81 74 C 81 34, 119 34, 119 73 C 114 60, 106 65, 99 63 C 91 61, 85 65, 81 74 Z',
   },
   braid: {
     back: 'M 100 48 C 77 48, 67 68, 70 94 C 72 120, 66 142, 61 158 C 74 155, 86 144, 92 126 L 108 126 C 112 144, 122 155, 136 158 C 131 142, 128 120, 130 94 C 133 68, 123 48, 100 48 Z',
-    fringe: 'M 83 72 C 83 55, 117 55, 117 72 C 112 62, 106 66, 100 64 C 93 63, 87 64, 83 72 Z',
+    fringe: 'M 81 76 C 80 35, 120 35, 119 76 C 115 61, 107 64, 100 63 C 92 62, 85 65, 81 76 Z',
     // A plait falling over one shoulder, drawn as stacked lozenges.
     extra: 'M 128 118 L 134 126 L 128 134 L 122 126 Z M 128 134 L 134 142 L 128 150 L 122 142 Z M 128 150 L 133 157 L 128 164 L 123 157 Z M 128 164 L 132 170 L 128 176 L 124 170 Z',
   },
   bun: {
     back: 'M 100 50 C 79 50, 70 68, 72 92 C 73 106, 70 114, 67 122 C 77 120, 85 113, 88 104 L 112 104 C 115 113, 123 120, 133 122 C 130 114, 127 106, 128 92 C 130 68, 121 50, 100 50 Z',
-    fringe: 'M 83 71 C 85 55, 115 55, 117 71 C 111 62, 106 68, 100 64 C 93 62, 87 63, 83 71 Z',
+    fringe: 'M 82 74 C 82 35, 118 35, 118 73 C 114 61, 106 65, 99 63 C 92 61, 86 65, 82 74 Z',
     extra: 'M 100 32 C 112 32, 118 40, 118 48 C 118 56, 110 61, 100 61 C 90 61, 82 56, 82 48 C 82 40, 88 32, 100 32 Z',
+  },
+  swept: {
+    back: 'M 100 47 C 80 47, 71 63, 72 85 C 72.5 92, 71 96, 69 100 C 77 98, 83 93, 85.5 86 L 114.5 86 C 117 93, 123 98, 131 100 C 129 96, 127.5 92, 128 85 C 129 63, 120 47, 100 47 Z',
+    fringe: 'M 79 72 C 80 33, 120 33, 121 70 C 117 60, 110 57, 102 59 C 94 61, 85 66, 79 72 Z',
   },
   tail: {
     back: 'M 100 48 C 78 48, 68 68, 71 93 C 72 108, 69 117, 66 125 C 77 123, 85 115, 88 106 L 112 106 C 115 115, 123 123, 134 125 C 131 117, 128 108, 129 93 C 132 68, 122 48, 100 48 Z',
-    fringe: 'M 82 72 C 84 54, 116 54, 118 72 C 112 62, 107 69, 100 65 C 92 62, 86 64, 82 72 Z',
+    fringe: 'M 81 75 C 81 34, 119 34, 119 74 C 114 61, 107 65, 100 63 C 92 61, 85 65, 81 75 Z',
     extra: 'M 128 96 C 142 104, 150 124, 146 146 C 143 164, 134 176, 126 182 C 132 168, 136 150, 134 134 C 132 118, 128 106, 122 100 Z',
   },
 };
@@ -181,8 +189,8 @@ function hair({ style }: Extract<ArtSpec, { kind: 'hair' }>, ctx: ArtContext) {
           {/* The sheen band, around the CROWN of the head. Lower down it reads
               as a headband drawn across the forehead, which is what the first
               attempt looked like. */}
-          <ellipse cx="100" cy="58" rx="27" ry="7" fill={ctx.hair.lit} opacity="0.26" />
-          <ellipse cx="100" cy="56" rx="18" ry="3.4" fill="#ffffff" opacity="0.16" />
+          <ellipse cx="100" cy="58" rx="27" ry="8" fill={ctx.hair.lit} opacity="0.2" filter="url(#qs-glow)" />
+          <ellipse cx="100" cy="56" rx="17" ry="3.6" fill="#ffffff" opacity="0.13" filter="url(#qs-glow)" />
         </g>
         {shape.extra ? <path d={shape.extra} fill={ctx.hair.dark} /> : null}
         {shape.extra ? (
@@ -198,7 +206,7 @@ function hair({ style }: Extract<ArtSpec, { kind: 'hair' }>, ctx: ArtContext) {
         </clipPath>
         <g clipPath={`url(#qs-fringeclip-${style})`}>
           <path d={shape.fringe} fill={ctx.hair.lit} opacity="0.28" transform="translate(-1.5,-2)" />
-          <ellipse cx="100" cy="60" rx="15" ry="3" fill="#ffffff" opacity="0.14" />
+          <ellipse cx="100" cy="60" rx="15" ry="3.4" fill="#ffffff" opacity="0.12" filter="url(#qs-glow)" />
         </g>
       </g>
     ),

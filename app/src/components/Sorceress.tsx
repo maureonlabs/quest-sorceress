@@ -87,12 +87,14 @@ export function Sorceress({ bodyType, hairColor, equipped, label, frame = 'full'
   const robeItem = wearing('robe');
   const shoeItem = wearing('shoes');
 
-  /* No hair item means the default long style, in the player's colour. */
+  /* No hair item means the body's default cut, in the player's colour. A
+     sorcerer starting with hair to his waist was most of why the two figures
+     read as the same person. */
   const hairItem = wearing('hair');
-  const hairSpec = (hairItem?.art ?? { kind: 'hair', style: 'long' }) as Extract<
-    ArtSpec,
-    { kind: 'hair' }
-  >;
+  const hairSpec = (hairItem?.art ?? {
+    kind: 'hair',
+    style: feminine ? 'long' : 'swept',
+  }) as Extract<ArtSpec, { kind: 'hair' }>;
   /* Always routed through the same drawing, item or not, so the default style
      gets the same sheen and strands as anything unlocked. */
   const hair = drawHair(hairSpec, ctx);
@@ -114,13 +116,32 @@ export function Sorceress({ bodyType, hairColor, equipped, label, frame = 'full'
 
         {hair.back}
 
-        {/* Throat and shoulders, so the head is attached to a body. */}
-        <path d="M 93 88 L 93 106 C 93 111, 107 111, 107 106 L 107 88 Z" fill="url(#qs-skin)" />
-        <path
-          d="M 93 100 C 96 106, 104 106, 107 100 L 107 106 C 107 111, 93 111, 93 106 Z"
-          fill="#b8906d"
-          opacity="0.45"
-        />
+        {/* Throat and shoulders, so the head is attached to a body. A thicker
+            neck is one of the plainest sex differences at any size, so it is
+            not left the same for both. */}
+        {feminine ? (
+          <>
+            <path d="M 93 88 L 93 106 C 93 111, 107 111, 107 106 L 107 88 Z" fill="url(#qs-skin)" />
+            <path
+              d="M 93 100 C 96 106, 104 106, 107 100 L 107 106 C 107 111, 93 111, 93 106 Z"
+              fill="#b8906d"
+              opacity="0.45"
+            />
+          </>
+        ) : (
+          <>
+            <path d="M 90.5 88 L 90.5 104 C 90.5 110, 109.5 110, 109.5 104 L 109.5 88 Z" fill="url(#qs-skin)" />
+            {/* Trapezius: the slope from neck to shoulder, which a straight
+                column of a neck never has. */}
+            <path d="M 90.5 102 C 84 104, 78 108, 74 113 L 126 113 C 122 108, 116 104, 109.5 102 Z" fill="url(#qs-skin)" opacity="0.9" />
+            <path
+              d="M 90.5 98 C 94 105, 106 105, 109.5 98 L 109.5 104 C 109.5 110, 90.5 110, 90.5 104 Z"
+              fill="#b8906d"
+              opacity="0.5"
+            />
+            <ellipse cx="100" cy="97" rx="2" ry="2.6" fill="#c9a384" opacity="0.5" />
+          </>
+        )}
 
         {/* Shoes go in front of the legs but behind whatever reaches the
             floor. A gown always does, so they sit under the whole body and
