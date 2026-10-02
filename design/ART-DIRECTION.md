@@ -134,9 +134,8 @@ cue sounds.
 | **Home** | One hero glass panel holding the current quest. "Give me a quest" is the primary action — the one element that gets the mint glow. Streak counter sits small and gold near the top. |
 | **Quest Detail** | The same panel, enlarged. Complete and Dismiss as the two actions. |
 | **Quest Preferences** | Frosted list rows with hairline gold borders; selected rows brighten, as in reference 2. |
-| **Avatar** | The sorceress framed like the panels — vines and blossom around her, forest behind. |
-| **Inventory** | A grid of circular gold-rimmed item slots. Locked items dimmed, not hidden, so the next unlock is visible. |
 | **Settings** | The quietest screen. Frame and glass, minimal vine. |
+| **The passage** | One wide glass panel, filigree, no competing buttons. It is for reading. |
 
 ---
 

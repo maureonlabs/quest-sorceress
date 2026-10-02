@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { useGame } from '../state';
 import { parseDescription } from '../game/text';
 import { QuestComplete } from '../components/QuestComplete';
-import { ItemUnlock } from '../components/ItemUnlock';
+import { Wisdom } from '../components/Wisdom';
 import { VineFrame } from '../components/VineFrame';
 import { Filigree } from '../components/Filigree';
 import {
@@ -27,9 +27,8 @@ export function Home() {
     completedToday,
     generate,
     complete,
-    justUnlocked,
-    clearUnlocked,
-    equip,
+    passage,
+    dismissPassage,
     here,
   } = useGame();
 
@@ -44,17 +43,17 @@ export function Home() {
 
   /**
    * Closing the congratulations draws the next quest, rather than dropping you
-   * back onto an empty screen — unless a streak milestone just landed, in which
-   * case the unlock gets the screen to itself first. Two modals at once would
-   * bury the reward under the next thing to do.
+   * back onto an empty screen — unless the day's passage just landed, in which
+   * case that gets the screen to itself first. Two dialogs at once would bury
+   * something worth reading under the next thing to do.
    */
   const onNext = () => {
     setJustFinished(null);
-    if (justUnlocked.length === 0) generate();
+    if (!passage) generate();
   };
 
-  const onUnlockSeen = () => {
-    clearUnlocked();
+  const onPassageRead = () => {
+    dismissPassage();
     generate();
   };
 
@@ -113,8 +112,8 @@ export function Home() {
 
       {justFinished ? (
         <QuestComplete title={justFinished.title} streak={streak} onNext={onNext} />
-      ) : justUnlocked.length > 0 ? (
-        <ItemUnlock items={justUnlocked} onEquip={equip} onDone={onUnlockSeen} />
+      ) : passage ? (
+        <Wisdom passage={passage} onDone={onPassageRead} />
       ) : null}
     </div>
   );

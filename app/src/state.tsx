@@ -23,23 +23,10 @@ import {
   today,
   type Today,
 } from './game/quests';
-import {
-  equipItem,
-  equippedItems,
-  grantItems,
-  nextUnlock,
-  unequipItem,
-  type WardrobeItem,
-} from './game/items';
-import type {
-  CheckIn,
-  DailyQuest,
-  HairColor,
-  OwnedItem,
-  Profile,
-  QuestTemplate,
-  SaveData,
-} from './types';
+import { earnsWisdom, markSeen, pickPassage } from './game/wisdom';
+import type { Passage } from './content/wisdom';
+
+import type { CheckIn, DailyQuest, Profile, QuestTemplate, SaveData } from './types';
 
 interface Game {
   profile: Profile | null;
@@ -61,19 +48,9 @@ interface Game {
   here: Today | null;
   checkIn: (answers: Omit<CheckIn, 'date'>) => void;
 
-  /* ---- the wardrobe ---- */
-  items: OwnedItem[];
-  /** What she is wearing, already in paint order. */
-  equipped: WardrobeItem[];
-  /** The next item the streak will earn, or null once everything is owned. */
-  nextUnlock: WardrobeItem | null;
-  /** Free from the start — a player with no items still deserves a choice. */
-  setHairColor: (c: HairColor) => void;
-  equip: (itemId: string) => void;
-  unequip: (itemId: string) => void;
-  /** Items earned by the completion just made, waiting to be announced. */
-  justUnlocked: WardrobeItem[];
-  clearUnlocked: () => void;
+  /** The day's passage, once the third quest is done. Null the rest of the time. */
+  passage: Passage | null;
+  dismissPassage: () => void;
 
   saveProfile: (p: Profile) => void;
   generate: () => void;
@@ -94,28 +71,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const loaded = store.load();
     sound.setEnabled(loaded.settings.sound);
 
-    /* Reconcile the wardrobe against the streak on the way in.
-   
-       Completing a quest grants on the spot, so this is for everything else: a
-       save written before items existed, or a streak that crossed a milestone
-       while the app was closed. Doing it here rather than in an effect avoids a
-       second render, and it grants in silence — nobody wants a modal thrown at
-       them for something they earned days ago. */
-    const earned = grantItems(loaded.items, streakWeeks(loaded.quests, new Date()));
-    if (earned.granted.length === 0) return loaded;
-    return store.update((d) => ({
-      ...d,
-      items: grantItems(d.items, streakWeeks(d.quests, new Date())).items,
-    }));
+    return loaded;
   });
 
   const apply = useCallback((fn: (current: SaveData) => SaveData) => {
     setData(store.update(fn));
   }, []);
 
-  /** Items earned by the last completion, held until the player has seen them. */
-  const [justUnlocked, setJustUnlocked] = useState<WardrobeItem[]>([]);
-  const clearUnlocked = useCallback(() => setJustUnlocked([]), []);
+  /** Held until the player has read it, then cleared. */
+  const [passage, setPassage] = useState<Passage | null>(null);
+  const dismissPassage = useCallback(() => setPassage(null), []);
 
   const saveProfile = useCallback(
     (profile: Profile) => apply((d) => ({ ...d, profile })),
@@ -171,51 +136,44 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [apply]);
 
   /**
-   * Mark a quest done — and, in the same write, hand over anything the longer
-   * streak has just earned. One write means the history and the wardrobe can
-   * never disagree about whether an item was deserved.
+   * Mark a quest done — and, if it is the third of the day, choose the passage
+   * in the same write.
+   *
+   * One write means the history and the record of what has been read can never
+   * disagree: a passage cannot be marked given without the quest that earned it
+   * also being saved.
    */
   const complete = useCallback(
     (id: string) => {
       sound.play('complete');
 
       // `apply` runs this reducer synchronously, exactly once, so reading the
-      // grant back out through a local is safe — and it is the only way to tell
-      // the difference between an item earned *now* and one granted quietly on
-      // a later reconcile.
-      let granted: WardrobeItem[] = [];
+      // choice back out through a local is safe.
+      let earned: Passage | null = null;
 
       apply((d) => {
+        const now = new Date();
         const quests = d.quests.map((q) =>
           q.id === id
-            ? { ...q, status: 'completed' as const, completedAt: new Date().toISOString() }
+            ? { ...q, status: 'completed' as const, completedAt: now.toISOString() }
             : q,
         );
-        const earned = grantItems(d.items, streakWeeks(quests, new Date()));
-        granted = earned.granted;
-        return { ...d, quests, items: earned.items };
+
+        const doneToday = quests.filter(
+          (q) => q.status === 'completed' && q.date === today(now),
+        ).length;
+
+        if (!earnsWisdom(doneToday, d.wisdom, now)) return { ...d, quests };
+
+        const chosen = pickPassage(d.wisdom);
+        earned = chosen;
+        return { ...d, quests, wisdom: markSeen(d.wisdom, chosen.id, now) };
       });
 
-      if (granted.length > 0) {
-        setJustUnlocked(granted);
+      if (earned) {
+        setPassage(earned);
         sound.play('unlock');
       }
-    },
-    [apply],
-  );
-
-  const equip = useCallback(
-    (itemId: string) => {
-      sound.play('select');
-      apply((d) => ({ ...d, items: equipItem(d.items, itemId) }));
-    },
-    [apply],
-  );
-
-  const unequip = useCallback(
-    (itemId: string) => {
-      sound.play('dismiss');
-      apply((d) => ({ ...d, items: unequipItem(d.items, itemId) }));
     },
     [apply],
   );
@@ -235,14 +193,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
     [apply],
   );
 
-  const setHairColor = useCallback(
-    (hairColor: HairColor) => {
-      sound.play('select');
-      apply((d) => (d.profile ? { ...d, profile: { ...d.profile, hairColor } } : d));
-    },
-    [apply],
-  );
-
   const setSound = useCallback(
     (on: boolean) => {
       sound.setEnabled(on);
@@ -254,7 +204,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const startOver = useCallback(() => {
     store.clear();
-    setJustUnlocked([]);
+    setPassage(null);
     setData(store.emptySave());
   }, []);
 
@@ -277,14 +227,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setSound,
       here: fresh,
       checkIn,
-      setHairColor,
-      items: data.items,
-      equipped: equippedItems(data.items),
-      nextUnlock: nextUnlock(data.items),
-      equip,
-      unequip,
-      justUnlocked,
-      clearUnlocked,
+      passage,
+      dismissPassage,
       saveProfile,
       generate,
       complete,
@@ -300,11 +244,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     startOver,
     setSound,
     checkIn,
-    equip,
-    unequip,
-    justUnlocked,
-    clearUnlocked,
-    setHairColor,
+    passage,
+    dismissPassage,
   ]);
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

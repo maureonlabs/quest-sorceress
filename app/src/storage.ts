@@ -14,15 +14,15 @@
 import type { SaveData } from './types';
 
 const KEY = 'quest-sorceress/v1';
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3;
 
 export const emptySave = (): SaveData => ({
   schemaVersion: SCHEMA_VERSION,
   profile: null,
   quests: [],
-  items: [],
   settings: { sound: true },
   checkIn: null,
+  wisdom: { seen: [], shownOn: null },
 });
 
 /** In-memory fallback, used when the browser will not persist for us. */
@@ -47,7 +47,12 @@ export function isPersistent(): boolean {
  * Migrate older saves forward, so a schema change moves people's data instead
  * of discarding it.
  *
- * **v1 → v2** added the feeling taxonomy, age bands, body type and hair colour.
+ * **v1 → v2** added the feeling taxonomy and age bands.
+ *
+ * **v2 → v3** removed the avatar and the wardrobe outright, and added the
+ * encouragement shown on the day's third quest. Anything a v2 save stored about
+ * owned or equipped items is dropped on the way through rather than carried
+ * along: there is nothing left that could read it.
  *
  * - A v1 profile has no age band. There is no way to infer one, so it is
  *   defaulted to `26-32` and is editable in Preferences. Defaulting rather than
@@ -61,14 +66,9 @@ function migrate(data: SaveData): SaveData {
   const base = emptySave();
   // Read as partial: a v1 profile genuinely lacks these keys at runtime, even
   // though the current type says every profile has them.
-  const stored = data.profile as Partial<SaveData['profile']> | null;
+  const stored = data.profile as Partial<NonNullable<SaveData['profile']>> | null;
   const profile = stored
-    ? ({
-        ageRange: '26-32',
-        bodyType: 'sorceress',
-        hairColor: 'black',
-        ...stored,
-      } as SaveData['profile'])
+    ? ({ ageRange: '26-32', ...stored } as SaveData['profile'])
     : null;
 
   const saved = data.checkIn as Partial<SaveData['checkIn']> | null;
@@ -79,14 +79,20 @@ function migrate(data: SaveData): SaveData {
 
   // Spread defaults underneath so a save written before a field existed gains
   // it rather than arriving as undefined.
-  return {
+  const next: SaveData = {
     ...base,
     ...data,
     profile,
     checkIn,
     settings: { ...base.settings, ...(data.settings ?? {}) },
+    wisdom: { ...base.wisdom, ...(data.wisdom ?? {}) },
     schemaVersion: SCHEMA_VERSION,
   };
+
+  // Drop anything a v2 save held about the wardrobe. Spreading `data` above
+  // would otherwise carry `items` along for ever, invisible and unread.
+  delete (next as unknown as Record<string, unknown>).items;
+  return next;
 }
 
 /** Shape-check a parsed save. A corrupt or hand-edited blob must not crash the app. */
@@ -96,7 +102,6 @@ function isSaveData(value: unknown): value is SaveData {
   return (
     typeof v.schemaVersion === 'number' &&
     Array.isArray(v.quests) &&
-    Array.isArray(v.items) &&
     (v.profile === null || typeof v.profile === 'object')
   );
 }

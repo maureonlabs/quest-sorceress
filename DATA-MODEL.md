@@ -53,28 +53,25 @@ can be calculated; the entity name reflects that grouping, not a daily generatio
 | `status` | text | one of `pending` · `completed` · `dismissed`; defaults to `pending` |
 | `dismissedAt` | timestamptz | set only when status becomes `dismissed`; otherwise null |
 
-### Item
+### Passage
 
-An avatar item or spell. Fixed catalogue, same for everyone.
+One encouragement. Fixed catalogue, same for everyone, bundled with the app.
 
-| Field | Type | Rules |
+| Field | Type | Notes |
 |---|---|---|
-| `id` | uuid | primary key |
-| `name` | text | required |
-| `type` | text | e.g. robe, hat, staff, spell |
-| `art` | ArtSpec | which of the nine parameterised families in `app/src/components/ItemArt.tsx` draws it, and with what colours — every item is vector art, there are no image files |
-| `unlockAtStreakWeeks` | integer | which weekly milestone unlocks it (1 = 7 days, 2 = 14 days…) |
+| `id` | text | stable, so "already seen" survives a reload |
+| `kind` | enum | `verse` (scripture) or `wisdom` (written for the app) |
+| `text` | text | the passage itself |
+| `source` | text | book, chapter and verse. Scripture only; wisdom carries none |
+| `theme` | enum | positivity, wealth, success, love |
 
-### OwnedItem
+### WisdomState
 
-Which items the player owns and which are equipped.
-
-| Field | Type | Rules |
+| Field | Type | Notes |
 |---|---|---|
-| `id` | uuid | primary key |
-| `itemId` | uuid | → Item, required |
-| `owned` | boolean | default false |
-| `equipped` | boolean | default false; **not exclusive** — several items may be equipped at once |
+| `seen` | text[] | passage ids already given; clears once all 100 have been |
+| `shownOn` | date | local YYYY-MM-DD of the last day one was shown |
+
 
 ---
 
@@ -101,12 +98,11 @@ Displayed in the UI as **Apprentice · Adept · Master**. Stored values stay pla
 
 ```
 Profile ──< DailyQuest >── QuestTemplate   (catalogue, read-only)
-Profile ──< OwnedItem  >── Item            (catalogue, read-only)
+Profile                                   (one per browser)
 ```
 
 - The Profile has many DailyQuests; each points at exactly one QuestTemplate.
-- The Profile has many OwnedItems; each points at exactly one Item.
-- QuestTemplate and Item are read-only catalogues bundled with the app.
+- QuestTemplate and Passage are read-only catalogues bundled with the app.
 
 ---
 
@@ -161,12 +157,6 @@ Flagged rather than guessed, per the spec's own rule.
 1. **One pending quest at a time?** Assumed yes: tapping "Give me a quest" while one is
    pending replaces it, and the replaced one is recorded as `dismissed` (and so enters
    the 14-day cooldown). Confirm — it means rerolling burns templates.
-2. ~~**Item art.**~~ **Done** — every item is drawn as SVG in the same 200 × 300
-   space as the sorceress, so one drawing serves both the figure and the
-   inventory slot. Direction is set in
-   `design/ART-DIRECTION.md`; individual pieces are not drawn.
-
----
 
 ## Storage
 
@@ -181,5 +171,5 @@ can be swapped without touching the rest of the app.
 - **Failure:** every read and write is wrapped. In a private window, or with site data
   blocked, the app must still run for the session rather than crash — it simply will not
   remember anything.
-- **Catalogues are never stored.** QuestTemplate and Item come from bundled files, so a
+- **Catalogues are never stored.** QuestTemplate and Passage come from bundled files, so a
   content update ships with the app and cannot go stale in someone's browser.

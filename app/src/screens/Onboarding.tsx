@@ -9,20 +9,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChipGroup } from '../components/ChipGroup';
-import { HairPicker } from '../components/HairPicker';
 import {
   AGE_LABELS,
   AGE_RANGES,
-  BODY_LABELS,
-  BODY_TYPES,
   DIFFICULTIES,
   DIFFICULTY_LABELS,
   SETTINGS,
   SETTING_LABELS,
   type AgeRange,
-  type BodyType,
   type Difficulty,
-  type HairColor,
   type Setting,
 } from '../types';
 import { useGame } from '../state';
@@ -34,7 +29,6 @@ const DIFFICULTY_OPTIONS = DIFFICULTIES.map((v) => ({
   sub: v,
 }));
 const AGE_OPTIONS = AGE_RANGES.map((v) => ({ value: v, label: AGE_LABELS[v] }));
-const BODY_OPTIONS = BODY_TYPES.map((v) => ({ value: v, label: BODY_LABELS[v] }));
 
 export function Onboarding() {
   const { saveProfile } = useGame();
@@ -44,8 +38,6 @@ export function Onboarding() {
   const [settings, setSettings] = useState<Setting[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty[]>(['easy']);
   const [age, setAge] = useState<AgeRange[]>([]);
-  const [body, setBody] = useState<BodyType[]>(['sorceress']);
-  const [hair, setHair] = useState<HairColor>('black');
 
   const steps = [
     {
@@ -76,18 +68,6 @@ export function Onboarding() {
       ready: age.length === 1,
       control: <ChipGroup options={AGE_OPTIONS} selected={age} onChange={setAge} single wide />,
     },
-    {
-      title: 'And who is doing the questing?',
-      hint: 'Looks only. It changes nothing about what she asks of you.',
-      ready: body.length === 1,
-      control: (
-        <>
-          <ChipGroup options={BODY_OPTIONS} selected={body} onChange={setBody} single wide />
-          <p className="dim sm">Hair</p>
-          <HairPicker value={hair} onChange={setHair} />
-        </>
-      ),
-    },
   ];
 
   const current = steps[step];
@@ -103,8 +83,6 @@ export function Onboarding() {
       settingPreferences: settings,
       difficultyPreference: difficulty[0],
       ageRange: age[0],
-      bodyType: body[0],
-      hairColor: hair,
       createdAt: new Date().toISOString(),
     });
     navigate('/');

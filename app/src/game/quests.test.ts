@@ -42,8 +42,6 @@ const profile = (over: Partial<Profile> = {}): Profile => ({
   settingPreferences: ['home'],
   difficultyPreference: 'easy',
   ageRange: '26-32',
-  bodyType: 'sorceress',
-  hairColor: 'black',
   createdAt: '2026-01-01T00:00:00.000Z',
   ...over,
 });

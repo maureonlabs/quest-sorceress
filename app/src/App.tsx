@@ -8,15 +8,8 @@ import { Home } from './screens/Home';
 import { Onboarding } from './screens/Onboarding';
 import { Preferences } from './screens/Preferences';
 import { CheckIn } from './screens/CheckIn';
-import { Avatar } from './screens/Avatar';
-import { Inventory } from './screens/Inventory';
-
-/* Inventory is reached from the sorceress rather than the nav: three
-   destinations fit a bottom bar on a phone, four start to crowd it, and the
-   two wardrobe screens are one idea seen two ways. */
 const NAV = [
   { to: '/', glyph: '✦', label: 'Quest' },
-  { to: '/avatar', glyph: '✧', label: 'Figure' },
   { to: '/preferences', glyph: '❖', label: 'Preferences' },
 ];
 
@@ -29,11 +22,7 @@ function Nav() {
         <Link
           key={item.to}
           to={item.to}
-          aria-current={
-            pathname === item.to || (item.to === '/avatar' && pathname === '/inventory')
-              ? 'page'
-              : undefined
-          }
+          aria-current={pathname === item.to ? 'page' : undefined}
         >
           <span className="glyph" aria-hidden="true">
             {item.glyph}
@@ -83,8 +72,6 @@ function Shell() {
         ) : null}
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/avatar" element={<Avatar />} />
-          <Route path="/inventory" element={<Inventory />} />
           <Route path="/preferences" element={<Preferences />} />
           <Route path="/onboarding" element={<Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />

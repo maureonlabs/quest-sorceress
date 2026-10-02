@@ -66,50 +66,13 @@ export const AGE_RANGES = [
 ] as const;
 
 /** Which figure is drawn. Cosmetic only — it changes nothing about the game. */
-export const BODY_TYPES = ['sorceress', 'sorcerer'] as const;
-
-/** Free from the start, because a player with no items still deserves a choice. */
-export const HAIR_COLORS = [
-  'black',
-  'red',
-  'pink',
-  'white',
-  'yellow',
-  'green',
-  'orange',
-  'blue',
-] as const;
-
-/**
- * What an item is worn as — and, deliberately, the order it is painted in.
- *
- * Back to front: the spell ring hangs behind her, the familiar perches in
- * front. Having one array serve as both the slot list and the z-order means a
- * new slot cannot be added in the wrong layer by accident.
- */
-export const ITEM_SLOTS = [
-  'aura',
-  'cloak',
-  'wings',
-  'hair',
-  'robe',
-  'shoes',
-  'crown',
-  'staff',
-  'familiar',
-] as const;
-
 export type Setting = (typeof SETTINGS)[number];
 export type Category = (typeof CATEGORIES)[number];
 export type Difficulty = (typeof DIFFICULTIES)[number];
 export type QuestStatus = (typeof STATUSES)[number];
-export type ItemSlot = (typeof ITEM_SLOTS)[number];
 export type Mood = (typeof MOODS)[number];
 export type Want = (typeof WANTS)[number];
 export type AgeRange = (typeof AGE_RANGES)[number];
-export type BodyType = (typeof BODY_TYPES)[number];
-export type HairColor = (typeof HAIR_COLORS)[number];
-
 /**
  * Difficulty is stored plainly so the data stays readable, and shown
  * thematically so the interface keeps its voice. See SPEC.md section 3.
@@ -137,18 +100,6 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   learning: 'Learning',
   'fun activities': 'Fun',
   'random activities': 'Anything',
-};
-
-export const SLOT_LABELS: Record<ItemSlot, string> = {
-  aura: 'Spell',
-  wings: 'Wings',
-  cloak: 'Cloak',
-  hair: 'Hair',
-  robe: 'Robe',
-  shoes: 'Shoes',
-  crown: 'Crown',
-  staff: 'Staff',
-  familiar: 'Familiar',
 };
 
 export const MOOD_LABELS: Record<Mood, string> = {
@@ -225,23 +176,6 @@ export const AGE_LABELS: Record<AgeRange, string> = {
   '50+': 'Over 50',
 };
 
-export const BODY_LABELS: Record<BodyType, string> = {
-  sorceress: 'Sorceress',
-  sorcerer: 'Sorcerer',
-};
-
-/** The two tones each hair colour is built from: lit side, and shadow side. */
-export const HAIR_SWATCHES: Record<HairColor, { lit: string; dark: string }> = {
-  black: { lit: '#4a4247', dark: '#14110f' },
-  red: { lit: '#c4542a', dark: '#5c1d10' },
-  pink: { lit: '#f0a8c0', dark: '#9b4466' },
-  white: { lit: '#f4ece0', dark: '#a9a195' },
-  yellow: { lit: '#f0d58a', dark: '#9c7a30' },
-  green: { lit: '#7fc08a', dark: '#2c5a3c' },
-  orange: { lit: '#f0a257', dark: '#9b4e1a' },
-  blue: { lit: '#8fb8e0', dark: '#2d4c75' },
-};
-
 /* --------------------------------------------------------------- entities */
 
 /** The local player. Exactly one per browser — there are no accounts. */
@@ -257,9 +191,6 @@ export interface Profile {
   difficultyPreference: Difficulty;
   /** Narrows which quests are eligible. Never relaxed — see TAXONOMY.md R5. */
   ageRange: AgeRange;
-  /** Cosmetic. Changes the figure drawn, nothing about the game. */
-  bodyType: BodyType;
-  hairColor: HairColor;
   createdAt: string;
 }
 
@@ -292,33 +223,6 @@ export interface DailyQuest {
 }
 
 /** Read-only catalogue, bundled with the app. */
-export interface Item {
-  id: string;
-  name: string;
-  type: ItemSlot;
-  /**
-   * How this item is drawn. There are no image files: every piece is vector
-   * art built from one of nine parameterised families in
-   * `components/ItemArt.tsx`, so it stays crisp at any size and a new colourway
-   * is a line of data rather than a new drawing.
-   *
-   * Typed as `unknown` here to keep the domain model free of a dependency on
-   * the renderer; `game/items.ts` narrows it to `ArtSpec`.
-   */
-  artAssetRef: unknown;
-  /** One line of flavour, shown on the unlock screen and in the inventory. */
-  flavor: string;
-  /** Which weekly streak milestone unlocks it: 1 = 7 days, 2 = 14 days, and so on. */
-  unlockAtStreakWeeks: number;
-}
-
-/** What the player owns and is wearing. Several items can be equipped at once. */
-export interface OwnedItem {
-  itemId: string;
-  owned: boolean;
-  equipped: boolean;
-}
-
 /* ------------------------------------------------------------ saved state */
 
 export interface Settings {
@@ -344,13 +248,25 @@ export interface CheckIn {
   difficulty: Difficulty;
 }
 
+/**
+ * Which encouragements have already been given, and whether today's has been.
+ *
+ * `seen` exists so the same passage does not come round twice while
+ * ninety-eight others wait; it clears once the whole book has been read.
+ */
+export interface WisdomState {
+  seen: string[];
+  /** Local YYYY-MM-DD of the last day a passage was shown, or null. */
+  shownOn: string | null;
+}
+
 export interface SaveData {
   schemaVersion: number;
   profile: Profile | null;
   quests: DailyQuest[];
-  items: OwnedItem[];
   settings: Settings;
   checkIn: CheckIn | null;
+  wisdom: WisdomState;
 }
 
 /* -------------------------------------------------------------- narrowing */
@@ -363,13 +279,3 @@ export const isDifficulty = (v: unknown): v is Difficulty =>
   DIFFICULTIES.includes(v as Difficulty);
 export const isStatus = (v: unknown): v is QuestStatus =>
   STATUSES.includes(v as QuestStatus);
-export const isItemSlot = (v: unknown): v is ItemSlot =>
-  ITEM_SLOTS.includes(v as ItemSlot);
-export const isMood = (v: unknown): v is Mood => MOODS.includes(v as Mood);
-export const isWant = (v: unknown): v is Want => WANTS.includes(v as Want);
-export const isAgeRange = (v: unknown): v is AgeRange =>
-  AGE_RANGES.includes(v as AgeRange);
-export const isBodyType = (v: unknown): v is BodyType =>
-  BODY_TYPES.includes(v as BodyType);
-export const isHairColor = (v: unknown): v is HairColor =>
-  HAIR_COLORS.includes(v as HairColor);

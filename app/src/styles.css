@@ -849,7 +849,6 @@ input,
   pointer-events: none;
 }
 
-
 .card-stage {
   position: relative;
   display: flex;
@@ -977,7 +976,6 @@ input,
   transform: translateX(1.1rem);
   background: var(--mint);
 }
-
 
 /* ------------------------------------------------------------------ brand */
 
@@ -1147,287 +1145,6 @@ input,
   margin-top: 0.4rem;
 }
 
-/* ---------------------------------------------------------------- avatar */
-
-/* She is drawn, not photographed — so the panel holds a vector figure rather
-   than an image, and it stays crisp at any size. */
-.avatar-panel {
-  align-items: center;
-  padding: 1.1rem 1rem 0.6rem;
-}
-
-.sorceress {
-  display: block;
-  width: 100%;
-  max-width: 18.5rem;
-  height: auto;
-  /* The glow sits under her, not around the panel. */
-  filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.45));
-}
-
-/* A slow breath, nothing more. The scene is serene; a bobbing avatar would
-   fight it. */
-.sorceress-figure {
-  animation: drift 7s ease-in-out infinite;
-  transform-origin: 100px 280px;
-}
-
-@keyframes drift {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-3px) rotate(0.25deg);
-  }
-}
-
-/* The spell ring turns, because a sigil that sits still is just a circle. */
-.sigil-ring {
-  animation: turn 48s linear infinite;
-  transform-origin: 100px 164px;
-}
-
-@keyframes turn {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sorceress-figure,
-  .sigil-ring {
-    animation: none;
-  }
-}
-
-/* ------------------------------------------------------------------ worn */
-
-.worn {
-  list-style: none;
-  margin: 0.2rem 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
-.worn li {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.5rem 0.7rem;
-  border: 1px solid var(--glass-edge);
-  border-radius: var(--radius-row);
-  background: var(--glass-raised);
-}
-
-.worn-slot {
-  flex: 0 0 auto;
-  font-size: 0.66rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-
-.worn-name {
-  flex: 1 1 auto;
-  font-family: var(--display);
-  color: var(--text);
-}
-
-.btn.tiny {
-  padding: 0.2rem 0.5rem;
-  font-size: 0.74rem;
-}
-
-.gold {
-  color: var(--gold-lit);
-  font-weight: 500;
-}
-
-/* ------------------------------------------------------------- inventory */
-
-/* Circular gold-rimmed slots, as in the references. Locked pieces are dimmed
-   rather than hidden — the next reward has to be visible to be worth earning. */
-.slots {
-  list-style: none;
-  margin: 0.2rem 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(5.4rem, 1fr));
-  gap: 1rem 0.7rem;
-}
-
-.slots li {
-  text-align: center;
-}
-
-.slot {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 38% 30%,
-    rgba(226, 240, 234, 0.13),
-    rgba(226, 240, 234, 0.04) 70%
-  );
-  backdrop-filter: blur(10px);
-  cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
-}
-
-.slot-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1px solid var(--gold-dim);
-  box-shadow: inset 0 1px 0 rgba(255, 252, 240, 0.12);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.slot.have:hover {
-  transform: translateY(-2px);
-}
-
-.slot.have:hover .slot-ring {
-  border-color: var(--gold);
-}
-
-/* One worn item at a time gets the mint ring, so "worn" is unmistakable
-   without a label. */
-.slot.on .slot-ring {
-  border-color: var(--mint);
-  box-shadow:
-    inset 0 0 0 1px rgba(111, 216, 192, 0.3),
-    0 0 18px rgba(111, 216, 192, 0.22);
-}
-
-.slot.locked {
-  cursor: default;
-  background: rgba(226, 240, 234, 0.03);
-}
-
-.slot.locked .slot-ring {
-  border-style: dashed;
-  border-color: rgba(201, 163, 78, 0.22);
-}
-
-/* Clipped, not just sized: a tall item like the wand has a tall focus
-   rectangle, and left to overflow it draws its whole shaft down the page
-   outside the slot. */
-.thumb {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-/* Locked art is a silhouette: enough to recognise the shape, not enough to
-   feel owned. */
-.thumb.locked {
-  opacity: 0.22;
-  filter: grayscale(0.7);
-}
-
-.slot-lock {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  color: var(--gold-dim);
-  font-size: 1.1rem;
-}
-
-.slot-name {
-  margin: 0.5rem 0 0;
-  font-family: var(--display);
-  font-size: 0.82rem;
-  line-height: 1.3;
-  color: var(--text);
-}
-
-.slot.locked + .slot-name {
-  color: var(--text-dim);
-}
-
-.slot-meta {
-  margin: 0.1rem 0 0;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-.slot.on + .slot-name + .slot-meta {
-  color: var(--mint);
-}
-
-/* ---------------------------------------------------------- unlock modal */
-
-.panel.modal.unlock {
-  max-width: 24rem;
-}
-
-.unlock-art {
-  position: relative;
-  width: 9.5rem;
-  height: 9.5rem;
-  margin: 0.2rem auto 0.1rem;
-  display: grid;
-  place-items: center;
-}
-
-.unlock-art .thumb {
-  position: relative;
-  z-index: 1;
-}
-
-/* The reward arrives lit from behind. */
-.unlock-halo {
-  position: absolute;
-  inset: -12%;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(240, 214, 149, 0.3),
-    rgba(201, 163, 78, 0.1) 55%,
-    transparent 72%
-  );
-  animation: halo 3.6s ease-in-out infinite;
-}
-
-@keyframes halo {
-  0%,
-  100% {
-    opacity: 0.65;
-    transform: scale(0.97);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.03);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .unlock-halo {
-    animation: none;
-  }
-}
-
-.dim.sm {
-  font-size: 0.78rem;
-  margin-top: 0.2rem;
-}
-
 /* ------------------------------------------------------------ check-in line */
 
 /* The daily answers, said back. Quiet — it is a caption, not a headline. */
@@ -1440,117 +1157,6 @@ input,
   text-wrap: balance;
 }
 
-/* ------------------------------------------------------------ hair picker */
-
-.hair-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  margin-top: 0.2rem;
-}
-
-.swatch {
-  width: 2.3rem;
-  height: 2.3rem;
-  padding: 0;
-  border-radius: 50%;
-  border: 1px solid var(--gold-dim);
-  cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255, 252, 240, 0.25);
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    border-color 0.18s ease;
-}
-
-.swatch:hover {
-  transform: translateY(-2px);
-  border-color: var(--gold);
-}
-
-/* The one mint ring on the screen marks the current choice. */
-.swatch.on {
-  border-color: var(--mint);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 252, 240, 0.3),
-    0 0 0 2px rgba(111, 216, 192, 0.35),
-    0 0 16px rgba(111, 216, 192, 0.3);
-}
-
-/* -------------------------------------------------------------- wardrobe */
-
-/* The figure stays on screen above the rack, so a tap shows its own effect
-   without the player having to navigate away and back to check. */
-.wardrobe-figure {
-  align-items: center;
-  padding: 0.8rem 1rem 0.3rem;
-}
-
-.wardrobe-figure .sorceress {
-  max-width: 11rem;
-}
-
-/* A horizontal rail rather than a wrapped grid: nine slots wrap to three
-   ragged rows on a phone, and the ragged edge reads as a mistake. */
-.slot-rail {
-  display: flex;
-  gap: 0.4rem;
-  overflow-x: auto;
-  padding: 0.15rem 0.2rem 0.5rem;
-  margin: -0.6rem -0.4rem -0.4rem;
-  scrollbar-width: none;
-}
-
-.slot-rail::-webkit-scrollbar {
-  display: none;
-}
-
-.slot-tab {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid var(--glass-edge);
-  background: var(--glass);
-  backdrop-filter: blur(10px);
-  color: var(--text-dim);
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition:
-    color 0.18s ease,
-    border-color 0.18s ease,
-    background 0.18s ease;
-}
-
-.slot-tab:hover {
-  border-color: var(--gold-dim);
-  color: var(--text);
-}
-
-.slot-tab.on {
-  border-color: var(--gold);
-  color: var(--gold-lit);
-  background: rgba(201, 163, 78, 0.14);
-}
-
-.tab-count {
-  font-size: 0.68rem;
-  min-width: 1.1rem;
-  padding: 0 0.3rem;
-  border-radius: 999px;
-  background: rgba(226, 240, 234, 0.12);
-  color: var(--text-dim);
-  text-align: center;
-}
-
-.slot-tab.on .tab-count {
-  background: rgba(240, 214, 149, 0.22);
-  color: var(--gold-lit);
-}
-
 .dim.sm {
   margin-bottom: 0.1rem;
   font-size: 0.78rem;
@@ -1558,59 +1164,44 @@ input,
   text-transform: uppercase;
 }
 
-/* ------------------------------------------------------- figure framing */
+/* ----------------------------------------------------------- the passage */
 
-.frame-toggle {
-  display: flex;
-  gap: 0.3rem;
-  margin-top: 0.4rem;
-  padding: 0.22rem;
-  border-radius: 999px;
-  border: 1px solid var(--glass-edge);
-  background: rgba(8, 15, 12, 0.4);
-  backdrop-filter: blur(10px);
+/* The day's encouragement. Wider and quieter than the other dialogs: it is for
+   reading, not for acting on, so it gets no second button and no urgency. */
+.panel.modal.wisdom {
+  max-width: 27rem;
+  padding: 2.4rem 1.9rem 1.8rem;
 }
 
-.frame-toggle button {
-  padding: 0.28rem 0.85rem;
-  border: none;
-  border-radius: 999px;
-  background: none;
-  color: var(--text-dim);
-  font-family: var(--body);
-  font-size: 0.76rem;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition:
-    background 0.18s ease,
-    color 0.18s ease;
+.wisdom-mark {
+  display: block;
+  margin: 0.2rem 0 -1.6rem;
+  font-family: var(--display);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--gold);
+  opacity: 0.45;
 }
 
-.frame-toggle button.on {
-  background: rgba(201, 163, 78, 0.18);
-  color: var(--gold-lit);
-}
-
-.frame-toggle button:hover:not(.on) {
+.wisdom-text {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.12rem;
+  line-height: 1.6;
   color: var(--text);
+  text-wrap: balance;
 }
 
-/* The portrait crop is squarer than the full figure, so the panel would jump
-   height between the two. Pin it. */
-.avatar-panel .sorceress {
-  height: 21rem;
-  width: auto;
-  max-width: 100%;
+.wisdom-source {
+  margin: 0.9rem 0 0.3rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
 }
 
-/* A file path is data the reader may need to type, so it gets a monospace
-   treatment rather than being left to blend into the sentence. */
-.panel code {
-  padding: 0.05em 0.35em;
-  border-radius: 5px;
-  background: rgba(226, 240, 234, 0.1);
+/* Emphasis inside quiet text, used where a name has to carry. */
+.gold {
   color: var(--gold-lit);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.86em;
-  overflow-wrap: anywhere;
+  font-weight: 500;
 }

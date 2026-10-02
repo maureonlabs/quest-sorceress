@@ -7,8 +7,8 @@ planning or building anything here.
 
 A gamified to-do app. You tap **Give me a quest** and it hands you one real-world task,
 drawn at random from a fixed library and filtered to your setting, category and
-difficulty. Completing quests builds a daily streak; weekly streak milestones unlock
-items for your sorceress avatar.
+difficulty. Completing quests builds a daily streak, and the third quest of any day brings a
+Bible verse or a line of wisdom.
 
 **Built here, in Claude Code.** React + Vite + TypeScript, deployed as a static site on
 Vercel. **No backend, no accounts, no database, no monthly cost.** Everything lives in
@@ -17,16 +17,11 @@ the visitor's browser.
 Base44 and Supabase were both considered and both dropped — see `SPEC.md` §5 and §7.
 Do not reintroduce a backend without an explicit decision to do so.
 
-## The spec is the target, not the current state
+## The spec is the target
 
-What is deployed today is still the **original prototype** (`index.html`, one
-self-contained file): one quest on demand filtered by intent/time/energy, 190 inline
-quests, no persistence, dark "arcane tarot" look.
-
-The spec's app differs in almost every respect — different filtering, a persisted
-profile, streaks, an avatar with unlockable items, and a fantasy/nature art direction.
-**Treat it as a rewrite, not an increment.** Do not patch `index.html`; the new app
-replaces it.
+`SPEC.md` describes what this should be and is kept current as decisions are made.
+Where the spec and the code disagree, fix one of them deliberately rather than letting
+them drift.
 
 ## Build order
 
@@ -42,29 +37,19 @@ checklist.
   **Apprentice/Adept/Master**. `difficultyPreference` is single-select.
 - **Streak is derived, never stored** — computed from completed quests, so it cannot
   drift out of sync with them.
-- **Several items can be equipped at once.**
-- **Catalogues are bundled, not stored.** Quests and items ship with the app.
+- **Catalogues are bundled, not stored.** Quests and passages ship with the app.
+- **No avatar, no items.** Both were built and then removed at the user's request —
+  the app is a quest generator and a streak. Do not reintroduce a wardrobe without an
+  explicit decision; it is in git history if it is ever wanted.
+- **The day's passage** is shown on the third completed quest, once per calendar day,
+  and does not repeat until all 100 have been seen. Scripture is the public-domain
+  World English Bible; the other fifty lines are written for the app and attributed to
+  nobody, because a misattributed quote is worse than an anonymous one.
 - **`design/TAXONOMY.md` is the ruling for quest selection.** Mood shifts difficulty
   downward only; target feeling and setting are hard filters; the age band is never
   relaxed. Change the rules there first, then the code.
 - **Category no longer filters anything.** The daily "what do you want to feel?"
   replaced it. It survives as a label on the card.
-- **Items are drawn, not photographed.** Both figures and all 61 items are SVG in one
-  shared 200 × 300 space (`components/avatarPaths.ts`), so the same drawing serves the
-  figure and the wardrobe slot. Items come from **nine parameterised families** in
-  `components/ItemArt.tsx` — a new item is a line of data, not a new path. A test fails
-  if an item draws nothing.
-- **Any layer can be replaced by an image, one at a time.** Drop a file into
-  `app/src/assets/avatar/` and it takes over that layer; everything with no image keeps
-  its drawing. Vite resolves the folder at build time, so there is no manifest and no
-  script to run. Canvas, landmarks and names: `design/AVATAR-ASSETS.md`, with a guide
-  at `design/avatar-template.svg`.
-- **The target look is Sims-style character renders**, which cannot be reached in
-  vector — the drawings are a placeholder that gets as close as drawing allows. Do not
-  spend effort chasing photorealism in SVG; spend it on the asset pipeline instead.
-- **Unlocks are one-way.** An item earned at seven days is kept when the streak
-  breaks. Granting happens inside the same write as the completion, plus a silent
-  catch-up when the app loads.
 
 ## Content
 

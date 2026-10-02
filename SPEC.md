@@ -3,7 +3,7 @@
 ## 1. App overview
 
 - **App name:** Quest Sorceress
-- **One-line pitch:** A gamified to-do app that hands you a quest whenever you ask for one, and lets you dress up your own customizable sorceress as you complete them.
+- **One-line pitch:** A gamified to-do app that hands you a quest whenever you ask for one, and gives you a verse or a line worth keeping once you have finished three.
 - **Target user:** People who find plain to-do lists demotivating, and who find deciding what to do its own source of friction.
 - **Problem it solves:** The app removes the blank-page problem by generating a task for you on request, instead of leaving the user to fill in an empty list.
 - **Platform(s):** Web (responsive, browser-based) for v1; native iOS/Android apps are a later phase.
@@ -30,22 +30,23 @@
 2. The streak counter on Home increments by one.
 3. Missing a full day resets the streak to zero.
 
-### Flow 3: Unlock an item at a streak milestone
+### Flow 3: The day's encouragement
 
-1. User's streak reaches a weekly milestone (7, 14, 21 days, and so on).
-2. A milestone screen shows the newly unlocked item or spell.
-3. User can equip the new item on their avatar immediately.
+1. User completes their **third** quest of the day.
+2. A passage appears — one of fifty Bible verses or fifty lines written for the app.
+3. It is shown once per day. A fourth quest does not bring a second one, and the same
+   passage does not come round again until all one hundred have been seen.
 
 ## 3. Data model
 
 | Entity | Key fields | Belongs to or relates to |
 |---|---|---|
-| **Profile** | displayName, settingPreferences (multi-select: home, gym, outdoors, office/desk, school, park, mall), difficultyPreference, ageRange, bodyType, hairColor, createdAt | none |
+| **Profile** | displayName, settingPreferences (multi-select: home, gym, outdoors, office/desk, school, park, mall), difficultyPreference, ageRange, createdAt | none |
 | **QuestTemplate** | title, description, category, difficulty, requiredSetting, feels, ages | none |
 | **CheckIn** | date, settings, mood, want, difficulty | none |
 | **DailyQuest** | date, status (pending, completed, dismissed), dismissedAt | belongs to QuestTemplate |
-| **Item** | name, type (one of 9 slots), art, flavor, unlockAtStreakWeeks | none |
-| **OwnedItem** | owned, equipped | belongs to Item |
+| **Passage** | kind (verse or wisdom), text, source, theme | none |
+| **WisdomState** | seen, shownOn | none |
 
 **Notes:**
 
@@ -59,9 +60,8 @@
   it survives only as a label on the card.
 - `difficulty` and `difficultyPreference` are one of: **easy · medium · hard**. `difficultyPreference` is **single-select** — the user picks exactly one of the three, unlike the two multi-select preference fields.
 - Those are the *stored* values. The UI displays them thematically as **Apprentice · Adept · Master**, so the database stays plainly readable while the interface keeps its voice.
-- `unlockAtStreakWeeks` on Item sets which weekly streak milestone (1 week, 2 weeks, and so on) unlocks that item — **no XP is involved**.
 - A dismissed DailyQuest's template becomes eligible to be assigned again 14 days after `dismissedAt`.
-- **Multiple items can be equipped at once** (for example a hat and a robe together). `equipped` is not exclusive.
+- The day's **Passage** is shown once the third quest of a day is completed, and once only — tied to the calendar date, so a fourth quest does not produce a second popup and tomorrow brings another. A passage is not repeated until all one hundred have been seen.
 
 **Library coverage requirement:**
 
@@ -81,8 +81,6 @@ The library is **319 quests** and every band is complete.
 | **Home** | "Give me a quest" button, the current quest, and the streak counter | Quest Detail |
 | **Quest Detail** | View, complete, or dismiss a quest (no manual creation) | Home |
 | **Quest Preferences** | Choose the categories and difficulty mix the generator draws from | Home |
-| **Avatar** | View sorceress and equip owned items | Inventory |
-| **Inventory** | List of owned items and spells | Avatar |
 | **Settings** | Account, sign out | Home |
 
 **Entry point:** Home
@@ -124,7 +122,7 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
 - **Compliance:** None known to apply.
 - **Environments:** Local dev server and the live Vercel deployment. No production data exists to protect, because no data leaves the device.
 - **Platform:** Built in Claude Code as a static web app (React + Vite + TypeScript), deployed on Vercel. No backend, no monthly cost.
-- **Inclusivity:** Quest content, categories, and difficulty are identical for every user — no gender-specific variants; avatar appearance is a separate cosmetic choice with no effect on gameplay.
+- **Inclusivity:** Quest content, categories, and difficulty are identical for every user — no gender-specific variants. Age band narrows which quests are eligible and nothing else.
 
 ## 8. Scope: in vs out for v1
 
@@ -133,9 +131,8 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
 - On-demand quest generation — one quest at a time, via a "Give me a quest" button, drawn at random from the fixed library
 - Complete or dismiss a quest
 - Setting-based quest filtering (home, gym, outdoors, office/desk, school, park, mall)
-- Basic avatar customization (equip owned items; several can be worn at once)
 - Daily streak counter
-- Streak-milestone avatar/item unlocks (weekly)
+- A Bible verse or a line of wisdom on the day's third quest
 - Quest preferences (categories, difficulty, setting)
 - Sharing the app link via the browser's native share sheet
 - Magical sound cues on every action, with a toggle to silence them
@@ -158,7 +155,7 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
 - Tapping "Give me a quest" while a quest is pending replaces it, and the replaced quest is recorded as dismissed.
 - Every setting x category x difficulty combination returns a quest — no eligible combination is ever empty.
 - A quest tagged for a setting the user hasn't selected (for example Gym) is never shown to a user who only selected Home.
-- Reaching a weekly streak milestone unlocks a new avatar item and shows the unlock screen.
+- Completing a third quest in one day shows a passage; a fourth does not show another; the next day does.
 - Progress survives a page reload and a full browser restart.
 - A first-time visitor with no saved data gets onboarding, not a crash or an empty screen.
 - Streak resets to 0 if no quest was completed the previous full day.
@@ -171,7 +168,6 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
 - Difficulty values are **easy · medium · hard**, stored plainly; shown in the UI as
   **Apprentice · Adept · Master**.
 - `difficultyPreference` is **single-select** — one of the three.
-- Several items can be equipped at once.
 - Too few eligible quests is solved by **expanding the library**, not by relaxing filters
   at runtime — see the library coverage requirement in section 3.
 - Flow 1 is **on-demand, one quest at a time**, not a daily batch.
@@ -179,8 +175,13 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
   the feeling model and selection rules.
 - Age bands are `1-12 · 13-18 · 19-25 · 26-32 · 33-40 · 41-50 · 50+`. The ranges as first
   sketched overlapped at 32 and 40; normalised so every age lands in exactly one.
-- The avatar has two body types (sorceress, sorcerer) and eight hair colours. Hair colour
-  is free from the start; everything else is earned.
+- **The avatar and the whole wardrobe were removed.** They were built and then cut: the
+  app is a quest generator and a streak, and an item system was a second game bolted to
+  the side of it. The reward is now a passage worth reading.
+- Scripture is the **World English Bible**, which is public domain. The NIV, ESV and NLT
+  are under copyright and could not ship in an app anyone can open.
+- The fifty non-scripture lines are **written for the app and attributed to nobody**. A
+  misattributed quote is worse than an anonymous one.
 - Platform is **Claude Code → React + Vite static app → Vercel**. No backend, no accounts, no monthly cost.
 - Quest library is written and validated (269 quests, full coverage).
 - Items are earned by **weeks of unbroken streak** and are never taken back when a
@@ -195,14 +196,5 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
 - **Replacing a pending quest.** Assumed: tapping "Give me a quest" while one is pending
   replaces it, and the replaced one counts as dismissed (entering the 14-day cooldown).
   Confirm — it means rerolling burns templates.
-- ~~**Item art.**~~ **Done for now** — the figures and all **61 items** are vector art in
-  one 200 × 300 coordinate space, so a single drawing serves both the figure and its
-  wardrobe slot. Items are built from nine parameterised families rather than drawn one by
-  one, which is why a new colourway is a line of data.
-- **A painted figure is still wanted.** The chosen direction is *hybrid*: two raster
-  figures (one per body type), with the vector items layered over them. `Sorceress.tsx`
-  isolates the whole body in a single `<g>` for exactly this swap — every item is
-  positioned against the shared stage, not against the body's paths, so replacing the body
-  moves nothing else.
 - **Accounts and cross-device sync** are deliberately deferred to a later phase. The
   storage layer is written behind one module so adding them is contained, not a rewrite.

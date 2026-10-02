@@ -9,21 +9,16 @@
 import { useNavigate } from 'react-router-dom';
 import { ChipGroup } from '../components/ChipGroup';
 import { Filigree } from '../components/Filigree';
-import { HairPicker } from '../components/HairPicker';
 import { VineFrame } from '../components/VineFrame';
 import { useGame } from '../state';
-import { artCount } from '../art/assets';
 import {
   AGE_LABELS,
   AGE_RANGES,
-  BODY_LABELS,
-  BODY_TYPES,
   DIFFICULTIES,
   DIFFICULTY_LABELS,
   SETTINGS,
   SETTING_LABELS,
   type AgeRange,
-  type BodyType,
   type Difficulty,
   type Setting,
 } from '../types';
@@ -35,10 +30,9 @@ const DIFFICULTY_OPTIONS = DIFFICULTIES.map((v) => ({
   sub: v,
 }));
 const AGE_OPTIONS = AGE_RANGES.map((v) => ({ value: v, label: AGE_LABELS[v] }));
-const BODY_OPTIONS = BODY_TYPES.map((v) => ({ value: v, label: BODY_LABELS[v] }));
 
 export function Preferences() {
-  const { profile, saveProfile, startOver, soundOn, setSound, setHairColor } = useGame();
+  const { profile, saveProfile, startOver, soundOn, setSound } = useGame();
   const navigate = useNavigate();
   if (!profile) return null;
 
@@ -54,10 +48,6 @@ export function Preferences() {
   const setAge = (update: (c: readonly AgeRange[]) => AgeRange[]) => {
     const next = update([profile.ageRange]);
     if (next[0]) saveProfile({ ...profile, ageRange: next[0] });
-  };
-  const setBody = (update: (c: readonly BodyType[]) => BodyType[]) => {
-    const next = update([profile.bodyType]);
-    if (next[0]) saveProfile({ ...profile, bodyType: next[0] });
   };
 
   const reset = () => {
@@ -111,33 +101,6 @@ export function Preferences() {
           Keeps quests meant for somebody else off your card. It never leaves this device.
         </p>
         <ChipGroup options={AGE_OPTIONS} selected={[profile.ageRange]} onChange={setAge} single wide />
-      </section>
-
-      <section className="panel">
-        <Filigree size={44} />
-        <h2>Your figure</h2>
-        <p className="dim">Looks only. It changes nothing about what she asks of you.</p>
-        <ChipGroup options={BODY_OPTIONS} selected={[profile.bodyType]} onChange={setBody} single wide />
-        <p className="dim sm">Hair</p>
-        <HairPicker value={profile.hairColor} onChange={setHairColor} />
-      </section>
-
-      <section className="panel">
-        <Filigree size={44} />
-        <h2>Painted art</h2>
-        {artCount() === 0 ? (
-          <p className="dim">
-            None installed — every figure and item is using its drawing. Drop images into{' '}
-            <code>app/src/assets/avatar/</code> and they take over one at a time. See{' '}
-            <code>design/AVATAR-ASSETS.md</code> for the canvas and the names.
-          </p>
-        ) : (
-          <p className="dim">
-            <b className="gold">{artCount()}</b> painted{' '}
-            {artCount() === 1 ? 'file is' : 'files are'} installed. Everything else is still
-            using its drawing.
-          </p>
-        )}
       </section>
 
       <section className="panel">
