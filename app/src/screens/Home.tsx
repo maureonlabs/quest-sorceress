@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useGame } from '../state';
 import { parseDescription } from '../game/text';
 import { QuestComplete } from '../components/QuestComplete';
+import { ItemUnlock } from '../components/ItemUnlock';
 import { VineFrame } from '../components/VineFrame';
 import { Filigree } from '../components/Filigree';
 import { CATEGORY_LABELS, DIFFICULTY_LABELS, type QuestTemplate } from '../types';
@@ -19,6 +20,9 @@ export function Home() {
     completedToday,
     generate,
     complete,
+    justUnlocked,
+    clearUnlocked,
+    equip,
   } = useGame();
 
   /** Held so the congratulations can name the quest after it has left the board. */
@@ -30,10 +34,19 @@ export function Home() {
     complete(pending.id);
   };
 
-  /** Closing the congratulations draws the next quest, rather than dropping you
-   *  back onto an empty screen. */
+  /**
+   * Closing the congratulations draws the next quest, rather than dropping you
+   * back onto an empty screen — unless a streak milestone just landed, in which
+   * case the unlock gets the screen to itself first. Two modals at once would
+   * bury the reward under the next thing to do.
+   */
   const onNext = () => {
     setJustFinished(null);
+    if (justUnlocked.length === 0) generate();
+  };
+
+  const onUnlockSeen = () => {
+    clearUnlocked();
     generate();
   };
 
@@ -81,6 +94,8 @@ export function Home() {
 
       {justFinished ? (
         <QuestComplete title={justFinished.title} streak={streak} onNext={onNext} />
+      ) : justUnlocked.length > 0 ? (
+        <ItemUnlock items={justUnlocked} onEquip={equip} onDone={onUnlockSeen} />
       ) : null}
     </div>
   );

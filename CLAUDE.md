@@ -44,6 +44,13 @@ checklist.
   drift out of sync with them.
 - **Several items can be equipped at once.**
 - **Catalogues are bundled, not stored.** Quests and items ship with the app.
+- **Items are drawn, not photographed.** The sorceress and all eight items are SVG in
+  one shared 200 × 300 space (`components/avatarPaths.ts`), so the same drawing serves
+  the figure and the inventory slot. `artAssetRef` names a drawing in
+  `components/ItemArt.tsx`, never a file — a test fails if a ref has no drawing.
+- **Unlocks are one-way.** An item earned at seven days is kept when the streak
+  breaks. Granting happens inside the same write as the completion, plus a silent
+  catch-up when the app loads.
 
 ## Content
 

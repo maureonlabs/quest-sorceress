@@ -167,6 +167,9 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
 - Art direction is settled — see `design/ART-DIRECTION.md`.
 - Platform is **Claude Code → React + Vite static app → Vercel**. No backend, no accounts, no monthly cost.
 - Quest library is written and validated (269 quests, full coverage).
+- Items are earned by **weeks of unbroken streak** and are never taken back when a
+  streak breaks. Equipping is exclusive **within a slot** (one crown at a time) and
+  free across slots (crown, robe and staff together).
 
 **Still open:**
 
@@ -176,7 +179,9 @@ No payment, analytics, or AI-generation integrations in v1 — every quest comes
 - **Replacing a pending quest.** Assumed: tapping "Give me a quest" while one is pending
   replaces it, and the replaced one counts as dismissed (entering the 14-day cooldown).
   Confirm — it means rerolling burns templates.
-- **Item art.** `artAssetRef` needs actual avatar and item assets. The direction is set;
-  the individual pieces are not drawn.
+- ~~**Item art.**~~ **Done** — the sorceress and all eight items are drawn as vector
+  art in `app/src/components/`, sharing one 200 × 300 coordinate space so a single
+  drawing serves both the figure and its inventory slot. No image files, no art
+  pipeline, and nothing to go missing at runtime.
 - **Accounts and cross-device sync** are deliberately deferred to a later phase. The
   storage layer is written behind one module so adding them is contained, not a rewrite.

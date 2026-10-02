@@ -62,7 +62,7 @@ An avatar item or spell. Fixed catalogue, same for everyone.
 | `id` | uuid | primary key |
 | `name` | text | required |
 | `type` | text | e.g. robe, hat, staff, spell |
-| `artAssetRef` | text | reference to the art asset — **pending reference images** (spec §10) |
+| `artAssetRef` | text | names a drawing in `app/src/components/ItemArt.tsx` — every item is vector art, there are no image files |
 | `unlockAtStreakWeeks` | integer | which weekly milestone unlocks it (1 = 7 days, 2 = 14 days…) |
 
 ### OwnedItem
@@ -161,7 +161,9 @@ Flagged rather than guessed, per the spec's own rule.
 1. **One pending quest at a time?** Assumed yes: tapping "Give me a quest" while one is
    pending replaces it, and the replaced one is recorded as `dismissed` (and so enters
    the 14-day cooldown). Confirm — it means rerolling burns templates.
-2. **Item art.** `artAssetRef` needs actual assets. Direction is set in
+2. ~~**Item art.**~~ **Done** — every item is drawn as SVG in the same 200 × 300
+   space as the sorceress, so one drawing serves both the figure and the
+   inventory slot. Direction is set in
    `design/ART-DIRECTION.md`; individual pieces are not drawn.
 
 ---

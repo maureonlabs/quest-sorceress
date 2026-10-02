@@ -30,10 +30,28 @@ export const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 
 export const STATUSES = ['pending', 'completed', 'dismissed'] as const;
 
+/**
+ * What an item is worn as — and, deliberately, the order it is painted in.
+ *
+ * Back to front: the spell ring hangs behind her, the familiar perches in
+ * front. Having one array serve as both the slot list and the z-order means a
+ * new slot cannot be added in the wrong layer by accident.
+ */
+export const ITEM_SLOTS = [
+  'aura',
+  'wings',
+  'cloak',
+  'robe',
+  'crown',
+  'staff',
+  'familiar',
+] as const;
+
 export type Setting = (typeof SETTINGS)[number];
 export type Category = (typeof CATEGORIES)[number];
 export type Difficulty = (typeof DIFFICULTIES)[number];
 export type QuestStatus = (typeof STATUSES)[number];
+export type ItemSlot = (typeof ITEM_SLOTS)[number];
 
 /**
  * Difficulty is stored plainly so the data stays readable, and shown
@@ -62,6 +80,16 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   learning: 'Learning',
   'fun activities': 'Fun',
   'random activities': 'Anything',
+};
+
+export const SLOT_LABELS: Record<ItemSlot, string> = {
+  aura: 'Spell',
+  wings: 'Wings',
+  cloak: 'Cloak',
+  robe: 'Robe',
+  crown: 'Crown',
+  staff: 'Staff',
+  familiar: 'Familiar',
 };
 
 /* --------------------------------------------------------------- entities */
@@ -100,8 +128,15 @@ export interface DailyQuest {
 export interface Item {
   id: string;
   name: string;
-  type: string;
+  type: ItemSlot;
+  /**
+   * Which drawing in `components/ItemArt.tsx` renders this item. There are no
+   * image files: every piece is vector art, so it stays crisp at any size and
+   * can be tinted by the same tokens as the rest of the app.
+   */
   artAssetRef: string;
+  /** One line of flavour, shown on the unlock screen and in the inventory. */
+  flavor: string;
   /** Which weekly streak milestone unlocks it: 1 = 7 days, 2 = 14 days, and so on. */
   unlockAtStreakWeeks: number;
 }
@@ -151,3 +186,5 @@ export const isDifficulty = (v: unknown): v is Difficulty =>
   DIFFICULTIES.includes(v as Difficulty);
 export const isStatus = (v: unknown): v is QuestStatus =>
   STATUSES.includes(v as QuestStatus);
+export const isItemSlot = (v: unknown): v is ItemSlot =>
+  ITEM_SLOTS.includes(v as ItemSlot);

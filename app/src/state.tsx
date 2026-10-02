@@ -16,7 +16,22 @@ import {
 import * as store from './storage';
 import * as sound from './sound';
 import { pickQuest, streak, streakWeeks, templateById, today } from './game/quests';
-import type { DailyQuest, Profile, QuestTemplate, SaveData, Setting } from './types';
+import {
+  equipItem,
+  equippedItems,
+  grantItems,
+  nextUnlock,
+  unequipItem,
+} from './game/items';
+import type {
+  DailyQuest,
+  Item,
+  OwnedItem,
+  Profile,
+  QuestTemplate,
+  SaveData,
+  Setting,
+} from './types';
 
 interface Game {
   profile: Profile | null;
@@ -34,6 +49,18 @@ interface Game {
   /** Where the player said they are today, or null if they have not been asked yet. */
   here: Setting[] | null;
   checkIn: (places: Setting[]) => void;
+
+  /* ---- the wardrobe ---- */
+  items: OwnedItem[];
+  /** What she is wearing, already in paint order. */
+  equipped: Item[];
+  /** The next item the streak will earn, or null once everything is owned. */
+  nextUnlock: Item | null;
+  equip: (itemId: string) => void;
+  unequip: (itemId: string) => void;
+  /** Items earned by the completion just made, waiting to be announced. */
+  justUnlocked: Item[];
+  clearUnlocked: () => void;
 
   saveProfile: (p: Profile) => void;
   generate: () => void;
@@ -53,12 +80,29 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<SaveData>(() => {
     const loaded = store.load();
     sound.setEnabled(loaded.settings.sound);
-    return loaded;
+
+    /* Reconcile the wardrobe against the streak on the way in.
+   
+       Completing a quest grants on the spot, so this is for everything else: a
+       save written before items existed, or a streak that crossed a milestone
+       while the app was closed. Doing it here rather than in an effect avoids a
+       second render, and it grants in silence — nobody wants a modal thrown at
+       them for something they earned days ago. */
+    const earned = grantItems(loaded.items, streakWeeks(loaded.quests, new Date()));
+    if (earned.granted.length === 0) return loaded;
+    return store.update((d) => ({
+      ...d,
+      items: grantItems(d.items, streakWeeks(d.quests, new Date())).items,
+    }));
   });
 
   const apply = useCallback((fn: (current: SaveData) => SaveData) => {
     setData(store.update(fn));
   }, []);
+
+  /** Items earned by the last completion, held until the player has seen them. */
+  const [justUnlocked, setJustUnlocked] = useState<Item[]>([]);
+  const clearUnlocked = useCallback(() => setJustUnlocked([]), []);
 
   const saveProfile = useCallback(
     (profile: Profile) => apply((d) => ({ ...d, profile })),
@@ -109,18 +153,53 @@ export function GameProvider({ children }: { children: ReactNode }) {
     });
   }, [apply]);
 
+  /**
+   * Mark a quest done — and, in the same write, hand over anything the longer
+   * streak has just earned. One write means the history and the wardrobe can
+   * never disagree about whether an item was deserved.
+   */
   const complete = useCallback(
-    (id: string) => (
-      sound.play('complete'),
-      apply((d) => ({
-        ...d,
-        quests: d.quests.map((q) =>
+    (id: string) => {
+      sound.play('complete');
+
+      // `apply` runs this reducer synchronously, exactly once, so reading the
+      // grant back out through a local is safe — and it is the only way to tell
+      // the difference between an item earned *now* and one granted quietly on
+      // a later reconcile.
+      let granted: Item[] = [];
+
+      apply((d) => {
+        const quests = d.quests.map((q) =>
           q.id === id
             ? { ...q, status: 'completed' as const, completedAt: new Date().toISOString() }
             : q,
-        ),
-      }))
-    ),
+        );
+        const earned = grantItems(d.items, streakWeeks(quests, new Date()));
+        granted = earned.granted;
+        return { ...d, quests, items: earned.items };
+      });
+
+      if (granted.length > 0) {
+        setJustUnlocked(granted);
+        sound.play('unlock');
+      }
+    },
+    [apply],
+  );
+
+  const equip = useCallback(
+    (itemId: string) => {
+      sound.play('select');
+      apply((d) => ({ ...d, items: equipItem(d.items, itemId) }));
+    },
+    [apply],
+  );
+
+  const unequip = useCallback(
+    (itemId: string) => {
+      sound.play('dismiss');
+      apply((d) => ({ ...d, items: unequipItem(d.items, itemId) }));
+    },
     [apply],
   );
 
@@ -150,6 +229,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const startOver = useCallback(() => {
     store.clear();
+    setJustUnlocked([]);
     setData(store.emptySave());
   }, []);
 
@@ -172,13 +252,33 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setSound,
       here: fresh ? fresh.settings : null,
       checkIn,
+      items: data.items,
+      equipped: equippedItems(data.items),
+      nextUnlock: nextUnlock(data.items),
+      equip,
+      unequip,
+      justUnlocked,
+      clearUnlocked,
       saveProfile,
       generate,
       complete,
       dismiss,
       startOver,
     };
-  }, [data, saveProfile, generate, complete, dismiss, startOver, setSound, checkIn]);
+  }, [
+    data,
+    saveProfile,
+    generate,
+    complete,
+    dismiss,
+    startOver,
+    setSound,
+    checkIn,
+    equip,
+    unequip,
+    justUnlocked,
+    clearUnlocked,
+  ]);
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
 }
