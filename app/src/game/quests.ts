@@ -6,13 +6,19 @@
  */
 
 import catalogue from '../content/quests.json';
-import type {
-  DailyQuest,
-  Difficulty,
-  Profile,
-  QuestTemplate,
-  Setting,
-  Category,
+import {
+  AGE_RANGES,
+  DIFFICULTIES,
+  EFFORT_SHIFT,
+  WANTS,
+  type AgeRange,
+  type DailyQuest,
+  type Difficulty,
+  type Mood,
+  type Profile,
+  type QuestTemplate,
+  type Setting,
+  type Want,
 } from '../types';
 
 /** The 269-quest library, bundled with the app and never written at runtime. */
@@ -34,23 +40,50 @@ export function today(now: Date = new Date()): string {
 /* ------------------------------------------------------------ eligibility */
 
 /**
- * A template the player could be given.
- *
- * `here` is where they said they are today. When it is supplied it replaces the
- * profile's general setting list entirely — being at the gym today is a stronger
- * fact than usually going to the gym.
+ * Today's four answers. Every one of them comes from the daily check-in rather
+ * than the stored profile, because where you are and how you feel are facts
+ * about today, not preferences.
  */
-export function matchesPreferences(
+export interface Today {
+  settings: Setting[];
+  mood: Mood;
+  want: Want;
+  difficulty: Difficulty;
+}
+
+/**
+ * Apply the mood's effort shift — downward only, never upward (TAXONOMY.md R4).
+ * Easy is the floor; there is nothing gentler to drop to.
+ */
+export function shiftDifficulty(chosen: Difficulty, mood: Mood): Difficulty {
+  const at = DIFFICULTIES.indexOf(chosen);
+  const shift = Math.min(0, EFFORT_SHIFT[mood]);
+  return DIFFICULTIES[Math.max(0, at + shift)];
+}
+
+export const suitsAge = (t: QuestTemplate, age: AgeRange): boolean =>
+  t.ages.includes(age);
+
+/**
+ * Could this quest be handed over today?
+ *
+ * Setting and age are hard: being at the gym today is a stronger fact than
+ * usually going there, and an age band is never widened for any reason. Want
+ * and difficulty are hard too in the ordinary case, but `pickQuest` is allowed
+ * to give them up rather than return nothing.
+ */
+export function matchesToday(
   t: QuestTemplate,
-  p: Profile,
-  here?: Setting[],
+  profile: Profile,
+  today: Today,
+  opts: { anyDifficulty?: boolean; anyWant?: boolean } = {},
 ): boolean {
-  const places = here && here.length > 0 ? here : p.settingPreferences;
-  return (
-    places.includes(t.requiredSetting) &&
-    p.categoryPreferences.includes(t.category) &&
-    t.difficulty === p.difficultyPreference
-  );
+  if (!today.settings.includes(t.requiredSetting)) return false;
+  if (!suitsAge(t, profile.ageRange)) return false;
+  if (!opts.anyWant && !t.feels.includes(today.want)) return false;
+  if (!opts.anyDifficulty && t.difficulty !== shiftDifficulty(today.difficulty, today.mood))
+    return false;
+  return true;
 }
 
 /** A template is still inside its 14-day cooldown after being dismissed. */
@@ -70,38 +103,51 @@ export function inCooldown(
   return elapsed < DISMISSAL_COOLDOWN_DAYS;
 }
 
-/** Everything the player could be served right now. */
+/** Everything the player could be served right now, cooldowns included. */
 export function eligible(
   profile: Profile,
   history: DailyQuest[],
+  today: Today,
   now: Date = new Date(),
-  here?: Setting[],
 ): QuestTemplate[] {
   return QUESTS.filter(
-    (t) => matchesPreferences(t, profile, here) && !inCooldown(t.id, history, now),
+    (t) => matchesToday(t, profile, today) && !inCooldown(t.id, history, now),
   );
 }
 
 /**
  * Pick one quest at random.
  *
- * The library guarantees at least one quest for every setting × category ×
- * difficulty combination, so `matchesPreferences` can never return nothing.
- * Cooldowns can still empty the pool for a player who dismisses relentlessly —
- * in that case we ignore cooldowns rather than hand back nothing, because an
- * empty screen is a worse outcome than an early repeat.
+ * The library guarantees at least one quest for every setting × want ×
+ * difficulty combination *within every age band*, so the ordinary case never
+ * comes back empty. When a relentless dismisser or an unusual combination does
+ * empty the pool, constraints are given up in a fixed order (TAXONOMY.md R7):
+ * cooldown, then difficulty, then want.
+ *
+ * Setting and age are never given up. An empty screen is bad; a gym quest for
+ * somebody sitting at home is worse; an adult quest for a child is not on the
+ * table at any price.
  */
 export function pickQuest(
   profile: Profile,
   history: DailyQuest[],
+  today: Today,
   now: Date = new Date(),
   random: () => number = Math.random,
-  here?: Setting[],
 ): QuestTemplate | null {
-  let pool = eligible(profile, history, now, here);
-  if (pool.length === 0) pool = QUESTS.filter((t) => matchesPreferences(t, profile, here));
-  if (pool.length === 0) return null;
-  return pool[Math.floor(random() * pool.length)];
+  const attempts: QuestTemplate[][] = [
+    eligible(profile, history, today, now),
+    QUESTS.filter((t) => matchesToday(t, profile, today)),
+    QUESTS.filter((t) => matchesToday(t, profile, today, { anyDifficulty: true })),
+    QUESTS.filter((t) =>
+      matchesToday(t, profile, today, { anyDifficulty: true, anyWant: true }),
+    ),
+  ];
+
+  for (const pool of attempts) {
+    if (pool.length > 0) return pool[Math.floor(random() * pool.length)];
+  }
+  return null;
 }
 
 /* ---------------------------------------------------------------- streaks */
@@ -149,20 +195,28 @@ export const streakWeeks = (history: DailyQuest[], now: Date = new Date()): numb
 export const templateById = (id: string): QuestTemplate | undefined =>
   QUESTS.find((t) => t.id === id);
 
-/** Sanity check used by the dev-time self-test: every combination is covered. */
-export function coverageGaps(): Array<[Setting, Category, Difficulty]> {
-  const gaps: Array<[Setting, Category, Difficulty]> = [];
+/**
+ * The coverage guarantee, checked per age band (TAXONOMY.md R6).
+ *
+ * Every setting × want × difficulty must be non-empty for *every* age band —
+ * checking the library as a whole would hide the real failure, which is that
+ * stripping the quests a child cannot be given leaves holes an adult never sees.
+ */
+export function coverageGaps(): Array<[AgeRange, Setting, Want, Difficulty]> {
+  const gaps: Array<[AgeRange, Setting, Want, Difficulty]> = [];
   const settings = [...new Set(QUESTS.map((q) => q.requiredSetting))];
-  const categories = [...new Set(QUESTS.map((q) => q.category))];
-  const difficulties = [...new Set(QUESTS.map((q) => q.difficulty))];
-  for (const s of settings)
-    for (const c of categories)
-      for (const d of difficulties)
-        if (
-          !QUESTS.some(
-            (q) => q.requiredSetting === s && q.category === c && q.difficulty === d,
+
+  for (const age of AGE_RANGES) {
+    const pool = QUESTS.filter((q) => q.ages.includes(age));
+    for (const s of settings)
+      for (const w of WANTS)
+        for (const d of DIFFICULTIES)
+          if (
+            !pool.some(
+              (q) => q.requiredSetting === s && q.feels.includes(w) && q.difficulty === d,
+            )
           )
-        )
-          gaps.push([s, c, d]);
+            gaps.push([age, s, w, d]);
+  }
   return gaps;
 }

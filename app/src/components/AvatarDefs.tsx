@@ -11,6 +11,19 @@
  * golds, one mint, one blossom. Nothing pure black, nothing pure white.
  */
 
+import { CLOTHS, METALS, type Ramp } from './palette';
+
+/** One three-stop gradient per ramp, lit from the upper left like the scene. */
+function rampStops(id: string, r: Ramp) {
+  return (
+    <linearGradient key={id} id={id} x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stopColor={r.lit} />
+      <stop offset="0.45" stopColor={r.mid} />
+      <stop offset="1" stopColor={r.dark} />
+    </linearGradient>
+  );
+}
+
 export function AvatarDefs() {
   return (
     <svg
@@ -21,6 +34,10 @@ export function AvatarDefs() {
       style={{ position: 'absolute' }}
     >
       <defs>
+        {/* Every material in the wardrobe, emitted once for the whole page. */}
+        {Object.entries(METALS).map(([k, r]) => rampStops(`qs-m-${k}`, r))}
+        {Object.entries(CLOTHS).map(([k, r]) => rampStops(`qs-c-${k}`, r))}
+
         {/* Gold, lit from the upper left like everything else in the scene. */}
         <linearGradient id="qs-gold" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#f6e3b4" />
@@ -97,6 +114,33 @@ export function AvatarDefs() {
         <filter id="qs-glow-soft" x="-80%" y="-80%" width="260%" height="260%">
           <feGaussianBlur stdDeviation="6" />
         </filter>
+
+        {/* A real lighting model rather than a painted-on highlight: this is
+            what lets metal read as metal instead of as a pale shape. */}
+        <filter id="qs-metal" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="1.4" result="bump" />
+          <feSpecularLighting
+            in="bump"
+            surfaceScale="3"
+            specularConstant="0.9"
+            specularExponent="22"
+            lightingColor="#fff6dd"
+            result="spec"
+          >
+            <feDistantLight azimuth="235" elevation="58" />
+          </feSpecularLighting>
+          <feComposite in="spec" in2="SourceAlpha" operator="in" result="lit" />
+          <feComposite in="SourceGraphic" in2="lit" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+        </filter>
+
+        {/* Cloth gets a soft sheen rather than a texture. An feTurbulence weave
+            was tried and removed: at inventory size it reads as television
+            static, and at figure size it muddied every colour in the palette. */}
+        <linearGradient id="qs-sheen" x1="0.1" y1="0" x2="0.75" y2="1">
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.18" />
+          <stop offset="0.4" stopColor="#ffffff" stopOpacity="0.04" />
+          <stop offset="1" stopColor="#000000" stopOpacity="0.22" />
+        </linearGradient>
       </defs>
     </svg>
   );

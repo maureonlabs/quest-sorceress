@@ -1,21 +1,27 @@
 /**
- * One item on its own, for the inventory grid.
+ * One item on its own, for the inventory grid and the dressing room.
  *
- * It is the very same drawing that appears on the figure — cropped to the
- * item's `focus` rectangle instead of redrawn at icon size. The aspect ratio is
- * preserved, so the staff stays tall and thin rather than being squashed into
+ * It is the very same drawing that appears on the figure — cropped to its
+ * family's `focus` rectangle instead of redrawn at icon size. The aspect ratio
+ * is preserved, so a staff stays tall and thin rather than being squashed into
  * its square slot; `preserveAspectRatio="none"` here would turn every circle
  * into an egg.
  */
 
-import type { Item } from '../types';
-import { drawingFor } from './ItemArt';
+import { drawItem, focusFor, type ArtSpec } from './ItemArt';
+import { HAIR_SWATCHES, type HairColor } from '../types';
+import { HEM_PATH, ROBE_PATH } from './avatarPaths';
 
-export function ItemThumb({ item, locked }: { item: Item; locked: boolean }) {
-  const drawing = drawingFor(item.artAssetRef);
-  if (!drawing) return null;
-
-  const [x, y, w, h] = drawing.focus;
+export function ItemThumb({
+  art,
+  locked,
+  hairColor = 'black',
+}: {
+  art: ArtSpec;
+  locked: boolean;
+  hairColor?: HairColor;
+}) {
+  const [x, y, w, h] = focusFor(art);
 
   return (
     <svg
@@ -25,7 +31,11 @@ export function ItemThumb({ item, locked }: { item: Item; locked: boolean }) {
       aria-hidden="true"
       focusable="false"
     >
-      {drawing.art}
+      {drawItem(art, {
+        hair: HAIR_SWATCHES[hairColor],
+        robePath: ROBE_PATH,
+        hemPath: HEM_PATH,
+      })}
     </svg>
   );
 }

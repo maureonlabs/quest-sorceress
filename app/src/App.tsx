@@ -16,7 +16,7 @@ import { Inventory } from './screens/Inventory';
    two wardrobe screens are one idea seen two ways. */
 const NAV = [
   { to: '/', glyph: '✦', label: 'Quest' },
-  { to: '/avatar', glyph: '✧', label: 'Sorceress' },
+  { to: '/avatar', glyph: '✧', label: 'Figure' },
   { to: '/preferences', glyph: '❖', label: 'Preferences' },
 ];
 

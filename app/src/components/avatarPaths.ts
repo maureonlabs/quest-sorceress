@@ -26,6 +26,12 @@ export const HEM_PATH = 'M 42 272 Q 100 288 158 272';
 export const HAIR_PATH =
   'M 100 48 C 76 48, 66 68, 69 94 C 72 128, 65 158, 58 180 C 76 176, 90 162, 94 138 L 106 138 C 110 162, 124 176, 142 180 C 135 158, 128 128, 131 94 C 134 68, 124 48, 100 48 Z';
 
+/** The sorcerer's robe: the same garment, cut straight instead of flared. */
+export const ROBE_PATH_M =
+  'M 72 110 C 82 103, 118 103, 128 110 C 126 140, 128 190, 132 240 C 134 262, 136 272, 138 280 Q 100 292 62 280 C 64 272, 66 262, 68 240 C 72 190, 74 140, 72 110 Z';
+
+export const HEM_PATH_M = 'M 62 280 Q 100 292 138 280';
+
 /** Where a hand rests, so a staff can be put in one. */
 export const HANDS = { left: { x: 71, y: 176 }, right: { x: 129, y: 176 } } as const;
 

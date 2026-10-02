@@ -1,39 +1,41 @@
 /**
- * The sorceress. Framed like the panels — vines and blossom around her, forest
+ * Your figure. Framed like the panels — vines and blossom around her, forest
  * behind — because she belongs to the same world as the quest card.
  *
- * Everything she owns is equipped from here or from the inventory; the two
- * screens are the same wardrobe seen two ways, so neither needs its own rules.
+ * Hair colour lives here rather than in the wardrobe, because it is the one
+ * thing a player with nothing unlocked can still change. A character screen
+ * that offers no choices at all on day one is a character screen nobody
+ * revisits.
  */
 
 import { Link } from 'react-router-dom';
 import { AvatarDefs } from '../components/AvatarDefs';
 import { Filigree } from '../components/Filigree';
+import { HairPicker } from '../components/HairPicker';
 import { Sorceress } from '../components/Sorceress';
 import { VineFrame } from '../components/VineFrame';
 import { daysUntil, ladder, owns } from '../game/items';
 import { useGame } from '../state';
-import { SLOT_LABELS } from '../types';
+import { BODY_LABELS, SLOT_LABELS } from '../types';
 
 export function Avatar() {
-  const { items, equipped, unequip, nextUnlock, streak } = useGame();
+  const { profile, items, equipped, unequip, nextUnlock, streak, setHairColor } = useGame();
+  if (!profile) return null;
 
-  /* Owning nothing and wearing nothing are different states, and telling
-     someone who has earned all eight that "the first piece" is still ahead of
-     them would be plainly false. */
   const ownedCount = ladder().filter((i) => owns(items, i.id)).length;
-
   const described =
     equipped.length > 0
-      ? `Your sorceress, wearing ${equipped.map((i) => i.name).join(', ')}.`
-      : 'Your sorceress, in a plain robe, with nothing equipped yet.';
+      ? `Your ${BODY_LABELS[profile.bodyType].toLowerCase()}, wearing ${equipped
+          .map((i) => i.name)
+          .join(', ')}.`
+      : `Your ${BODY_LABELS[profile.bodyType].toLowerCase()}, with nothing equipped yet.`;
 
   return (
     <div className="content">
       <AvatarDefs />
 
       <header>
-        <p className="eyebrow">Your sorceress</p>
+        <p className="eyebrow">Your {BODY_LABELS[profile.bodyType].toLowerCase()}</p>
         <h1>She wears what you earn</h1>
       </header>
 
@@ -42,10 +44,22 @@ export function Avatar() {
         <section className="panel avatar-panel">
           <span className="sheen" aria-hidden="true" />
           <Filigree size={52} />
-          <Sorceress equipped={equipped} label={described} />
+          <Sorceress
+            bodyType={profile.bodyType}
+            hairColor={profile.hairColor}
+            equipped={equipped}
+            label={described}
+          />
         </section>
         <VineFrame layer="front" />
       </div>
+
+      <section className="panel">
+        <Filigree size={44} />
+        <h2>Hair</h2>
+        <p className="dim">Yours from the start. No streak required.</p>
+        <HairPicker value={profile.hairColor} onChange={setHairColor} />
+      </section>
 
       <section className="panel">
         <Filigree size={44} />
@@ -53,22 +67,18 @@ export function Avatar() {
         {equipped.length === 0 ? (
           <p className="dim">
             {ownedCount === 0
-              ? 'Nothing yet. Keep a streak going for a week and the first piece is yours.'
+              ? 'Nothing yet. Keep a streak going for a week and the first pieces are yours.'
               : `Nothing on. You have ${ownedCount} ${
                   ownedCount === 1 ? 'piece' : 'pieces'
-                } waiting in your inventory.`}
+                } waiting in the wardrobe.`}
           </p>
         ) : (
           <ul className="worn">
-            {equipped.map((item) => (
-              <li key={item.id}>
-                <span className="worn-slot">{SLOT_LABELS[item.type]}</span>
-                <span className="worn-name">{item.name}</span>
-                <button
-                  type="button"
-                  className="btn quiet tiny"
-                  onClick={() => unequip(item.id)}
-                >
+            {equipped.map((i) => (
+              <li key={i.id}>
+                <span className="worn-slot">{SLOT_LABELS[i.type]}</span>
+                <span className="worn-name">{i.name}</span>
+                <button type="button" className="btn quiet tiny" onClick={() => unequip(i.id)}>
                   Take off
                 </button>
               </li>
@@ -94,22 +104,22 @@ export function Avatar() {
               : ''}
           </p>
         </section>
-      ) : ownedCount > 0 ? (
+      ) : (
         <section className="panel">
           <Filigree size={44} />
           <h2>Next</h2>
           <p className="dim">
-            Every piece earned. There is nothing left to unlock — only the streak
-            itself to keep.
+            Every piece earned. There is nothing left to unlock — only the streak itself to
+            keep.
           </p>
         </section>
-      ) : null}
+      )}
 
       <Link to="/inventory" className="btn tune">
         <span className="glyph" aria-hidden="true">
           ✧
         </span>
-        Open your inventory
+        Open the wardrobe
       </Link>
     </div>
   );

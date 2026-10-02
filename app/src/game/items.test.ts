@@ -17,7 +17,9 @@ import {
   owns,
   unequipItem,
 } from './items';
-import { DRAWINGS } from '../components/ItemArt';
+import { FOCUS, drawItem } from '../components/ItemArt';
+import { HAIR_SWATCHES } from '../types';
+import { HEM_PATH, ROBE_PATH } from '../components/avatarPaths';
 import { ITEM_SLOTS, type OwnedItem } from '../types';
 
 describe('the catalogue', () => {
@@ -25,12 +27,31 @@ describe('the catalogue', () => {
     expect(new Set(ITEMS.map((i) => i.id)).size).toBe(ITEMS.length);
   });
 
-  /* A typo in artAssetRef would ship as an item that is owned, equippable, and
-     completely invisible — which is why this is a test and not a comment. */
-  it('has a drawing for every item', () => {
+  it('has over fifty items', () => {
+    expect(ITEMS.length).toBeGreaterThan(50);
+  });
+
+  /* An art spec that renders nothing would ship as an item that is owned,
+     equippable, and completely invisible — which is why this is a test and not
+     a comment. */
+  it('draws something for every item', () => {
+    const ctx = { hair: HAIR_SWATCHES.black, robePath: ROBE_PATH, hemPath: HEM_PATH };
     for (const item of ITEMS) {
-      expect(DRAWINGS[item.artAssetRef], `no drawing for ${item.id}`).toBeDefined();
+      expect(drawItem(item.art, ctx), `nothing drawn for ${item.id}`).toBeTruthy();
+      expect(FOCUS[item.art.kind], `no focus for ${item.id}`).toBeDefined();
     }
+  });
+
+  /* Every slot must be reachable in the wardrobe, or a rail tab opens on an
+     empty rack. */
+  it('fills every slot with at least two items', () => {
+    for (const slot of ITEM_SLOTS) {
+      expect(ITEMS.filter((i) => i.type === slot).length, slot).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it('gives the first week more than one piece, so day seven feels like an event', () => {
+    expect(ITEMS.filter((i) => i.unlockAtStreakWeeks === 1).length).toBeGreaterThan(1);
   });
 
   it('only uses slots the figure knows how to paint', () => {
@@ -52,9 +73,10 @@ describe('granting', () => {
     expect(grantItems([], 0).granted).toEqual([]);
   });
 
-  it('gives the one-week item at one week', () => {
+  it('gives the first-week pieces at one week, and nothing later', () => {
     const { granted } = grantItems([], 1);
-    expect(granted.map((i) => i.id)).toEqual(['circlet-first-light']);
+    expect(granted.length).toBeGreaterThan(0);
+    for (const i of granted) expect(i.unlockAtStreakWeeks).toBe(1);
   });
 
   it('grants nothing a second time', () => {
@@ -68,7 +90,9 @@ describe('granting', () => {
      one completion. All of them are owed, not just the latest. */
   it('catches up every milestone passed at once', () => {
     const { granted } = grantItems([], 4);
-    expect(granted.map((i) => i.unlockAtStreakWeeks)).toEqual([1, 2, 3, 4]);
+    expect(new Set(granted.map((i) => i.unlockAtStreakWeeks))).toEqual(
+      new Set([1, 2, 3, 4]),
+    );
   });
 
   it('never takes an item back when the streak breaks', () => {
@@ -105,7 +129,8 @@ describe('equipping', () => {
     items = equipItem(items, 'circlet-first-light');
     items = equipItem(items, 'branchwood-wand');
     items = equipItem(items, 'mantle-still-air');
-    expect(equippedItems(items)).toHaveLength(3);
+    items = equipItem(items, 'boots-mosswalk');
+    expect(equippedItems(items)).toHaveLength(4);
   });
 
   /* Two crowns at once is not a style choice, it is a drawing bug. */
@@ -128,9 +153,15 @@ describe('equipping', () => {
   it('returns what is worn in paint order, not the order it was put on', () => {
     let items = earned(12);
     items = equipItem(items, 'crown-long-vigil');
-    items = equipItem(items, 'sigil-quiet-hour');
+    items = equipItem(items, 'ring-quiet-hour');
     items = equipItem(items, 'mantle-still-air');
-    expect(equippedItems(items).map((i) => i.type)).toEqual(['aura', 'cloak', 'crown']);
+    items = equipItem(items, 'boots-mosswalk');
+    expect(equippedItems(items).map((i) => i.type)).toEqual([
+      'aura',
+      'cloak',
+      'shoes',
+      'crown',
+    ]);
   });
 });
 
@@ -139,7 +170,7 @@ describe('the next goal', () => {
     expect(nextUnlock([])?.unlockAtStreakWeeks).toBe(1);
   });
 
-  it('moves on once an item is earned', () => {
+  it('moves on once the first week is earned', () => {
     expect(nextUnlock(grantItems([], 1).items)?.unlockAtStreakWeeks).toBe(2);
   });
 

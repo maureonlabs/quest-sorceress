@@ -62,7 +62,7 @@ An avatar item or spell. Fixed catalogue, same for everyone.
 | `id` | uuid | primary key |
 | `name` | text | required |
 | `type` | text | e.g. robe, hat, staff, spell |
-| `artAssetRef` | text | names a drawing in `app/src/components/ItemArt.tsx` — every item is vector art, there are no image files |
+| `art` | ArtSpec | which of the nine parameterised families in `app/src/components/ItemArt.tsx` draws it, and with what colours — every item is vector art, there are no image files |
 | `unlockAtStreakWeeks` | integer | which weekly milestone unlocks it (1 = 7 days, 2 = 14 days…) |
 
 ### OwnedItem

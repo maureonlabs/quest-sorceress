@@ -10,10 +10,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { AvatarDefs } from './AvatarDefs';
 import { ItemThumb } from './ItemThumb';
-import { SLOT_LABELS, type Item } from '../types';
+import { SLOT_LABELS } from '../types';
+import type { WardrobeItem } from '../game/items';
 
 interface Props {
-  items: readonly Item[];
+  items: readonly WardrobeItem[];
   /** Puts the item on, so "wear it now" works without leaving the dialog. */
   onEquip: (itemId: string) => void;
   /** Called once every unlocked item has been seen. */
@@ -72,7 +73,7 @@ export function ItemUnlock({ items, onEquip, onDone }: Props) {
 
         <div className="unlock-art">
           <span className="unlock-halo" aria-hidden="true" />
-          <ItemThumb item={item} locked={false} />
+          <ItemThumb art={item.art} locked={false} />
         </div>
 
         <h2 id="unlock-title">{item.name}</h2>

@@ -10,7 +10,14 @@ import { QuestComplete } from '../components/QuestComplete';
 import { ItemUnlock } from '../components/ItemUnlock';
 import { VineFrame } from '../components/VineFrame';
 import { Filigree } from '../components/Filigree';
-import { CATEGORY_LABELS, DIFFICULTY_LABELS, type QuestTemplate } from '../types';
+import {
+  CATEGORY_LABELS,
+  DIFFICULTY_LABELS,
+  MOOD_LABELS,
+  WANT_PHRASE,
+  type QuestTemplate,
+} from '../types';
+import { shiftDifficulty } from '../game/quests';
 
 export function Home() {
   const {
@@ -23,6 +30,7 @@ export function Home() {
     justUnlocked,
     clearUnlocked,
     equip,
+    here,
   } = useGame();
 
   /** Held so the congratulations can name the quest after it has left the board. */
@@ -61,6 +69,17 @@ export function Home() {
           </p>
         ) : null}
       </header>
+
+      {/* Say the matching out loud. An app that quietly lowers the difficulty
+          without mentioning it reads as broken the moment somebody notices. */}
+      {here ? (
+        <p className="today-line">
+          {MOOD_LABELS[here.mood]}, and you want to feel {WANT_PHRASE[here.want]}.
+          {shiftDifficulty(here.difficulty, here.mood) !== here.difficulty
+            ? ' So she is asking for a little less today.'
+            : ''}
+        </p>
+      ) : null}
 
       {pending && pendingTemplate ? (
         /* "Not this" dismisses and deals again in one move — generate() already

@@ -15,22 +15,30 @@ import {
 } from 'react';
 import * as store from './storage';
 import * as sound from './sound';
-import { pickQuest, streak, streakWeeks, templateById, today } from './game/quests';
+import {
+  pickQuest,
+  streak,
+  streakWeeks,
+  templateById,
+  today,
+  type Today,
+} from './game/quests';
 import {
   equipItem,
   equippedItems,
   grantItems,
   nextUnlock,
   unequipItem,
+  type WardrobeItem,
 } from './game/items';
 import type {
+  CheckIn,
   DailyQuest,
-  Item,
+  HairColor,
   OwnedItem,
   Profile,
   QuestTemplate,
   SaveData,
-  Setting,
 } from './types';
 
 interface Game {
@@ -46,20 +54,25 @@ interface Game {
   remembers: boolean;
   soundOn: boolean;
   setSound: (on: boolean) => void;
-  /** Where the player said they are today, or null if they have not been asked yet. */
-  here: Setting[] | null;
-  checkIn: (places: Setting[]) => void;
+  /**
+   * Today's four answers, or null if the check-in has not happened yet. Where
+   * they are, how they feel, what they want to feel, and how hard they want it.
+   */
+  here: Today | null;
+  checkIn: (answers: Omit<CheckIn, 'date'>) => void;
 
   /* ---- the wardrobe ---- */
   items: OwnedItem[];
   /** What she is wearing, already in paint order. */
-  equipped: Item[];
+  equipped: WardrobeItem[];
   /** The next item the streak will earn, or null once everything is owned. */
-  nextUnlock: Item | null;
+  nextUnlock: WardrobeItem | null;
+  /** Free from the start — a player with no items still deserves a choice. */
+  setHairColor: (c: HairColor) => void;
   equip: (itemId: string) => void;
   unequip: (itemId: string) => void;
   /** Items earned by the completion just made, waiting to be announced. */
-  justUnlocked: Item[];
+  justUnlocked: WardrobeItem[];
   clearUnlocked: () => void;
 
   saveProfile: (p: Profile) => void;
@@ -101,7 +114,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, []);
 
   /** Items earned by the last completion, held until the player has seen them. */
-  const [justUnlocked, setJustUnlocked] = useState<Item[]>([]);
+  const [justUnlocked, setJustUnlocked] = useState<WardrobeItem[]>([]);
   const clearUnlocked = useCallback(() => setJustUnlocked([]), []);
 
   const saveProfile = useCallback(
@@ -109,11 +122,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
     [apply],
   );
 
-  /** Record where they are today. Good until midnight, then they are asked again. */
+  /** Record today's answers. Good until midnight, then they are asked again. */
   const checkIn = useCallback(
-    (places: Setting[]) => {
+    (answers: Omit<CheckIn, 'date'>) => {
       sound.play('select');
-      apply((d) => ({ ...d, checkIn: { date: today(new Date()), settings: places } }));
+      apply((d) => ({ ...d, checkIn: { date: today(new Date()), ...answers } }));
     },
     [apply],
   );
@@ -135,9 +148,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
         q.status === 'pending' ? { ...q, status: 'dismissed' as const, dismissedAt: stamp } : q,
       );
 
-      const hereToday =
-        d.checkIn && d.checkIn.date === today(now) ? d.checkIn.settings : undefined;
-      const template = pickQuest(d.profile, quests, now, Math.random, hereToday);
+      /* No check-in means no answers to filter on, so there is nothing to
+         hand over. The shell routes to the check-in before Home, so this is a
+         guard rather than a path anyone travels. */
+      const fresh = d.checkIn && d.checkIn.date === today(now) ? d.checkIn : null;
+      if (!fresh) return { ...d, quests };
+
+      const template = pickQuest(d.profile, quests, fresh, now, Math.random);
       if (!template) return { ...d, quests };
       sound.play('deal');
 
@@ -166,7 +183,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
       // grant back out through a local is safe — and it is the only way to tell
       // the difference between an item earned *now* and one granted quietly on
       // a later reconcile.
-      let granted: Item[] = [];
+      let granted: WardrobeItem[] = [];
 
       apply((d) => {
         const quests = d.quests.map((q) =>
@@ -218,6 +235,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
     [apply],
   );
 
+  const setHairColor = useCallback(
+    (hairColor: HairColor) => {
+      sound.play('select');
+      apply((d) => (d.profile ? { ...d, profile: { ...d.profile, hairColor } } : d));
+    },
+    [apply],
+  );
+
   const setSound = useCallback(
     (on: boolean) => {
       sound.setEnabled(on);
@@ -250,8 +275,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
       remembers: store.isPersistent(),
       soundOn: data.settings.sound,
       setSound,
-      here: fresh ? fresh.settings : null,
+      here: fresh,
       checkIn,
+      setHairColor,
       items: data.items,
       equipped: equippedItems(data.items),
       nextUnlock: nextUnlock(data.items),
@@ -278,6 +304,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     unequip,
     justUnlocked,
     clearUnlocked,
+    setHairColor,
   ]);
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

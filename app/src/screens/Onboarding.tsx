@@ -1,31 +1,40 @@
 /**
- * First run. Three questions, because the engine cannot filter without answers
- * to all three — so none of them is skippable.
+ * First run. Four questions, and none of them is skippable.
+ *
+ * What is *not* asked here matters as much as what is. Mood, target feeling and
+ * difficulty are asked daily instead, because they are facts about today rather
+ * than standing preferences — see design/TAXONOMY.md.
  */
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChipGroup } from '../components/ChipGroup';
+import { HairPicker } from '../components/HairPicker';
 import {
-  CATEGORIES,
-  CATEGORY_LABELS,
+  AGE_LABELS,
+  AGE_RANGES,
+  BODY_LABELS,
+  BODY_TYPES,
   DIFFICULTIES,
   DIFFICULTY_LABELS,
   SETTINGS,
   SETTING_LABELS,
-  type Category,
+  type AgeRange,
+  type BodyType,
   type Difficulty,
+  type HairColor,
   type Setting,
 } from '../types';
 import { useGame } from '../state';
 
 const SETTING_OPTIONS = SETTINGS.map((v) => ({ value: v, label: SETTING_LABELS[v] }));
-const CATEGORY_OPTIONS = CATEGORIES.map((v) => ({ value: v, label: CATEGORY_LABELS[v] }));
 const DIFFICULTY_OPTIONS = DIFFICULTIES.map((v) => ({
   value: v,
   label: DIFFICULTY_LABELS[v],
   sub: v,
 }));
+const AGE_OPTIONS = AGE_RANGES.map((v) => ({ value: v, label: AGE_LABELS[v] }));
+const BODY_OPTIONS = BODY_TYPES.map((v) => ({ value: v, label: BODY_LABELS[v] }));
 
 export function Onboarding() {
   const { saveProfile } = useGame();
@@ -33,38 +42,23 @@ export function Onboarding() {
 
   const [step, setStep] = useState(0);
   const [settings, setSettings] = useState<Setting[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty[]>(['easy']);
+  const [age, setAge] = useState<AgeRange[]>([]);
+  const [body, setBody] = useState<BodyType[]>(['sorceress']);
+  const [hair, setHair] = useState<HairColor>('black');
 
   const steps = [
     {
       title: 'Where do you spend your days?',
-      hint: 'Pick everywhere you actually go. She will only ever send you somewhere you have chosen.',
+      hint: 'Everywhere you actually go. She asks again each morning which of these is true today.',
       ready: settings.length > 0,
       control: (
-        <ChipGroup
-          options={SETTING_OPTIONS}
-          selected={settings}
-          onChange={setSettings}
-        />
+        <ChipGroup options={SETTING_OPTIONS} selected={settings} onChange={setSettings} />
       ),
     },
     {
-      title: 'What kind of quests?',
-      hint: 'Choose as many as you like. More choices, more variety.',
-      ready: categories.length > 0,
-      control: (
-        <ChipGroup
-          options={CATEGORY_OPTIONS}
-          selected={categories}
-          onChange={setCategories}
-          selectAll="random activities"
-        />
-      ),
-    },
-    {
-      title: 'How hard should they be?',
-      hint: 'One rank. You can change it whenever you like.',
+      title: 'How hard, usually?',
+      hint: 'A starting point. You can change it any morning, and a bad day lowers it on its own.',
       ready: difficulty.length === 1,
       control: (
         <ChipGroup
@@ -74,6 +68,24 @@ export function Onboarding() {
           single
           wide
         />
+      ),
+    },
+    {
+      title: 'How old are you?',
+      hint: 'So she never hands you something meant for somebody else. Nothing leaves your device.',
+      ready: age.length === 1,
+      control: <ChipGroup options={AGE_OPTIONS} selected={age} onChange={setAge} single wide />,
+    },
+    {
+      title: 'And who is doing the questing?',
+      hint: 'Looks only. It changes nothing about what she asks of you.',
+      ready: body.length === 1,
+      control: (
+        <>
+          <ChipGroup options={BODY_OPTIONS} selected={body} onChange={setBody} single wide />
+          <p className="dim sm">Hair</p>
+          <HairPicker value={hair} onChange={setHair} />
+        </>
       ),
     },
   ];
@@ -89,8 +101,10 @@ export function Onboarding() {
     saveProfile({
       displayName: null,
       settingPreferences: settings,
-      categoryPreferences: categories,
       difficultyPreference: difficulty[0],
+      ageRange: age[0],
+      bodyType: body[0],
+      hairColor: hair,
       createdAt: new Date().toISOString(),
     });
     navigate('/');

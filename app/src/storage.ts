@@ -14,7 +14,7 @@
 import type { SaveData } from './types';
 
 const KEY = 'quest-sorceress/v1';
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 
 export const emptySave = (): SaveData => ({
   schemaVersion: SCHEMA_VERSION,
@@ -44,16 +44,46 @@ export function isPersistent(): boolean {
 }
 
 /**
- * Migrate older saves forward. Nothing to do yet, but the hook exists so a
- * future schema change can move people's data instead of discarding it.
+ * Migrate older saves forward, so a schema change moves people's data instead
+ * of discarding it.
+ *
+ * **v1 → v2** added the feeling taxonomy, age bands, body type and hair colour.
+ *
+ * - A v1 profile has no age band. There is no way to infer one, so it is
+ *   defaulted to `26-32` and is editable in Preferences. Defaulting rather than
+ *   re-onboarding keeps the player's streak and wardrobe intact; the trade is
+ *   that an existing player must correct their own age if it matters to them.
+ * - A v1 check-in has no mood, want or difficulty, so it is discarded entirely
+ *   and the player is asked again today. Inventing answers on their behalf
+ *   would silently pick the quests they get.
  */
 function migrate(data: SaveData): SaveData {
   const base = emptySave();
+  // Read as partial: a v1 profile genuinely lacks these keys at runtime, even
+  // though the current type says every profile has them.
+  const stored = data.profile as Partial<SaveData['profile']> | null;
+  const profile = stored
+    ? ({
+        ageRange: '26-32',
+        bodyType: 'sorceress',
+        hairColor: 'black',
+        ...stored,
+      } as SaveData['profile'])
+    : null;
+
+  const saved = data.checkIn as Partial<SaveData['checkIn']> | null;
+  const checkIn =
+    saved && saved.mood && saved.want && saved.difficulty
+      ? (saved as SaveData['checkIn'])
+      : null;
+
   // Spread defaults underneath so a save written before a field existed gains
   // it rather than arriving as undefined.
   return {
     ...base,
     ...data,
+    profile,
+    checkIn,
     settings: { ...base.settings, ...(data.settings ?? {}) },
     schemaVersion: SCHEMA_VERSION,
   };

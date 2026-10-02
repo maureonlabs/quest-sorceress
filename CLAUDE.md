@@ -44,20 +44,32 @@ checklist.
   drift out of sync with them.
 - **Several items can be equipped at once.**
 - **Catalogues are bundled, not stored.** Quests and items ship with the app.
-- **Items are drawn, not photographed.** The sorceress and all eight items are SVG in
-  one shared 200 × 300 space (`components/avatarPaths.ts`), so the same drawing serves
-  the figure and the inventory slot. `artAssetRef` names a drawing in
-  `components/ItemArt.tsx`, never a file — a test fails if a ref has no drawing.
+- **`design/TAXONOMY.md` is the ruling for quest selection.** Mood shifts difficulty
+  downward only; target feeling and setting are hard filters; the age band is never
+  relaxed. Change the rules there first, then the code.
+- **Category no longer filters anything.** The daily "what do you want to feel?"
+  replaced it. It survives as a label on the card.
+- **Items are drawn, not photographed.** Both figures and all 61 items are SVG in one
+  shared 200 × 300 space (`components/avatarPaths.ts`), so the same drawing serves the
+  figure and the wardrobe slot. Items come from **nine parameterised families** in
+  `components/ItemArt.tsx` — a new item is a line of data, not a new path. A test fails
+  if an item draws nothing.
+- **The figure is a placeholder for a painted one.** The agreed direction is hybrid:
+  raster bodies, vector items on top. `Sorceress.tsx` keeps the whole body in one `<g>`
+  so that swap touches nothing else.
 - **Unlocks are one-way.** An item earned at seven days is kept when the streak
   breaks. Granting happens inside the same write as the completion, plus a silent
   catch-up when the app loads.
 
 ## Content
 
-`content/quests.csv` and `content/quests.json` hold the finished library — **269 quests
-covering all 126 setting × category × difficulty combinations**. 190 were retagged from
-the prototype, 79 written to fill gaps. **Do not regenerate this content.** Every
-combination is guaranteed non-empty, which is why no runtime fallback logic is needed.
+`app/src/content/quests.json` holds the library — **319 quests**, covering every
+**setting × target feeling × difficulty** combination **in every age band**.
+
+**Do not regenerate this content.** To change tags, edit `tools/retag.py` and run
+`python3 tools/retag.py --write`, then `python3 tools/coverage.py` to prove no
+combination went empty. Quests written by hand carry `manualTags: true` and the keyword
+tagger leaves them alone.
 
 ## Design
 
