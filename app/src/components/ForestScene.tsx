@@ -70,11 +70,17 @@ export function ForestScene() {
       // Three ranks of trees, each darker and sharper than the one behind it.
       const ranks = [
         // Every rank is darker than the air it stands in — a trunk is a
-        // silhouette, never a lit band. Narrow, too: wide soft verticals are
-        // what made this read as drapery.
-        { n: 13, shade: '#0C1A15', alpha: 0.4, blur: 12, top: 0.16, wide: 0.022 },
-        { n: 9, shade: '#071210', alpha: 0.62, blur: 6, top: 0.1, wide: 0.03 },
-        { n: 5, shade: '#030807', alpha: 0.85, blur: 2, top: 0.04, wide: 0.042 },
+        // silhouette, never a lit band.
+        //
+        // Count and spacing matter more than colour. Thirteen evenly spaced
+        // blurred verticals do not read as a far rank of trees; the regular
+        // light gaps BETWEEN them read as pleats, which is what made this look
+        // like drapery however dark the trunks themselves were. Fewer trunks,
+        // irregular gaps, and enough blur on the far rank that it becomes
+        // atmosphere rather than objects.
+        { n: 7, shade: '#0C1A15', alpha: 0.26, blur: 18, top: 0.16, wide: 0.02 },
+        { n: 6, shade: '#071210', alpha: 0.55, blur: 7, top: 0.1, wide: 0.028 },
+        { n: 4, shade: '#030807', alpha: 0.85, blur: 2, top: 0.04, wide: 0.042 },
       ];
 
       for (const rank of ranks) {
@@ -82,11 +88,22 @@ export function ForestScene() {
         g.filter = rank.blur ? `blur(${rank.blur}px)` : 'none';
         g.globalAlpha = rank.alpha;
         g.fillStyle = rank.shade;
-        for (let i = 0; i < rank.n; i++) {
-          const x = (i / (rank.n - 1)) * w + (R() - 0.5) * w * 0.1;
+
+        // Walk across in irregular steps rather than dividing the width evenly:
+        // a real wood clusters and leaves clearings, and even spacing is the
+        // whole reason the old version had a rhythm to it.
+        const xs: number[] = [];
+        let cursor = -w * 0.08;
+        while (cursor < w * 1.08 && xs.length < rank.n) {
+          xs.push(cursor);
+          cursor += (w * 1.16) / rank.n * (0.45 + R() * 1.3);
+        }
+
+        for (let i = 0; i < xs.length; i++) {
+          const x = xs[i];
           const trunkW = w * rank.wide * (0.5 + R() * 0.8);
           const top = h * (rank.top + R() * 0.12);
-          const lean = (R() - 0.5) * w * 0.035;
+          const lean = (R() - 0.5) * w * 0.09;
           const base = h * 0.84;
 
           // A trunk: narrow, leaning, and stopping at the ground rather than
